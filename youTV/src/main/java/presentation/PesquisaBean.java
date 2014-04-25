@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.WebApplicationContext;
 
+import business.usuario.VimeoService;
+import business.usuario.VimeoVideoSearchResult;
+
 import com.google.api.services.samples.youtube.cmdline.data.MyUploads;
 import com.google.api.services.samples.youtube.cmdline.data.Search;
 import com.google.api.services.youtube.model.PlaylistItem;
@@ -23,9 +26,11 @@ public class PesquisaBean {
     private String termoPesquisa;
     private List<SearchResult> resultadoPesquisa;
     private List<PlaylistItem> myUploads;
+    private VimeoVideoSearchResult searchVideos;
 
     public void pesquisar() {
         resultadoPesquisa = Search.pesquisar(termoPesquisa);
+        searchVideos = VimeoService.searchVideos(termoPesquisa);
         List<SearchResult> aux = new ArrayList<SearchResult>();
         for (SearchResult item : resultadoPesquisa) {
             if ("youtube#video".equals(item.getId().getKind())) {
@@ -70,5 +75,13 @@ public class PesquisaBean {
 
     public void setResultadoPesquisa(List<SearchResult> resultadoPesquisa) {
         this.resultadoPesquisa = resultadoPesquisa;
+    }
+
+    public VimeoVideoSearchResult getSearchVideos() {
+        return searchVideos;
+    }
+
+    public void setSearchVideos(VimeoVideoSearchResult searchVideos) {
+        this.searchVideos = searchVideos;
     }
 }

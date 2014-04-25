@@ -13,13 +13,21 @@
 		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
 		<link rel="icon" href="img/favicon.ico" type="image/gif" />
 		<script type="text/javascript" src="#{request.contextPath}/js/primefaces_i18n.js"></script>
+		<script type="text/javascript" src="#{request.contextPath}/js/jquery.jcarousel.js"></script>
 		<script type="text/javascript" src="#{facesContext.externalContext.requestContextPath}/js/jquery.maskMoney.js"></script>
-		<script type="text/javascript" src="#{facesContext.externalContext.requestContextPath}/js/emprel.js"></script>
+		<script type="text/javascript" src="#{facesContext.externalContext.requestContextPath}/js/template.js" ></script>
 		<ui:insert name="head"></ui:insert>
 	</h:head>
 		<h:body>
 			<h:form>
-			
+				
+				
+				<script type="text/javascript" src="#{facesContext.externalContext.requestContextPath}/js/swfobject.js" />    
+				  <div id="ytapiplayer">
+				    You need Flash player 8+ and JavaScript enabled to view this video.
+				  </div>
+				  
+				
 				<p:tabView id="tabView" dynamic="true" cache="true" >  
 					<p:ajax event="tabChange" listener="#{pesquisaBean.onTabChange}"/>
 					
@@ -55,7 +63,11 @@
 								Primeiros 25 videos upados									 <br/>
 								=============================================================<br/>
 								#{item.snippet.title}<br/>
+								#{item.contentDetails.videoId}<br/>
 								<img src="#{item.snippet.thumbnails.default.url}" /> 
+								<iframe id="player" type="text/html" width="340" height="290"
+								  src="http://www.youtube.com/embed/#{item.contentDetails.videoId}"
+								  frameborder="0"></iframe>
 								<br/>
 							</ui:repeat>
 							<br/>

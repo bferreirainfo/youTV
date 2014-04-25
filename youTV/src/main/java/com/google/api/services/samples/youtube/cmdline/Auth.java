@@ -79,7 +79,8 @@ public class Auth {
 
         // Build the local server and bind it to port 8080
         LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(8089).build();
-
+        //Desabilita debug do jetty
+        org.mortbay.log.Log.getLog().setDebugEnabled(false);
         // Authorize.
         return new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
     }

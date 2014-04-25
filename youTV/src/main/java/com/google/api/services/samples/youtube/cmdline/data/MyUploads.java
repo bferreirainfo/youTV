@@ -62,6 +62,9 @@ public class MyUploads {
         try {
             // Authorize the request.
             Credential credential = Auth.authorize(scopes, "myuploads");
+            System.out.println(credential.refreshToken());
+            System.out.println(credential.getAccessToken());
+            System.out.println(credential.getRefreshToken());
 
             // This object is used to make YouTube Data API requests.
             youtube =
