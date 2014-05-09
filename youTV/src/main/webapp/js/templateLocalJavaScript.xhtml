@@ -1,0 +1,181 @@
+<script>
+
+// ============================== ProgressBar =======================================
+	//configurando  progress bar
+	function nada(){
+	NProgress.configure({ ease: 'ease', speed: 500 , showSpinner: false});
+	$( document ).ajaxStart(function() {
+		NProgress.start();
+		$('.bar').css('margin-top','52px');
+	});
+	$.ajax({
+			url: '././index.faces',
+			type: 'GET',
+			xhrFields: {
+			onprogress: function (e) {
+				if (e.lengthComputable) {
+					alert("10");
+					console.log((e.loaded / e.total));
+					NProgress.set((e.loaded / e.total));
+				}
+			}
+		},
+	});
+	}
+// ============================== Slidebar =======================================		
+	$(window).ready(function(){
+		  //bx slider configuration
+		  loadBxSlider();
+		});
+		function loadBxSlider(){
+		  $('.bxslider').bxSlider({
+		  adaptiveHeight: true,
+		  slideWidth: 176,
+		  slideHeight: 500,
+		  minSlides: 2,
+		  maxSlides: 99,
+		  slideMargin: 10,
+		  });
+		  $('.bx-wrapper').css('margin','0 auto 5px 3px');
+		  $('.bx-default-pager').css('position','relative').css('top','-50px');
+		}
+// ============================== Abas =======================================		
+			
+		$(document).ready(function(ev){
+		    $('#custom_carousel').on('slide.bs.carousel', function (evt) {
+		      $('#custom_carousel .controls li.active').removeClass('active');
+		      $('#custom_carousel .controls li:eq('+$(evt.relatedTarget).index()+')').addClass('active');
+		    });
+		});
+		
+// ============================== youtube =======================================	
+		var player;
+		var youtubeVideoId;
+		
+		function playYoutube(youtubeVideoId){
+			this.youtubeVideoId = youtubeVideoId;
+			updateUrl('youtube',youtubeVideoId);
+			if(player == null){
+			 //construir o objeto do iframe
+			 // 2. This code loads the IFrame Player API code asynchronously.
+			 	
+			    var tag = document.createElement('script');
+			    tag.src = "https://www.youtube.com/iframe_api";
+			    var firstScriptTag = document.getElementsByTagName('script')[0];
+			    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+			    
+			}else{
+				document.getElementById('assistindoLink').click();
+				visualizarApenasPlayer('youtubePlayerWrapper',player.stop);
+				currenctlyPlayerStopCommand = function () {player.stopVideo();} ;
+				player.loadVideoById(youtubeVideoId);
+			}
+		}
+		// 3. This function creates an iframe (and YouTube player)
+		//	  after the API code downloads.
+		function onYouTubeIframeAPIReady() {
+		    player = new YT.Player('youtubePlayerWrapper', {
+		        videoId: youtubeVideoId,
+		        events: {
+		            'onReady': onYoutubePlayerReady,
+		          }
+		      });
+		    }
+		    
+		function onYoutubePlayerReady(event){
+			event.target.playVideo();
+			document.getElementById('assistindoLink').click();
+		 	visualizarApenasPlayer('youtubePlayerWrapper');
+		    currenctlyPlayerStopCommand = function () {player.stopVideo();} ;
+		}
+// ============================== Vimeo =======================================	
+
+function playVimeo(videoVimeoId){
+	
+   var videoUrl = 'http://www.vimeo.com/'+videoVimeoId+'api=1&amp;player_id=vimeoIframe';
+   // This is the oEmbed endpoint for Vimeo (we're using JSON)
+   // (Vimeo also supports oEmbed discovery. See the PHP example.)
+   var endpoint = 'http://www.vimeo.com/api/oembed.json';
+
+   // Tell Vimeo what function to call
+   var callback = 'embedVideo';
+   // Put together the URL
+   var url = endpoint + '?url=' + encodeURIComponent(videoUrl) + '&amp;callback=' + callback + '&amp;width=640' + '&amp;autoplay=true';
+   // This function puts the video on the page
+    
+   var js = document.createElement('script');
+   js.setAttribute('type', 'text/javascript');
+   js.setAttribute('src', url);
+   document.getElementsByTagName('head').item(0).appendChild(js);
+   
+   // update URL
+   updateUrl('vimeo',videoVimeoId);
+   
+}
+var vimeoPlayer
+//this function will be called after playVimeo(videoVimeoId); 
+function embedVideo(video) {
+	video.html = video.html.substring(0,7) + ' id="vimeoIframe"' + video.html.substring(7);
+    document.getElementById('vimeoPlayerWrapper').innerHTML = unescape(video.html);
+    
+     var vimeoIframe = document.getElementById('vimeoIframe');
+	 vimeoPlayer = $f(vimeoIframe);
+	 vimeoPlayer.addEvent('ready', onVimeoPlayerRead());
+}
+function onVimeoPlayerRead(){
+	//When player is ready it will call 'exibirAbaAssistir'
+	 
+	var playButton = document.getElementById("play-button");
+	playButton.addEventListener("click", function() {
+	  vimeoPlayer.api("play");
+	});
+	
+	var pauseButton = document.getElementById("pause-button");
+	pauseButton.addEventListener("click", function() {
+	  vimeoPlayer.api("pause");
+	});
+	document.getElementById('assistindoLink').click();
+	visualizarApenasPlayer('vimeoPlayerWrapper');
+	currenctlyPlayerStopCommand = function() {vimeoPlayer.api("unload")};
+}
+// ============================== Controle Abas =======================================	
+function display(abaId){
+	if(abaAtual != null){
+		hiddeElementById(abaAtual);
+		showElementById(abaId);
+	}
+	abaAtual=abaId;
+}
+var abaAtual = 'searchResult';
+// ============================== Utility =======================================	
+function updateUrl(action,value){
+	history.pushState(null, null, 'index.faces?' + action + '=' + value);
+}
+var currenctlyPlayerStopCommand;
+
+function visualizarApenasPlayer(playerWrapper){
+	if(currenctlyPlayerStopCommand != null){
+		currenctlyPlayerStopCommand();
+	}
+	var wrappers = [
+	    "youtubePlayerWrapper",
+	    "vimeoPlayerWrapper",
+	];
+	
+	wrappers.forEach(function(wrapper) {
+	   if(playerWrapper == wrapper){
+			showElementById(wrapper);
+		}else{
+			hiddeElementById(wrapper);
+		}
+	});
+}
+function hiddeElementById(playerWrapper){
+	document.getElementById(playerWrapper).style.display='none';
+}
+function showElementById(playerWrapper){
+	document.getElementById(playerWrapper).style.display='block';
+}
+
+
+</script>

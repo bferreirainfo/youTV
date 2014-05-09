@@ -23,14 +23,32 @@ import com.google.api.services.youtube.model.SearchResult;
 @Controller
 @Scope(WebApplicationContext.SCOPE_APPLICATION)
 public class PesquisaBean {
-    private String termoPesquisa;
+    private String searchTerm;
     private List<SearchResult> resultadoPesquisa;
     private List<PlaylistItem> myUploads;
     private VimeoVideoSearchResult searchVideos;
+    private String youtubeVideoId;
+    private String vimeoVideoId;
+    private static final String FACES_REDIRECT = "?faces-redirect=true";
+
+    public void carregarDadosVimeo() {
+    }
+
+    public void carregarDadosYoutube() {
+
+    }
+
+    public String consultarPagina() {
+        return "/template/devoops/index.faces?youtube=" + youtubeVideoId + FACES_REDIRECT;
+    }
+
+    public String consultarVimeo() {
+        return "index.faces" + FACES_REDIRECT;
+    }
 
     public void pesquisar() {
-        resultadoPesquisa = Search.pesquisar(termoPesquisa);
-        searchVideos = VimeoService.searchVideos(termoPesquisa);
+        resultadoPesquisa = Search.pesquisar(searchTerm);
+        searchVideos = VimeoService.searchVideos(searchTerm);
         List<SearchResult> aux = new ArrayList<SearchResult>();
         for (SearchResult item : resultadoPesquisa) {
             if ("youtube#video".equals(item.getId().getKind())) {
@@ -61,12 +79,12 @@ public class PesquisaBean {
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
 
-    public String getTermoPesquisa() {
-        return termoPesquisa;
+    public String getSearchTerm() {
+        return searchTerm;
     }
 
-    public void setTermoPesquisa(String termoPesquisa) {
-        this.termoPesquisa = termoPesquisa;
+    public void setSearchTerm(String termoPesquisa) {
+        this.searchTerm = termoPesquisa;
     }
 
     public List<SearchResult> getResultadoPesquisa() {
@@ -84,4 +102,21 @@ public class PesquisaBean {
     public void setSearchVideos(VimeoVideoSearchResult searchVideos) {
         this.searchVideos = searchVideos;
     }
+
+    public String getYoutubeVideoId() {
+        return youtubeVideoId;
+    }
+
+    public void setYoutubeVideoId(String youtubeVideoId) {
+        this.youtubeVideoId = youtubeVideoId;
+    }
+
+    public String getVimeoVideoId() {
+        return vimeoVideoId;
+    }
+
+    public void setVimeoVideoId(String vimeoVideoId) {
+        this.vimeoVideoId = vimeoVideoId;
+    }
+
 }

@@ -41,6 +41,7 @@
 	</properties>
 
 	<dependencies>
+
 	<!-- Biblioteca responsável por converter json para java -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
