@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.context.WebApplicationContext;
 
 import business.usuario.VimeoService;
+import business.usuario.VimeoVideo;
 import business.usuario.VimeoVideoSearchResult;
 
 import com.google.api.services.samples.youtube.cmdline.data.MyUploads;
@@ -29,13 +30,27 @@ public class PesquisaBean {
     private VimeoVideoSearchResult searchVideos;
     private String youtubeVideoId;
     private String vimeoVideoId;
+    private VimeoVideo vimeoVideo;
+    private String assistindo;
+    private SearchResult youtubeVideo;
     private static final String FACES_REDIRECT = "?faces-redirect=true";
 
     public void carregarDadosVimeo() {
+        for (VimeoVideo video : searchVideos.getVideos().getVideos()) {
+            if (video.getId().equals(vimeoVideoId)) {
+                vimeoVideo = video;
+            }
+        }
+        assistindo = "vimeo";
     }
 
     public void carregarDadosYoutube() {
-
+        for (SearchResult searchResult : resultadoPesquisa) {
+            if (searchResult.getId().getVideoId().equals(youtubeVideoId)) {
+                youtubeVideo = searchResult;
+            }
+        }
+        assistindo = "youtube";
     }
 
     public String consultarPagina() {
@@ -119,4 +134,39 @@ public class PesquisaBean {
         this.vimeoVideoId = vimeoVideoId;
     }
 
+    public VimeoVideo getVimeoVideo() {
+        return vimeoVideo;
+    }
+
+    public void setVimeoVideo(VimeoVideo vimeoVideo) {
+        this.vimeoVideo = vimeoVideo;
+    }
+
+    public boolean isShowVimeo() {
+        return "vimeo".equals(assistindo);
+    }
+
+    public boolean isShowYoutube() {
+        return "youtube".equals(assistindo);
+    }
+
+    public String getAssistindo() {
+        return assistindo;
+    }
+
+    public void setAssistindo(String assistindo) {
+        this.assistindo = assistindo;
+    }
+
+    public SearchResult getYoutubeVideo() {
+        return youtubeVideo;
+    }
+
+    public void setYoutubeVideo(SearchResult youtubeVideo) {
+        this.youtubeVideo = youtubeVideo;
+    }
+
+    public void setMyUploads(List<PlaylistItem> myUploads) {
+        this.myUploads = myUploads;
+    }
 }

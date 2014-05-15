@@ -75,7 +75,8 @@
 													 action="#{pesquisaBean.pesquisar}" 
 													 process="@this searchTerm" 
 													 value="Pesquisar"
-													 update="main"/>
+													 onclick="display('searchResult');"
+													 update="searchPanel"/>
 						 				</span>
 				          			</div>
 					        </div>
@@ -115,75 +116,86 @@
 	                	<!-- pagina pesquisa -->
 	                	
 	                	<h:panelGroup id="contentPanel" >
-	                	
-	                		<div id="searchResult" layout="block">
-					          	<div id="content"   style="top:30px;background-color: white;box-shadow:none; line-height: 1.2;font-size: 14px;padding-bottom: 0px !important;margin-bottom: 0px !important;"  >
-									<div style="margin-left:auto; margin-right:auto; width:95%;" >
-										<h2 class="page-header"  >
-											Youtube
-										</h2>
-										<ul class="bxslider">
-											<ui:repeat var="item" value="#{pesquisaBean.resultadoPesquisa}" varStatus="myVarStatus"  >
-												<li> 
-													<div >
-														<p:commandLink 
-																action="#{pesquisaBean.carregarDadosYoutube}" 
-																process="@this" 
-																update=":form:videoAba :form:contentPanel" 
-																onmousedown="playYoutube('#{item.id.videoId}');" >
-															<f:setPropertyActionListener target="#{pesquisaBean.youtubeVideoId}" value="#{item.id.videoId}"/>
-															<img class="thumbnailVideo" src="#{item.snippet.thumbnails.default.url}" /> <br/>
-														</p:commandLink>
-														<a  style="vertical-align: middle;max-width: 30px" >
-															#{item.snippet.title}
-														</a>
-													</div>
-												</li>
-											</ui:repeat>
-										</ul>
-										<h2 class="page-header"  >
-											Vimeo
-										</h2>
-										<ul class="bxslider">
-											<h:panelGroup  rendered="#{pesquisaBean.searchVideos.statusOk}" >
-												<ui:repeat var="item" value="#{pesquisaBean.searchVideos.videos.videos}" varStatus="myVarStatus"  >
+	                		<h:panelGroup id="searchPanel" >
+		                		<div id="searchResult">
+						          	<div id="content"   style="top:30px;background-color: white;box-shadow:none; line-height: 1.2;font-size: 14px;padding-bottom: 0px !important;margin-bottom: 0px !important;"  >
+										<div style="margin-left:auto; margin-right:auto; width:95%;" >
+											<h2 class="page-header"  >
+												Youtube
+											</h2>
+											<ul class="bxslider">
+												<ui:repeat var="item" value="#{pesquisaBean.resultadoPesquisa}" varStatus="myVarStatus"  >
 													<li> 
-														<div>
-															<p:commandLink  action="#{pesquisaBean.carregarDadosVimeo}" process="@this" update=":form:videoAba :form:contentPanel"  onmousedown="playVimeo(#{item.id});">
-																<f:setPropertyActionListener target="#{pesquisaBean.vimeoVideoId}" value="#{item.id}" />
-																<img class="thumbnailVideo" src="#{item.thumbnails.mediumThumbail.content}" /> <br/>
+														<div >
+															<p:commandLink 
+																	action="#{pesquisaBean.carregarDadosYoutube}" 
+																	process="@this" 
+																	update=":form:contentPanel" 
+																	onmousedown="playYoutube('#{item.id.videoId}');" >
+																<f:setPropertyActionListener target="#{pesquisaBean.youtubeVideoId}" value="#{item.id.videoId}"/>
+																<img class="thumbnailVideo" src="#{item.snippet.thumbnails.default.url}" /> <br/>
 															</p:commandLink>
-															#{item.title}<br/>
+															<a class="videoLinkTitle"   style="vertical-align: middle;max-width: 30px" >
+																#{item.snippet.title}
+															</a>
 														</div>
 													</li>
 												</ui:repeat>
-											</h:panelGroup>
-										</ul>
-									</div>
-								</div> 
-	                		</div>
+											</ul>
+											<h2 class="page-header"  >
+												Vimeo
+											</h2>
+											<ul class="bxslider">
+												<h:panelGroup  rendered="#{pesquisaBean.searchVideos.statusOk}" >
+													<ui:repeat var="item" value="#{pesquisaBean.searchVideos.videos.videos}" varStatus="myVarStatus"  >
+														<li> 
+															<div>
+																<p:commandLink  action="#{pesquisaBean.carregarDadosVimeo}" process="@this" update=":form:contentPanel"  onmousedown="playVimeo(#{item.id});">
+																	<f:setPropertyActionListener target="#{pesquisaBean.vimeoVideoId}" value="#{item.id}" />
+																	<img class="thumbnailVideo" src="#{item.thumbnails.mediumThumbail.content}" /> <br/>
+																</p:commandLink>
+																<div class="videoLinkTitle" >
+																	#{item.title}<br/>
+																</div>
+															</div>
+														</li>
+													</ui:repeat>
+												</h:panelGroup>
+											</ul>
+										</div>
+									</div> 
+		                		</div>
+	                		</h:panelGroup>
 							
 							<!-- Página do player -->
-							<div id="playerView" style="padding-top: 20px;" >
-							  <h:panelGroup id="player" >
-				            	<div class="item">
-					                <div class="container-fluid">
-					                    <div class="row">
-					                    	<h:panelGroup id="videoAba" >
-					                    				#{pesquisaBean.vimeoVideoId}
-					                    	</h:panelGroup>
-						                    			<!-- 1. The iframe (and video player) will replace this <div> tag. -->
-						                    			<a id="play-button" href="#" >play</a>
-						                    			<a id="pause-button" href="#" >pause</a>
-							                        	<div id="youtubePlayerWrapper"  />
-							                        	<div id="vimeoPlayerWrapper"   />
-					                        <div class="col-md-9">
-					                            <h2>Slide 2</h2>
-					                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, labore, magni illum nemo ipsum quod voluptates ab natus nulla possimus incidunt aut neque quaerat mollitia perspiciatis assumenda asperiores consequatur soluta.</p><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Animi, labore, magni illum nemo ipsum quod voluptates ab natus nulla possimus incidunt aut neque quaerat mollitia perspiciatis assumenda asperiores consequatur soluta.</p>
-					                        </div>
-					                    </div>
-					                </div>            
-				            	</div> 
+							<div id="playerView" style="padding-top: 20px;display: none;" >
+							  <h:panelGroup id="player" style="width:100%;" layout="block" >
+                    			<a id="play-button" href="#" >play</a>
+                    			<a id="pause-button" href="#" >pause</a>
+                    			
+                    			<div id="playerColumn">
+                    			<!-- All iframe´s players will be rendered here -->
+		                        	<div id="youtubePlayerWrapper"  />
+		                        	<div id="vimeoPlayerWrapper"   />
+                    			</div>
+		                        <div id="vimeoVideoInformations" style="display: #{pesquisaBean.showVimeo? 'block' : 'none' }"  >
+		                            <h2>#{pesquisaBean.vimeoVideo.title}</h2>
+		                            publicado em:
+		                            <h:outputText style="padding-left:5px" value="#{pesquisaBean.vimeoVideo.uploadDate}" >
+		                            </h:outputText>	 
+		                            <div style="float:right;" >
+		                            	views: #{pesquisaBean.vimeoVideo.numberOfPlays}
+		                            </div>	
+		                        </div>
+		                        <div id="youtubeVideoInformations" style="display: #{pesquisaBean.showYoutube? 'block' : 'none' }"  >
+		                            <h2>#{pesquisaBean.youtubeVideo.snippet.title}</h2>
+		                            publicado em:
+		                            <h:outputText style="padding-left:5px" value="#{pesquisaBean.vimeoVideo.uploadDate}" >
+		                            </h:outputText>	 
+		                            <div style="float:right;" >
+		                            	views: #{pesquisaBean.youtubeVideo.statistics.viewCount}
+		                            </div>	
+		                        </div>
 							  </h:panelGroup>
 							</div>
 						</h:panelGroup>
@@ -206,6 +218,8 @@
 	}
 	.thumbnailVideo{
 		width: 100% !important;
+		min-width:146px;
+		min-height:132px;
 		height: 98;
 	}
 	inverterDiv{
@@ -253,6 +267,9 @@
 }
 a:hover, a:focus{
 text-decoration: none;
+}
+.videoLinkTitle{
+	color: #2B2A3D;
 }
 </style>
 	<!--End Content-->
