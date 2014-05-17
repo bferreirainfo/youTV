@@ -65,7 +65,29 @@ version="2.5">
     <exception-type>javax.faces.application.ViewExpiredException</exception-type>
     <location>/views/login.faces</location>
   </error-page>
-  <welcome-file-list>
-    <welcome-file>/index.jsp</welcome-file>
-  </welcome-file-list>
+  
+   <servlet> 
+       <servlet-name>tomcatServlet</servlet-name> 
+       <servlet-class> 
+         org.apache.catalina.servlets.DefaultServlet
+       </servlet-class> 
+       <init-param> 
+           <param-name>debug</param-name> 
+           <param-value>1</param-value> 
+       </init-param> 
+       <init-param> 
+           <param-name>listings</param-name> 
+           <param-value>true</param-value> 
+       </init-param> 
+       <load-on-startup>1</load-on-startup> 
+   </servlet>
+   
+   <servlet-mapping>
+
+	<servlet-name>tomcatServlet</servlet-name>
+	
+	<url-pattern>/</url-pattern>
+
+	</servlet-mapping>
+    
 </web-app>

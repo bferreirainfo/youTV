@@ -14,6 +14,12 @@
 
 package com.google.api.services.samples.youtube.cmdline.data;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.samples.youtube.cmdline.Auth;
@@ -23,30 +29,24 @@ import com.google.api.services.youtube.model.VideoListResponse;
 import com.google.api.services.youtube.model.VideoSnippet;
 import com.google.common.collect.Lists;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Update a video by adding a keyword tag to its metadata. The demo uses the
- * YouTube Data API (v3) and OAuth 2.0 for authorization.
- *
+ * Update a video by adding a keyword tag to its metadata. The demo uses the YouTube Data API (v3)
+ * and OAuth 2.0 for authorization.
+ * 
  * @author Ibrahim Ulukaya
  */
 public class UpdateVideo {
 
     /**
-     * Define a global instance of a Youtube object, which will be used
-     * to make YouTube Data API requests.
+     * Define a global instance of a Youtube object, which will be used to make YouTube Data API
+     * requests.
      */
     private static YouTube youtube;
 
     /**
-     * Add a keyword tag to a video that the user specifies. Use OAuth 2.0 to
-     * authorize the API request.
-     *
+     * Add a keyword tag to a video that the user specifies. Use OAuth 2.0 to authorize the API
+     * request.
+     * 
      * @param args command line args (not used).
      */
     public static void main(String[] args) {
@@ -60,9 +60,9 @@ public class UpdateVideo {
             Credential credential = Auth.authorize(scopes, "updatevideo");
 
             // This object is used to make YouTube Data API requests.
-            youtube = new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
-                    .setApplicationName("youtube-cmdline-updatevideo-sample").build();
-
+            youtube =
+                    new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
+                            .setApplicationName("youtube-cmdline-updatevideo-sample").build();
             // Prompt the user to enter the video ID of the video being updated.
             String videoId = getVideoIdFromUser();
             System.out.println("You chose " + videoId + " to update.");
@@ -75,7 +75,6 @@ public class UpdateVideo {
             // retrieve the resource that represents the specified video.
             YouTube.Videos.List listVideosRequest = youtube.videos().list("snippet").setId(videoId);
             VideoListResponse listResponse = listVideosRequest.execute();
-
             // Since the API request specified a unique video ID, the API
             // response should return exactly one video. If the response does
             // not contain a video, then the specified video ID was not found.
@@ -109,8 +108,8 @@ public class UpdateVideo {
             System.out.println("  - Tags: " + videoResponse.getSnippet().getTags());
 
         } catch (GoogleJsonResponseException e) {
-            System.err.println("GoogleJsonResponseException code: " + e.getDetails().getCode() + " : "
-                    + e.getDetails().getMessage());
+            System.err.println("GoogleJsonResponseException code: " + e.getDetails().getCode()
+                    + " : " + e.getDetails().getMessage());
             e.printStackTrace();
         } catch (IOException e) {
             System.err.println("IOException: " + e.getMessage());

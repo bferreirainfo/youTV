@@ -1,82 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html
-	xmlns:html="http://www.w3.org/1999/xhtml"
  	xmlns:h="http://java.sun.com/jsf/html"
- 	
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 	<f:view contentType="text/html" locale="pt_BR">	
 	<h:head>
-		<title>EMPREL - <ui:insert name="titulo">ARTR</ui:insert></title>
-		
-		<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
-		<link rel="icon" href="img/favicon.ico" type="image/gif" />
-		<script type="text/javascript" src="#{request.contextPath}/js/primefaces_i18n.js"></script>
-		<script type="text/javascript" src="#{request.contextPath}/js/jquery.jcarousel.js"></script>
-		<script type="text/javascript" src="#{facesContext.externalContext.requestContextPath}/js/jquery.maskMoney.js"></script>
-		<script type="text/javascript" src="#{facesContext.externalContext.requestContextPath}/js/template.js" ></script>
-		<ui:insert name="head"></ui:insert>
 	</h:head>
 		<h:body>
 			<h:form>
-				
-				
-				<script type="text/javascript" src="#{facesContext.externalContext.requestContextPath}/js/swfobject.js" />    
-				  <div id="ytapiplayer">
-				    You need Flash player 8+ and JavaScript enabled to view this video.
-				  </div>
-				  
-				
-				<p:tabView id="tabView" dynamic="true" cache="true" >  
-					<p:ajax event="tabChange" listener="#{pesquisaBean.onTabChange}"/>
+				<input id="queryInput" value="http://localhost:8080/template/js/" />
+				<input id="term" />
+				<p:commandButton type="button" onclick="procurarArquivos(getInputValue('queryInput'))"  /><br/>
+				<textarea id="result" />
+					 <div id="includedContent" style="display: none;" >
+					 	
+					 </div>
+				<script>
+					function getInputValue(inputId){
+						return document.getElementById(inputId).value;
+					}
+					function procurarArquivos(url){
+						carregarPaginaDestino(url);
+					}
+					function carregarPaginaDestino(url){
+					      $("#includedContent").load(url,procurarLinks); 
+					    };
+					function procurarLinks(){
+						$('a[href*=".js"]').each(function() {
+							lerArquivo($(this).attr('href'));
+						});
+						
+					}
+					function lerArquivo(url){
+						var txtFile = new XMLHttpRequest();
+						txtFile.open("GET", url, true);
+						txtFile.onreadystatechange = function() {
+						  if (txtFile.readyState === 4) {  // Makes sure the document is ready to parse.
+						    if (txtFile.status === 200) {  // Makes sure it's found the file.
+						      allText = txtFile.responseText; 
+						      lines = txtFile.responseText.split("\n"); // Will separate each line into an array
+						      lines.forEach(function(entry,index) {
+						    	  	column = entry.indexOf(getInputValue('term'));
+						    	  	if(column > -1){
+						    	  		getInputValue('result').value =(
+						    	  				'Encontrei: Arquivo: '+ url + " linha: " +  index + "na coluna" + entry.indexOf(getInputValue('term'))
+						    	  				);
+						    	  		
+						    	  	}
+						    	});
+						    }
+						  }
+						}
+						txtFile.send(null);
+					}
 					
-		   			 <p:tab id="tab1" title="Pequisa"  >  
-						<h:panelGrid id="panelGrid" columns="3" styleClass="formFields">
-						    <h:outputLabel value="Pesquisar" for="termoPesquisa"/>
-						    <p:inputText id="termoPesquisa"  value="#{pesquisaBean.termoPesquisa}" />
-							<p:commandButton value="Pesquisar" action="#{pesquisaBean.pesquisar}" process="panelGrid" update="panelGrid"/>
-							<br/>
-							<ui:repeat var="item" value="#{pesquisaBean.resultadoPesquisa}">
-								=============================================================<br/>
-								Primeiros  25 videos para termo "#{pesquisaBean.termoPesquisa}"<br/>
-								=============================================================<br/>
-								#{item.snippet.title}<br/>
-								<img src="#{item.snippet.thumbnails.default.url}" /> 
-								<br/>
-							</ui:repeat>
-							<br/>
-						</h:panelGrid>
-					</p:tab>
-					
-					<p:tab id="tab2" title="Upload Video">  
-						<p:fileUpload fileUploadListener="#{pesquisaBean.handleFileUpload}" mode="advanced" dragDropSupport="true" 
-                						  update="messages" fileLimit="1" allowTypes="/(\.|\/)(mp4)$/" />  
-  						    <p:growl id="messages" showDetail="true"/>  
-					</p:tab>
-					
-					<p:tab id="tab3" title="Meus uploads"  >  
-						<h:panelGrid id="panelGrid2" columns="1" styleClass="formFields">
-							<br/>
-							<ui:repeat var="item" value="#{pesquisaBean.myUploads}">
-								=============================================================<br/>
-								Primeiros 25 videos upados									 <br/>
-								=============================================================<br/>
-								#{item.snippet.title}<br/>
-								#{item.contentDetails.videoId}<br/>
-								<img src="#{item.snippet.thumbnails.default.url}" /> 
-								<iframe id="player" type="text/html" width="340" height="290"
-								  src="http://www.youtube.com/embed/#{item.contentDetails.videoId}"
-								  frameborder="0"></iframe>
-								<br/>
-							</ui:repeat>
-							<br/>
-						</h:panelGrid>
-					</p:tab>
-					
-				</p:tabView>
-				
+				</script>
 			</h:form>
 		</h:body>
 	</f:view>

@@ -1,5 +1,6 @@
 package presentation;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import com.google.api.services.samples.youtube.cmdline.data.MyUploads;
 import com.google.api.services.samples.youtube.cmdline.data.Search;
 import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.SearchResult;
+import com.google.common.collect.Lists;
 
 @Controller
 @Scope(WebApplicationContext.SCOPE_APPLICATION)
@@ -44,13 +46,22 @@ public class PesquisaBean {
         assistindo = "vimeo";
     }
 
-    public void carregarDadosYoutube() {
+    public void carregarDadosYoutube() throws IOException {
         for (SearchResult searchResult : resultadoPesquisa) {
             if (searchResult.getId().getVideoId().equals(youtubeVideoId)) {
                 youtubeVideo = searchResult;
             }
         }
         assistindo = "youtube";
+        List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/drive");
+        //        Credential credential = Auth.authorize(scopes, "readOnly");
+        //        YouTube youtube =
+        //                new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
+        //                        .setApplicationName("youtube-cmdline-uploadvideo-sample").build();
+        //
+        //        com.google.api.services.youtube.YouTube.Videos.List a =
+        //                youtube.videos().list("contentDetails,statistics").setId(youtubeVideoId);
+        //        System.out.println(a.execute());
     }
 
     public String consultarPagina() {

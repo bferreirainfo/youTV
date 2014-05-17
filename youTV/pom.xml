@@ -371,8 +371,8 @@
             <artifactId>google-collections</artifactId>
             <version>1.0</version>
         </dependency>
+        
 	</dependencies>
-
 	<repositories>
 
 		<!-- Spring Dependencies -->
@@ -419,10 +419,10 @@
 			</plugin>
 
 			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>tomcat-maven-plugin</artifactId>
-				<version>1.1</version>
-			</plugin>
+	         <groupId>org.apache.tomcat.maven</groupId>
+			<artifactId>tomcat7-maven-plugin</artifactId>
+	          <version>2.2</version>
+	        </plugin>
 
 		</plugins>
 	</build>
