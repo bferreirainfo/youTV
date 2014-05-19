@@ -107,6 +107,7 @@
 					function lerArquivo(url){
 						newElement = false;
 						var txtFile = new XMLHttpRequest();
+					
 						txtFile.open("GET", url, true);
 						txtFile.onreadystatechange = function() {
 						  if (txtFile.readyState === 4) {  // Makes sure the document is ready to parse.
