@@ -77,6 +77,19 @@
 							        $("#searchButton").click();
 							    }
 							});
+							function testando(){
+								$('.bx-wrapper').hover(function() {
+								    this.focus();
+								}, function() {
+								    this.blur();
+								}).keydown(function(e) {
+								    alert(e.keyCode);
+								});
+							}
+							
+							
+							
+							
 							
 						</script>
 							<div class="input-group" style="line-height:0px;padding:5.5px" >
@@ -116,7 +129,7 @@
 	                		<h:panelGroup id="searchPanel" >
 		                		<div id="searchResult">
 						          	<div id="content"   style="top:30px;background-color: white;box-shadow:none; line-height: 1.2;font-size: 14px;padding-bottom: 0px !important;margin-bottom: 0px !important;"  >
-										<div style="margin-left:auto; margin-right:auto; width:98%;padding-top:5px" >
+										<div style="margin-left:auto; margin-right:auto; width:98%;padding:1%" >
 											<h4>
 												Youtube
 											</h4>	
@@ -129,8 +142,8 @@
 																	process="@this" 
 																	update=":form:contentPanel" 
 																	onmousedown="playYoutube('#{item.id.videoId}');" >
-																<f:setPropertyActionListener target="#{pesquisaBean.youtubeVideoId}" value="#{item.id.videoId}"/>
-																<img class="thumbnailVideo" src="#{item.snippet.thumbnails.default.url}" /> <br/>
+																	<f:setPropertyActionListener target="#{pesquisaBean.youtubeVideoId}" value="#{item.id.videoId}"/>
+																	<img class="thumbnailVideo" src="#{item.snippet.thumbnails.default.url}" /> <br/>
 															</p:commandLink>
 															<a class="videoLinkTitle"   style="vertical-align: middle;max-width: 30px" >
 																#{item.snippet.title}
@@ -168,7 +181,7 @@
 	                		</h:panelGroup>
 							
 							<!-- Página do player -->
-							<div id="playerView" style="padding-top: 20px;display: none;padding: 2%;" >
+							<div id="playerView" style="padding-top: 20px;display: none;padding: 1%;" >
 							  <h:panelGroup id="player" style="width:100%;" layout="block" >
                     			<a id="play-button" href="#" >play</a>
                     			<a id="pause-button" href="#" >pause</a>
@@ -177,19 +190,20 @@
                     			<!-- All iframe´s players will be rendered here -->
 		                        	<div id="youtubePlayerWrapper"  />
 		                        	<div id="vimeoPlayerWrapper"   />
+		                        	<div id="vimeoVideoInformations" style="display: #{pesquisaBean.showVimeo? 'block' : 'none' }"  >
+			                            <h2>#{pesquisaBean.vimeoVideo.title}</h2>
+			                            publicado em:
+			                            <h:outputText style="padding-left:5px" value="#{pesquisaBean.vimeoVideo.uploadDate}" >
+			                            </h:outputText>	 
+			                            <div style="float:right;" >
+			                            	views: #{pesquisaBean.vimeoVideo.numberOfPlays}
+			                            </div>	
+			                        </div>
                     			</div>
-		                        <div id="vimeoVideoInformations" style="display: #{pesquisaBean.showVimeo? 'block' : 'none' }"  >
-		                            <h2>#{pesquisaBean.vimeoVideo.title}</h2>
-		                            publicado em:
-		                            <h:outputText style="padding-left:5px" value="#{pesquisaBean.vimeoVideo.uploadDate}" >
-		                            </h:outputText>	 
-		                            <div style="float:right;" >
-		                            	views: #{pesquisaBean.vimeoVideo.numberOfPlays}
-		                            </div>	
-		                        </div>
+		                        
 		                        <div id="youtubeVideoInformations" style="display: #{pesquisaBean.showYoutube? 'block' : 'none' }"  >
 		                            <h2>#{pesquisaBean.youtubeVideo.snippet.title}</h2>
-		                            publicado em:
+		                            	publicado em:
 		                            <h:outputText style="padding-left:5px" value="#{pesquisaBean.vimeoVideo.uploadDate}" >
 		                            </h:outputText>	 
 		                            <div style="float:right;" >
@@ -270,6 +284,42 @@ text-decoration: none;
 }
 .videoLinkTitle{
 	color: #2B2A3D;
+}
+.arrow{
+	display:none;
+	border-bottom: solid 30px transparent;
+	border-top: solid 30px transparent;
+	margin-top: -30px;
+	content: " ";
+	display: block;
+	top: 50%;
+	left: 50%;
+	position: absolute;
+}
+.bx-prev::before{
+	border-right: solid 22px #BE4040;
+	margin-left: 1px;
+	border-bottom: solid 22px transparent;
+	border-top: solid 22px transparent;
+	margin-top: -30px;
+	content: " ";
+	display: block;
+	top: 50%;
+	left: 19%;
+	position: absolute;
+}
+
+.bx-next::before{
+	border-left: solid 22px #BE4040;
+	margin-left: 1px;
+	border-bottom: solid 22px transparent;
+	border-top: solid 22px transparent;
+	margin-top: -30px;
+	content: " ";
+	display: block;
+	top: 50%;
+	left: 19%;
+	position: absolute;
 }
 </style>
 	<!--End Content-->

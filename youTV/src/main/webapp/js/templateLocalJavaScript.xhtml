@@ -42,10 +42,13 @@ click('searchLTabLink');
 		  minSlides: 2,
 		  maxSlides: 99,
 		  slideMargin: 10,
+		  infiniteLoop: false,
+		  hideControlOnEnd: true,
+		  hideControlOnStart: true
 		  });
 		  $('.bx-wrapper').css('margin','0 auto 5px 3px');
-		  $('.bx-default-pager').css('position','relative').css('top','-50px');
-		}
+		  $('.bx-wrapper').each(function(index){$(this).attr('tabindex',index);});
+	}
 // ============================== Abas =======================================		
 			
 		
@@ -57,6 +60,8 @@ click('searchLTabLink');
 			this.youtubeVideoId = youtubeVideoId;
 			updateUrl('youtube',youtubeVideoId);
 			if(player == null){
+			//ao esconder o player uma mensagem de erro será gerada se tentar usa-lo, portanto devemos exbir antes de utiliza-lo.
+				visualizarApenasPlayer('youtubePlayerWrapper');
 			 //construir o objeto do iframe
 			 // 2. This code loads the IFrame Player API code asynchronously.
 			 	
@@ -65,11 +70,12 @@ click('searchLTabLink');
 			    tag.src = "https://www.youtube.com/iframe_api";
 			    var firstScriptTag = document.getElementsByTagName('script')[0];
 			    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-			    
 			}else{
-				document.getElementById('viewTabLink').click();
-				visualizarApenasPlayer('youtubePlayerWrapper',player.stop);
+				//ao esconder o player uma mensagem de erro será gerada se tentar usa-lo, portanto devemos exbir antes de utiliza-lo.
+				visualizarApenasPlayer('youtubePlayerWrapper');
 				currenctlyPlayerStopCommand = function () {player.stopVideo();} ;
+				//sempre redimensiona
+				player.setSize(Math.round($(window).width()*0.75),Math.round($(window).height()*0.65));
 				player.loadVideoById(youtubeVideoId);
 			}
 		}
@@ -78,6 +84,8 @@ click('searchLTabLink');
 		function onYouTubeIframeAPIReady() {
 		    player = new YT.Player('youtubePlayerWrapper', {
 		        videoId: youtubeVideoId,
+		        width:Math.round($(window).width()*0.75),
+		        height:Math.round($(window).height()*0.65),
 		        events: {
 		            'onReady': onYoutubePlayerReady,
 		          }
@@ -85,16 +93,13 @@ click('searchLTabLink');
 		    }
 		    
 		function onYoutubePlayerReady(event){
-			event.target.playVideo();
-			document.getElementById('viewTabLink').click();
-		 	visualizarApenasPlayer('youtubePlayerWrapper');
 		    currenctlyPlayerStopCommand = function () {player.stopVideo();} ;
-			player.setSize($(window).width()*0.75,$(window).height()*0.65);
+			event.target.playVideo();
 		}
 // ============================== Vimeo =======================================	
 
 function playVimeo(videoVimeoId){
-	
+   visualizarApenasPlayer('vimeoPlayerWrapper');
    var videoUrl = 'http://www.vimeo.com/'+videoVimeoId+'api=1&amp;player_id=vimeoIframe';
    // This is the oEmbed endpoint for Vimeo (we're using JSON)
    // (Vimeo also supports oEmbed discovery. See the PHP example.)
@@ -103,7 +108,7 @@ function playVimeo(videoVimeoId){
    // Tell Vimeo what function to call
    var callback = 'embedVideo';
    // Put together the URL
-   var url = endpoint + '?url=' + encodeURIComponent(videoUrl) + '&amp;callback=' + callback + '&amp;width='+ $(window).width()*0.75 + '&amp;autoplay=true';
+   var url = endpoint + '?url=' + encodeURIComponent(videoUrl) + '&amp;callback=' + callback + '&amp;width='+ Math.round($(window).width()*0.75) + '&amp;height='+ Math.round($(window).height()*0.65) + '&amp;autoplay=true';
    // This function puts the video on the page
     
    var js = document.createElement('script');
@@ -137,8 +142,6 @@ function onVimeoPlayerRead(){
 	pauseButton.addEventListener("click", function() {
 	  vimeoPlayer.api("pause");
 	});
-	document.getElementById('viewTabLink').click();
-	visualizarApenasPlayer('vimeoPlayerWrapper');
 	currenctlyPlayerStopCommand = function() {vimeoPlayer.api("unload")};
 }
 // ============================== Controle Abas =======================================	
@@ -172,6 +175,7 @@ function visualizarApenasPlayer(playerWrapper){
 			hiddeElementById(wrapper);
 		}
 	});
+	document.getElementById('viewTabLink').click();
 }
 function hiddeElementById(playerWrapper){
 	document.getElementById(playerWrapper).style.display='none';
