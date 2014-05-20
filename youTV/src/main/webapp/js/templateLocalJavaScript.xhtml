@@ -1,4 +1,11 @@
 <script>
+//============================== OnPageLoad =======================================
+$(document).ready(function(){
+click('searchLTabLink');
+	
+	
+	
+});
 
 // ============================== ProgressBar =======================================
 	//configurando  progress bar
@@ -24,14 +31,13 @@
 	}
 // ============================== Slidebar =======================================		
 	$(window).ready(function(){
-		 display('searchResult');
 		  //bx slider configuration
 		  loadBxSlider();
 		});
 		function loadBxSlider(){
 		  $('.bxslider').bxSlider({
 		  adaptiveHeight: true,
-		  slideWidth: 176,
+		  slideWidth: 200,
 		  slideHeight: 500,
 		  minSlides: 2,
 		  maxSlides: 99,
@@ -54,13 +60,14 @@
 			 //construir o objeto do iframe
 			 // 2. This code loads the IFrame Player API code asynchronously.
 			 	
+			 
 			    var tag = document.createElement('script');
 			    tag.src = "https://www.youtube.com/iframe_api";
 			    var firstScriptTag = document.getElementsByTagName('script')[0];
 			    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 			    
 			}else{
-				document.getElementById('assistindoLink').click();
+				document.getElementById('viewTabLink').click();
 				visualizarApenasPlayer('youtubePlayerWrapper',player.stop);
 				currenctlyPlayerStopCommand = function () {player.stopVideo();} ;
 				player.loadVideoById(youtubeVideoId);
@@ -79,7 +86,7 @@
 		    
 		function onYoutubePlayerReady(event){
 			event.target.playVideo();
-			document.getElementById('assistindoLink').click();
+			document.getElementById('viewTabLink').click();
 		 	visualizarApenasPlayer('youtubePlayerWrapper');
 		    currenctlyPlayerStopCommand = function () {player.stopVideo();} ;
 			player.setSize($(window).width()*0.75,$(window).height()*0.65);
@@ -96,7 +103,7 @@ function playVimeo(videoVimeoId){
    // Tell Vimeo what function to call
    var callback = 'embedVideo';
    // Put together the URL
-   var url = endpoint + '?url=' + encodeURIComponent(videoUrl) + '&amp;callback=' + callback + '&amp;width=640' + '&amp;autoplay=true';
+   var url = endpoint + '?url=' + encodeURIComponent(videoUrl) + '&amp;callback=' + callback + '&amp;width='+ $(window).width()*0.75 + '&amp;autoplay=true';
    // This function puts the video on the page
     
    var js = document.createElement('script');
@@ -130,7 +137,7 @@ function onVimeoPlayerRead(){
 	pauseButton.addEventListener("click", function() {
 	  vimeoPlayer.api("pause");
 	});
-	document.getElementById('assistindoLink').click();
+	document.getElementById('viewTabLink').click();
 	visualizarApenasPlayer('vimeoPlayerWrapper');
 	currenctlyPlayerStopCommand = function() {vimeoPlayer.api("unload")};
 }
@@ -138,8 +145,8 @@ function onVimeoPlayerRead(){
 function display(abaId){
 	if(abaAtual != null){
 		hiddeElementById(abaAtual);
-		showElementById(abaId);
 	}
+	showElementById(abaId);
 	abaAtual=abaId;
 }
 var abaAtual;
@@ -172,6 +179,8 @@ function hiddeElementById(playerWrapper){
 function showElementById(playerWrapper){
 	document.getElementById(playerWrapper).style.display='block';
 }
-
+function click(id){
+	document.getElementById(id).click();
+}
 
 </script>

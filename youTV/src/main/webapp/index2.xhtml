@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html
+ 	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	<head>
+		<SCRIPT type="text/javascript" src="jquery-1.11.0.js" />
+			
+	</head>
+		<body>
+			<form>
+				<input id="queryInput" value="http://localhost:8080/template/js/" style="width: 300px " />
+				<input id="term" style="width: 300px" value="sistema" />
+				<button type="button" onclick="procurarArquivos(getInputValue('queryInput'))" value="pesquisar" /><br/>
+				<textarea id="result"  style="width: 300px;height: 500px"  />
+					 <div id="includedContent" style="display: none;" >
+					 	
+					 </div>
+				<script>
+					function getInputValue(inputId){
+						return document.getElementById(inputId).value;
+					}
+					function procurarArquivos(url){
+						carregarPaginaDestino(url);
+					}
+					function carregarPaginaDestino(url){
+					      $("#includedContent").load(url,procurarLinks); 
+					    };
+					function procurarLinks(){
+						$('a[href*=".js"]').each(function() {
+							lerArquivo($(this).attr('href'));
+						});
+						
+					}
+					function lerArquivo(url){
+						var txtFile = new XMLHttpRequest();
+						txtFile.open("GET", url, true);
+						txtFile.onreadystatechange = function() {
+						  if (txtFile.readyState === 4) {  // Makes sure the document is ready to parse.
+						    if (txtFile.status === 200) {  // Makes sure it's found the file.
+						      allText = txtFile.responseText; 
+						      lines = txtFile.responseText.split("\n"); // Will separate each line into an array
+						      lines.forEach(function(entry,index) {
+						    	  	column = entry.indexOf(getInputValue('term'));
+						    	  	if(column > -1){
+						    	  		document.getElementById('result').value =(
+						    	  				 url + " linha: " +  index + " na coluna " + entry.indexOf(getInputValue('term'))
+						    	  				);
+						    	  		
+						    	  	}
+						    	});
+						    }
+						  }
+						}
+						txtFile.send(null);
+					}
+					
+				</script>
+			</form>
+		</body>
+</html>

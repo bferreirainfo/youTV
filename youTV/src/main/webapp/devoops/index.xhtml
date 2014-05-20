@@ -13,7 +13,6 @@
 		<meta name="description" content="description"/>
 		<meta name="author" content="DevOOPS"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<link href="plugins/bootstrap/bootstrap.css" rel="stylesheet"/>
 		<link href="plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet"/>
 		<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
 		<link href='http://fonts.googleapis.com/css?family=Righteous' rel='stylesheet' type='text/css'/>
@@ -21,6 +20,7 @@
 		<link href="plugins/fullcalendar/fullcalendar.css" rel="stylesheet"/>
 		<link href="plugins/xcharts/xcharts.min.css" rel="stylesheet"/>
 		<link href="plugins/select2/select2.css" rel="stylesheet"/>
+		<link href="#{request.contextPath}/bootstrap-3.1.1-dist/css/bootstrap.css" rel="stylesheet"/>
 		<!-- css template DevOOPS -->
 		<link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
 		<!-- imports bxSlider  -->
@@ -50,10 +50,25 @@
 <header class="navbar">
 	<div class="container-fluid expanded-panel">
 		<div class="row"  >
-			<div id="logo" class="col-xs-12 col-sm-2"  style="width: 20%" >
-				<a href="index.faces" style="font-size: 15px;" >YouTV versão 0.1 Alpha@</a>
+			<div class="col-xs-12 col-sm-1" style="background: #BE4040;height: 50px;width: 10%;font-color:white;"  >
 			</div>
-			<div id="top-panel" class="col-xs-12 col-sm-10" style="width: 80%;background: #BE4040" >
+			<div class="col-xs-12 col-sm-2"  style="width: 45%;background: #BE4040" >
+				<div class="cbp-hsmenu-wrapper" id="cbp-hsmenu-wrapper" style="height: 50px;top: 10px;left: 250px;" >
+						<ul class="cbp-hsmenu" style="margin: 0px" >
+							<li>
+								<a id="searchLTabLink" href="#" class="menulink" onclick="display('searchResult');" >Pesquisa</a>
+								<ul class="cbp-hssubmenu">
+								</ul>
+							</li>
+							<li>
+								<a  id="viewTabLink" href="#" onclick="display('playerView');" >Assistindo</a>
+								<ul class="cbp-hssubmenu">
+								</ul>
+							</li>
+						</ul>
+				</div>
+			</div>
+			<div id="top-panel" class="col-xs-12 col-sm-3" style="width: 45%;height: 50px;background: #BE4040" >
 					<div  style="width:80%;height:20px;"  >
 						<div id="search" style="height: 50px;" >
 						<script>
@@ -67,17 +82,16 @@
 							<div class="input-group" style="line-height:0px;padding:5.5px" >
 						           <p:inputText styleClass="form-control" id="searchTerm" style="width:100%;background:white;float:none;height:40px;" type="text" value="#{pesquisaBean.searchTerm}" />
 						          	<div class="input-group-addon"  >
-						          		<span class="input-group-btn">
+						          		<div class="input-group-btn">
 								            <p:commandButton 
 								            		 id="searchButton" 
-								            		 style="margin:0px"
-								            		 styleClass="btn btn-default"
+								            		 style="margin:0px;"
 													 action="#{pesquisaBean.pesquisar}" 
 													 process="@this searchTerm" 
-													 value="Pesquisar"
 													 onclick="display('searchResult');"
-													 update="searchPanel"/>
-						 				</span>
+													 update="searchPanel" />
+													 
+									   </div>
 				          			</div>
 					        </div>
 						</div>
@@ -85,31 +99,14 @@
 			</div>
 		</div>
 	</div>
-	<nav class="cbp-hsmenu-wrapper" id="cbp-hsmenu-wrapper">
-	<div class="cbp-hsinner">
-		<ul class="cbp-hsmenu">
-			<li>
-				<a href="#" class="menulink" onclick="display('searchResult');" >Pesquisa</a>
-				<ul class="cbp-hssubmenu">
-				</ul>
-			</li>
-			<li>
-				<a  id="assistindoLink" href="#" onclick="display('playerView');" >Assistindo</a>
-				<ul class="cbp-hssubmenu">
-				</ul>
-			</li>
-		</ul>
-	</div>
-</nav>
 </header>
 
 <!--End Header-->
 <!--Start Container-->
 <h:panelGroup id="main" class="container-fluid" layout="block" >
-	<div class="row"  style="padding : 35px 50px 2px 50px; background:white">
+	<div class="row"  style="background:white">
 		<!--Start Content-->
 		<div id="custom_carousel" class="carousel slide" data-ride="carousel" data-interval="0" >
-		
 	        <!-- conteudo dos menus -->
 	        	<!-- menu ativo inicial no caso data-slide-to="0" -->
 	                <div class="container-fluid" style="padding-left:1px;padding-right: 1px;" >
@@ -119,10 +116,10 @@
 	                		<h:panelGroup id="searchPanel" >
 		                		<div id="searchResult">
 						          	<div id="content"   style="top:30px;background-color: white;box-shadow:none; line-height: 1.2;font-size: 14px;padding-bottom: 0px !important;margin-bottom: 0px !important;"  >
-										<div style="margin-left:auto; margin-right:auto; width:95%;" >
-											<h2 class="page-header"  >
+										<div style="margin-left:auto; margin-right:auto; width:98%;padding-top:5px" >
+											<h4>
 												Youtube
-											</h2>
+											</h4>	
 											<ul class="bxslider">
 												<ui:repeat var="item" value="#{pesquisaBean.resultadoPesquisa}" varStatus="myVarStatus"  >
 													<li> 
@@ -142,9 +139,9 @@
 													</li>
 												</ui:repeat>
 											</ul>
-											<h2 class="page-header"  >
+											<h4>
 												Vimeo
-											</h2>
+											</h4>
 											<ul class="bxslider">
 												<h:panelGroup  rendered="#{pesquisaBean.searchVideos.statusOk}" >
 													<ui:repeat var="item" value="#{pesquisaBean.searchVideos.videos.videos}" varStatus="myVarStatus"  >
@@ -157,6 +154,9 @@
 																<div class="videoLinkTitle" >
 																	#{item.title}<br/>
 																</div>
+																<div class="videoLinkTitle" style="float:right" >
+																	views: #{item.numberOfPlays}<br/>
+																</div>
 															</div>
 														</li>
 													</ui:repeat>
@@ -168,12 +168,12 @@
 	                		</h:panelGroup>
 							
 							<!-- Página do player -->
-							<div id="playerView" style="padding-top: 20px;display: none;" >
+							<div id="playerView" style="padding-top: 20px;display: none;padding: 2%;" >
 							  <h:panelGroup id="player" style="width:100%;" layout="block" >
                     			<a id="play-button" href="#" >play</a>
                     			<a id="pause-button" href="#" >pause</a>
                     			
-                    			<div id="playerColumn">
+                    			<div id="playerColumn"  >
                     			<!-- All iframe´s players will be rendered here -->
 		                        	<div id="youtubePlayerWrapper"  />
 		                        	<div id="vimeoPlayerWrapper"   />
