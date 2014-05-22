@@ -29,9 +29,8 @@ click('searchLTabLink');
 		},
 	});
 	}
-// ============================== Slidebar =======================================		
-	$(window).ready(function(){
-		  //bx slider configuration
+// ============================== bx slider configuration =======================================		
+		$(window).ready(function(){
 		  loadBxSlider();
 		});
 		function loadBxSlider(){
@@ -44,10 +43,12 @@ click('searchLTabLink');
 		  slideMargin: 10,
 		  infiniteLoop: false,
 		  hideControlOnEnd: true,
-		  hideControlOnStart: true
+		  hideControlOnStart: true,
+		  onSliderLoad: function(){
+			  $('.bx-wrapper').css('margin','0 auto 5px 3px');
+			  //$('.bx-wrapper').each(function(index){$(this).attr('tabindex',index);});
+		 	 }
 		  });
-		  $('.bx-wrapper').css('margin','0 auto 5px 3px');
-		  $('.bx-wrapper').each(function(index){$(this).attr('tabindex',index);});
 	}
 // ============================== Abas =======================================		
 			

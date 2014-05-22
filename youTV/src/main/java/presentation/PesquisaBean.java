@@ -13,15 +13,19 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.WebApplicationContext;
 
+import business.usuario.VideoView;
 import business.usuario.VimeoService;
 import business.usuario.VimeoVideo;
 import business.usuario.VimeoVideoSearchResult;
 
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.services.samples.youtube.cmdline.Auth;
 import com.google.api.services.samples.youtube.cmdline.data.MyUploads;
 import com.google.api.services.samples.youtube.cmdline.data.Search;
+import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.SearchResult;
-import com.google.common.collect.Lists;
 
 @Controller
 @Scope(WebApplicationContext.SCOPE_APPLICATION)
@@ -36,6 +40,7 @@ public class PesquisaBean {
     private String assistindo;
     private SearchResult youtubeVideo;
     private static final String FACES_REDIRECT = "?faces-redirect=true";
+    private VideoView videoView;
 
     public void carregarDadosVimeo() {
         for (VimeoVideo video : searchVideos.getVideos().getVideos()) {
@@ -44,24 +49,27 @@ public class PesquisaBean {
             }
         }
         assistindo = "vimeo";
+        System.out.println("carregarDadosVimeo");
     }
 
     public void carregarDadosYoutube() throws IOException {
+        System.out.println("carregarDadosYoutube");
         for (SearchResult searchResult : resultadoPesquisa) {
             if (searchResult.getId().getVideoId().equals(youtubeVideoId)) {
                 youtubeVideo = searchResult;
             }
         }
         assistindo = "youtube";
-        List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/drive");
-        //        Credential credential = Auth.authorize(scopes, "readOnly");
-        //        YouTube youtube =
-        //                new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
-        //                        .setApplicationName("youtube-cmdline-uploadvideo-sample").build();
-        //
-        //        com.google.api.services.youtube.YouTube.Videos.List a =
-        //                youtube.videos().list("contentDetails,statistics").setId(youtubeVideoId);
-        //        System.out.println(a.execute());
+        YouTube youtube =
+                new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY,
+                        new HttpRequestInitializer() {
+                            public void initialize(HttpRequest request) throws IOException {
+                            }
+                        }).setApplicationName("youtube-cmdline-search-sample").build();
+
+        com.google.api.services.youtube.YouTube.Videos.List a =
+                youtube.videos().list("contentDetails,statistics").setId(youtubeVideoId);
+        System.out.println(a.execute());
     }
 
     public String consultarPagina() {
@@ -163,6 +171,14 @@ public class PesquisaBean {
 
     public String getAssistindo() {
         return assistindo;
+    }
+
+    public VideoView getVideoView() {
+        return videoView;
+    }
+
+    public void setVideoView(VideoView videoView) {
+        this.videoView = videoView;
     }
 
     public void setAssistindo(String assistindo) {
