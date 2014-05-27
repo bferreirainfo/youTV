@@ -62,7 +62,7 @@ public class UpdateVideo {
             // This object is used to make YouTube Data API requests.
             youtube =
                     new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
-                            .setApplicationName("youtube-cmdline-updatevideo-sample").build();
+                            .setApplicationName("youtv1988").build();
             // Prompt the user to enter the video ID of the video being updated.
             String videoId = getVideoIdFromUser();
             System.out.println("You chose " + videoId + " to update.");

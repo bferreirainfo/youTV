@@ -1,55 +1,49 @@
 <script>
 //============================== OnPageLoad =======================================
-$(document).ready(function(){
+$(window).ready(function(){
+loadBxSlider();
 click('searchLTabLink');
-	
-	
-	
 });
-
+//============================== OnAjaxComplete =======================================
 // ============================== ProgressBar =======================================
 	//configurando  progress bar
-	function nada(){
-	NProgress.configure({ ease: 'ease', speed: 500 , showSpinner: false});
-	$( document ).ajaxStart(function() {
+	NProgress.configure({speed:500, showSpinner: false});
+	$(document).ajaxStart(function() {
 		NProgress.start();
 		$('.bar').css('margin-top','52px');
+		NProgress.set(0.5);
 	});
-	$.ajax({
-			url: '././index.faces',
-			type: 'GET',
-			xhrFields: {
-			onprogress: function (e) {
-				if (e.lengthComputable) {
-					alert("10");
-					console.log((e.loaded / e.total));
-					NProgress.set((e.loaded / e.total));
-				}
-			}
-		},
+	$(document).ajaxComplete(function() {
+		NProgress.done();
 	});
-	}
+	
 // ============================== bx slider configuration =======================================		
-		$(window).ready(function(){
-		  loadBxSlider();
-		});
+		// Api  http://bxslider.com/options 
+		var bxSlider;
+		var sliderSettings =  {
+			  slideWidth: 200,
+			  slideHeight: 500,
+			  minSlides: 2,
+			  maxSlides: 99,
+			  slideMargin: 10,
+			  infiniteLoop: false,
+			  hideControlOnEnd: true,
+			  hideControlOnStart: true,
+			  onSliderLoad: function(){
+				  $('.bx-wrapper').css('margin','0 auto 5px 3px');
+				  //adicionar funcões no on focus
+				  //$('.bx-wrapper').each(function(index){$(this).attr('tabindex',index);});
+	 			 }
+			};
 		function loadBxSlider(){
-		  $('.bxslider').bxSlider({
-		  adaptiveHeight: true,
-		  slideWidth: 200,
-		  slideHeight: 500,
-		  minSlides: 2,
-		  maxSlides: 99,
-		  slideMargin: 10,
-		  infiniteLoop: false,
-		  hideControlOnEnd: true,
-		  hideControlOnStart: true,
-		  onSliderLoad: function(){
-			  $('.bx-wrapper').css('margin','0 auto 5px 3px');
-			  //$('.bx-wrapper').each(function(index){$(this).attr('tabindex',index);});
-		 	 }
-		  });
-	}
+		  this.bxSlider =  $('.bxslider').bxSlider(sliderSettings);
+		}
+		function reloadSlider(){
+			//this.bxSlider.reloadSlider($.extend(sliderSettings,{startSlide:bxSlider.getCurrentSlide()}));
+		}
+		function resizeSlider(){
+			bxSlider.resize();
+		}
 // ============================== Abas =======================================		
 			
 		
@@ -58,27 +52,22 @@ click('searchLTabLink');
 		var youtubeVideoId;
 		
 		function playYoutube(youtubeVideoId){
-			this.youtubeVideoId = youtubeVideoId;
-			updateUrl('youtube',youtubeVideoId);
-			if(player == null){
-			//ao esconder o player uma mensagem de erro será gerada se tentar usa-lo, portanto devemos exbir antes de utiliza-lo.
-				visualizarApenasPlayer('youtubePlayerWrapper');
-			 //construir o objeto do iframe
-			 // 2. This code loads the IFrame Player API code asynchronously.
-			 	
-			 
-			    var tag = document.createElement('script');
-			    tag.src = "https://www.youtube.com/iframe_api";
-			    var firstScriptTag = document.getElementsByTagName('script')[0];
-			    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-			}else{
+				this.youtubeVideoId = youtubeVideoId;
 				//ao esconder o player uma mensagem de erro será gerada se tentar usa-lo, portanto devemos exbir antes de utiliza-lo.
 				visualizarApenasPlayer('youtubePlayerWrapper');
-				currenctlyPlayerStopCommand = function () {player.stopVideo();} ;
-				//sempre redimensiona
-				player.setSize(Math.round($(window).width()*0.75),Math.round($(window).height()*0.65));
-				player.loadVideoById(youtubeVideoId);
-			}
+				 //construir o objeto do iframe
+				 // 2. This code loads the IFrame Player API code asynchronously.
+			 	if(player == null){
+				    var tag = document.createElement('script');
+				    tag.src = "https://www.youtube.com/iframe_api";
+				    var firstScriptTag = document.getElementsByTagName('script')[0];
+				    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+			 	}else{
+			 		player.loadVideoById(youtubeVideoId);
+					currenctlyPlayerStopCommand = function () {player.stopVideo();} ;
+			 	}
+				updateUrl('youtube',youtubeVideoId);
+			    currenctlyPlayerWrapper = 'youtubePlayerWrapper';
 		}
 		// 3. This function creates an iframe (and YouTube player)
 		//	  after the API code downloads.
@@ -121,29 +110,31 @@ function playVimeo(videoVimeoId){
    updateUrl('vimeo',videoVimeoId);
    
 }
-var vimeoPlayer
 //this function will be called after playVimeo(videoVimeoId); 
+var vimeoPlayer
 function embedVideo(video) {
 	video.html = video.html.substring(0,7) + ' id="vimeoIframe"' + video.html.substring(7);
     document.getElementById('vimeoPlayerWrapper').innerHTML = unescape(video.html);
     
      var vimeoIframe = document.getElementById('vimeoIframe');
 	 vimeoPlayer = $f(vimeoIframe);
+	//When player is ready it will call 'onVimeoPlayerRead()'
 	 vimeoPlayer.addEvent('ready', onVimeoPlayerRead());
 }
 function onVimeoPlayerRead(){
-	//When player is ready it will call 'exibirAbaAssistir'
 	 
-	var playButton = document.getElementById("play-button");
-	playButton.addEventListener("click", function() {
-	  vimeoPlayer.api("play");
-	});
+	//var playButton = document.getElementById("play-button");
+	//playButton.addEventListener("click", function() {
+	//  vimeoPlayer.api("play");
+	//});
 	
-	var pauseButton = document.getElementById("pause-button");
-	pauseButton.addEventListener("click", function() {
-	  vimeoPlayer.api("pause");
-	});
+	//var pauseButton = document.getElementById("pause-button");
+	//pauseButton.addEventListener("click", function() {
+	//  vimeoPlayer.api("pause");
+	//});
 	currenctlyPlayerStopCommand = function() {vimeoPlayer.api("unload")};
+	currenctlyPlayerWrapper = 'vimeoPlayerWrapper';
+	
 }
 // ============================== Controle Abas =======================================	
 function display(abaId){
@@ -159,24 +150,14 @@ function updateUrl(action,value){
 	history.pushState(null, null, 'index.faces?' + action + '=' + value);
 }
 var currenctlyPlayerStopCommand;
-
+var currenctlyPlayerWrapper;
 function visualizarApenasPlayer(playerWrapper){
 	if(currenctlyPlayerStopCommand != null){
 		currenctlyPlayerStopCommand();
+		hiddeElementById(currenctlyPlayerWrapper);
 	}
-	var wrappers = [
-	    "youtubePlayerWrapper",
-	    "vimeoPlayerWrapper",
-	];
-	
-	wrappers.forEach(function(wrapper) {
-	   if(playerWrapper == wrapper){
-			showElementById(wrapper);
-		}else{
-			hiddeElementById(wrapper);
-		}
-	});
-	document.getElementById('viewTabLink').click();
+	showElementById(playerWrapper);
+	click('viewTabLink');
 }
 function hiddeElementById(playerWrapper){
 	document.getElementById(playerWrapper).style.display='none';
@@ -188,4 +169,13 @@ function click(id){
 	document.getElementById(id).click();
 }
 
+function testando(){
+	$('.bx-wrapper').hover(function() {
+	    this.focus();
+	}, function() {
+	    this.blur();
+	}).keydown(function(e) {
+	    alert(e.keyCode);
+	});
+}
 </script>

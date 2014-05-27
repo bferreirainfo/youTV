@@ -1,18 +1,15 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>  
-		<script type="text/javascript" src='js/jquery.js'></script>
-		<script type="text/javascript" src='js/jquery.dataTables.js'></script>
+		<script type="text/javascript" src='http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js'></script>
+		<script type="text/javascript" src='jquery.dataTables.min.js'></script>
 		<link href="css/jquery.dataTables.css" rel="stylesheet"/>
-	
+		<meta charset="utf-8"/>
 	</head>
 		<body  >
-			<div id="includedContent" style="display: none;visibility: hidden;" >
-			 </div>
-			<div id="loaderImage" style="display:none; background-image: url(images/sprites.gif); width: 64px; height: 64px; background-position: -192px 0px;float:right"  />
+			<div id="includedContent" style="display:none;"  >
+			
+			</div>
+			<div id="loaderImage" style="display:none; background-image: url(images/sprites.gif); width: 64px; height: 64px; background-position: -192px 0px;float:right"  >			</div>
 			<form style="padding:4%">
 				<table class="cell-border row-border" style="width:500px;float: left" >
 					<tr>
@@ -62,7 +59,7 @@
 						    	"fnCreatedRow": function( nRow, aData, iDisplayIndex ) {
 						    			hideProgressImage();
 						    			nRow.setAttribute('style','cursor: pointer');
-						    			$(nRow).click(function() {window.open(aData[0])}						    									) 			
+						    			$(nRow).click(function() {window.open(aData[0])}) 			
 				    		  	  	}
 						    }
 					    );
@@ -94,7 +91,7 @@
 					function procurarLinks(){
 						var term =  getInputValue('term');
 						var extensao =  getInputValue('extensao');
-						if(term !="" &amp;&amp; term.length > 1 ){
+						if(term !="" && term.length > 1 ){
 							showProgressImage();
 							$('#includedContent').children().each(function() {
 								lerArquivo($(this).attr('href'));
@@ -192,6 +189,7 @@
 					new imageLoader(cImageSrc, 'stopAnimation()');
 
 				</script>
+				
 		</form>
 	</body>
 </html>

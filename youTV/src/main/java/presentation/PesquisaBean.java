@@ -4,11 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.event.TabChangeEvent;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.context.WebApplicationContext;
@@ -18,17 +13,12 @@ import business.usuario.VimeoService;
 import business.usuario.VimeoVideo;
 import business.usuario.VimeoVideoSearchResult;
 
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.services.samples.youtube.cmdline.Auth;
-import com.google.api.services.samples.youtube.cmdline.data.MyUploads;
 import com.google.api.services.samples.youtube.cmdline.data.Search;
-import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.SearchResult;
 
 @Controller
-@Scope(WebApplicationContext.SCOPE_APPLICATION)
+@Scope(WebApplicationContext.SCOPE_SESSION)
 public class PesquisaBean {
     private String searchTerm;
     private List<SearchResult> resultadoPesquisa;
@@ -37,47 +27,29 @@ public class PesquisaBean {
     private String youtubeVideoId;
     private String vimeoVideoId;
     private VimeoVideo vimeoVideo;
-    private String assistindo;
     private SearchResult youtubeVideo;
-    private static final String FACES_REDIRECT = "?faces-redirect=true";
     private VideoView videoView;
+    private Operation operation;
+
+    public PesquisaBean() {
+        operation = Operation.searching;
+    }
 
     public void carregarDadosVimeo() {
+        System.out.println("carregarDadosVimeo");
         for (VimeoVideo video : searchVideos.getVideos().getVideos()) {
             if (video.getId().equals(vimeoVideoId)) {
-                vimeoVideo = video;
+                //vericicar se passar o id é suficiente
+                videoView = new VideoView(video);
             }
         }
-        assistindo = "vimeo";
-        System.out.println("carregarDadosVimeo");
+        operation = Operation.watching;
     }
 
     public void carregarDadosYoutube() throws IOException {
         System.out.println("carregarDadosYoutube");
-        for (SearchResult searchResult : resultadoPesquisa) {
-            if (searchResult.getId().getVideoId().equals(youtubeVideoId)) {
-                youtubeVideo = searchResult;
-            }
-        }
-        assistindo = "youtube";
-        YouTube youtube =
-                new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY,
-                        new HttpRequestInitializer() {
-                            public void initialize(HttpRequest request) throws IOException {
-                            }
-                        }).setApplicationName("youtube-cmdline-search-sample").build();
-
-        com.google.api.services.youtube.YouTube.Videos.List a =
-                youtube.videos().list("contentDetails,statistics").setId(youtubeVideoId);
-        System.out.println(a.execute());
-    }
-
-    public String consultarPagina() {
-        return "/template/devoops/index.faces?youtube=" + youtubeVideoId + FACES_REDIRECT;
-    }
-
-    public String consultarVimeo() {
-        return "index.faces" + FACES_REDIRECT;
+        videoView = new VideoView(youtubeVideoId);
+        operation = Operation.watching;
     }
 
     public void pesquisar() {
@@ -92,26 +64,26 @@ public class PesquisaBean {
         resultadoPesquisa = aux;
     }
 
-    public void onTabChange(TabChangeEvent event) {
-        if ("tab3".equals(event.getTab().getId())) {
-            obtainMyUploads();
-        }
-    }
+    //    public void onTabChange(TabChangeEvent event) {
+    //        if ("tab3".equals(event.getTab().getId())) {
+    //            obtainMyUploads();
+    //        }
+    //    }
 
-    public void obtainMyUploads() {
-        myUploads = MyUploads.myUploads();
-    }
-
-    public List<PlaylistItem> getMyUploads() {
-        return myUploads;
-    }
-
-    public void handleFileUpload(FileUploadEvent event) {
-        FacesMessage msg =
-                new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
-        //        UploadVideo.upload(event.getFile());
-        FacesContext.getCurrentInstance().addMessage(null, msg);
-    }
+    //    public void obtainMyUploads() {
+    //        myUploads = MyUploads.myUploads();
+    //    }
+    //
+    //    public List<PlaylistItem> getMyUploads() {
+    //        return myUploads;
+    //    }
+    //
+    //    public void handleFileUpload(FileUploadEvent event) {
+    //        FacesMessage msg =
+    //                new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
+    //        //        UploadVideo.upload(event.getFile());
+    //        FacesContext.getCurrentInstance().addMessage(null, msg);
+    //    }
 
     public String getSearchTerm() {
         return searchTerm;
@@ -161,28 +133,12 @@ public class PesquisaBean {
         this.vimeoVideo = vimeoVideo;
     }
 
-    public boolean isShowVimeo() {
-        return "vimeo".equals(assistindo);
-    }
-
-    public boolean isShowYoutube() {
-        return "youtube".equals(assistindo);
-    }
-
-    public String getAssistindo() {
-        return assistindo;
-    }
-
     public VideoView getVideoView() {
         return videoView;
     }
 
     public void setVideoView(VideoView videoView) {
         this.videoView = videoView;
-    }
-
-    public void setAssistindo(String assistindo) {
-        this.assistindo = assistindo;
     }
 
     public SearchResult getYoutubeVideo() {
@@ -195,5 +151,13 @@ public class PesquisaBean {
 
     public void setMyUploads(List<PlaylistItem> myUploads) {
         this.myUploads = myUploads;
+    }
+
+    public Operation getOperation() {
+        return operation;
+    }
+
+    public void setOperation(Operation operation) {
+        this.operation = operation;
     }
 }
