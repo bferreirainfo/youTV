@@ -10,6 +10,8 @@ public class VimeoVideoSearchResult {
     private String status;
     @SerializedName("videos")
     private VimeoVideos videos;
+    @SerializedName("video")
+    private VimeoVideo[] video;
 
     public void setGeneratedIn(String generatedIn) {
         this.generatedIn = generatedIn;
@@ -38,4 +40,13 @@ public class VimeoVideoSearchResult {
     public String getGeneratedIn() {
         return generatedIn;
     }
+
+    public VimeoVideo[] getVideo() {
+        return video;
+    }
+
+    public void setVideo(VimeoVideo[] video) {
+        this.video = video;
+    }
+
 }

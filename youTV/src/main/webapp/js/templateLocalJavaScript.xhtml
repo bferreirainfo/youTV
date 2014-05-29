@@ -1,8 +1,9 @@
 <script>
 //============================== OnPageLoad =======================================
 $(window).ready(function(){
+abaAtual = 'searchResult';
+openInicialTab();
 loadBxSlider();
-click('searchLTabLink');
 });
 //============================== OnAjaxComplete =======================================
 // ============================== ProgressBar =======================================
@@ -19,7 +20,7 @@ click('searchLTabLink');
 	
 // ============================== bx slider configuration =======================================		
 		// Api  http://bxslider.com/options 
-		var bxSlider;
+		var bxSlider = $('.bxslider').bxSlider(sliderSettings);;
 		var sliderSettings =  {
 			  slideWidth: 200,
 			  slideHeight: 500,
@@ -36,13 +37,15 @@ click('searchLTabLink');
 	 			 }
 			};
 		function loadBxSlider(){
-		  this.bxSlider =  $('.bxslider').bxSlider(sliderSettings);
+			bxSlider =  $('.bxslider').bxSlider(sliderSettings);
 		}
 		function reloadSlider(){
-			//this.bxSlider.reloadSlider($.extend(sliderSettings,{startSlide:bxSlider.getCurrentSlide()}));
-		}
-		function resizeSlider(){
-			bxSlider.resize();
+			//this.bxSlider.reloadSlider($.extend(sliderSettings,{startSlide:this.bxSlider.getCurrentSlide()}));
+			if(bxSlider != null){
+				$('.bxslider li').css('width','146px');
+			}else{
+				loadBxSlider();
+			}
 		}
 // ============================== Abas =======================================		
 			
@@ -137,13 +140,22 @@ function onVimeoPlayerRead(){
 	
 }
 // ============================== Controle Abas =======================================	
-function display(abaId){
-	if(abaAtual != null){
-		hiddeElementById(abaAtual);
+function openInicialTab(){
+	switch('#{pesquisaBean.operation}'){
+		case 'search' : click('searchLTabLink'); break;
+		case 'playYoutube' : playYoutube('#{pesquisaBean.videoView.id}');break;
+		case 'playVimeo' : playVimeo('#{pesquisaBean.videoView.id}');break;
+		default : alert("operação não recohecida"); 
 	}
-	showElementById(abaId);
-	abaAtual=abaId;
 }
+function display(abaId){
+	if(abaId != abaAtual){
+		hiddeElementById(abaAtual);
+		showElementById(abaId);
+		abaAtual=abaId;
+	}
+}
+
 var abaAtual;
 // ============================== Utility =======================================	
 function updateUrl(action,value){
@@ -151,13 +163,14 @@ function updateUrl(action,value){
 }
 var currenctlyPlayerStopCommand;
 var currenctlyPlayerWrapper;
+
 function visualizarApenasPlayer(playerWrapper){
+	click('watchingTabLink');
 	if(currenctlyPlayerStopCommand != null){
 		currenctlyPlayerStopCommand();
 		hiddeElementById(currenctlyPlayerWrapper);
 	}
 	showElementById(playerWrapper);
-	click('viewTabLink');
 }
 function hiddeElementById(playerWrapper){
 	document.getElementById(playerWrapper).style.display='none';

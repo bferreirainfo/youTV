@@ -7,7 +7,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:players="http://java.sun.com/jsf/composite/players"
 	>
 	
 	<h:head>
@@ -44,12 +43,7 @@
 <h:body style="background:white;">
 <h:form id="form">
 <!--  código responsável por pega os parâmetros na url -->
-<f:metadata>
-	<f:viewParam id="youtubeParam" name="youtube" value="#{pesquisaBean.youtubeVideoId}"/>
-	<f:viewParam id="vimeoParam" name="vimeo" value="#{pesquisaBean.vimeoVideoId}"/>
-	<f:viewParam id="searchParam" name="search" value="#{pesquisaBean.searchTerm}"/>
-</f:metadata>
-
+<f:event listener="#{pesquisaBean.resolveUrlAction}" type="preRenderView" />
 <!--Start Header-->
 <header class="navbar">
 	<div class="container-fluid expanded-panel" style="background: white" >
@@ -60,12 +54,12 @@
 				<div class="cbp-hsmenu-wrapper" id="cbp-hsmenu-wrapper" style="height: 50px;top: 10px;left: 250px;" >
 						<ul class="cbp-hsmenu" style="margin: 0px" >
 							<li>
-								<a id="searchLTabLink" href="#" class="menulink" onclick="display('searchResult');resizeSlider();" >Pesquisa</a>
-								<ul class="cbp-hssubmenu">
+								<a id="searchLTabLink" href="#" class="menulink" onclick="display('searchResult');" >Pesquisa</a>
+ 								<ul class="cbp-hssubmenu">
 								</ul>
 							</li>
 							<li>
-								<a  id="viewTabLink" href="#" onclick="display('playerView');" > Assistindo</a>
+								<a  id="watchingTabLink" href="#" onclick="#{pesquisaBean.operation} != 'search' ? display('playerView') : event.preventDefault()" > Assistindo</a>
 								<ul class="cbp-hssubmenu">
 								</ul>
 							</li>
@@ -88,9 +82,9 @@
 							            		 style="margin:0px;"
 												 action="#{pesquisaBean.pesquisar}" 
 												 process="@this searchTerm" 
-												 update="searchPanel"
+												 update=":form:searchPanel"
 												 onclick="display('searchResult');"
-												 oncomplete="loadBxSlider();"
+												 oncomplete="reloadSlider();"
 												  >
 												  <div class="glyphicon glyphicon-search"  />
 											  </p:commandLink>
@@ -151,7 +145,7 @@
 	}
 	.thumbnailVideo{
 		width: 100% !important;
-		width:146px;
+		width:146px !important;
 		height:132px;
 	}
 	inverterDiv{

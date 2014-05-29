@@ -3,10 +3,14 @@ package presentation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ComponentSystemEvent;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.context.WebApplicationContext;
 
 import business.usuario.VideoView;
 import business.usuario.VimeoService;
@@ -14,15 +18,14 @@ import business.usuario.VimeoVideo;
 import business.usuario.VimeoVideoSearchResult;
 
 import com.google.api.services.samples.youtube.cmdline.data.Search;
-import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.SearchResult;
 
 @Controller
-@Scope(WebApplicationContext.SCOPE_SESSION)
+@ManagedBean
+@Scope("session")
 public class PesquisaBean {
     private String searchTerm;
     private List<SearchResult> resultadoPesquisa;
-    private List<PlaylistItem> myUploads;
     private VimeoVideoSearchResult searchVideos;
     private String youtubeVideoId;
     private String vimeoVideoId;
@@ -31,25 +34,58 @@ public class PesquisaBean {
     private VideoView videoView;
     private Operation operation;
 
-    public PesquisaBean() {
-        operation = Operation.searching;
+    public void resolveUrlAction(ComponentSystemEvent event) throws IOException {
+        FacesContext fc = FacesContext.getCurrentInstance();
+        if (fc.getPartialViewContext().isAjaxRequest()) {
+            return; // Skip ajax requests.
+        }
+        Map<String, String> requestParameterMap = fc.getExternalContext().getRequestParameterMap();
+
+        boolean isUrlHeadertEmpty = requestParameterMap.isEmpty();
+        if (isUrlHeadertEmpty) {
+            operation = Operation.search;
+        } else if (requestParameterMap.containsKey("youtube")) {
+            youtubeVideoId = requestParameterMap.get("youtube");
+            carregarDadosYoutube();
+        } else if (requestParameterMap.containsKey("vimeo")) {
+            vimeoVideoId = requestParameterMap.get("vimeo");
+            carregarDadosVimeo();
+        } else {
+            throw new IOException("initial operation not defined");
+        }
+        clearValues();
+    }
+
+    public void onLoad() {
+        System.out.println("onload callled");
+    }
+
+    private void clearValues() {
+        searchTerm = null;
+        youtubeVideoId = null;
+        vimeoVideoId = null;
     }
 
     public void carregarDadosVimeo() {
-        System.out.println("carregarDadosVimeo");
+        VimeoVideo video =
+                searchVideos == null ? VimeoService.getVideoById(vimeoVideoId)
+                        : recuperarVideoLocal();
+        videoView = new VideoView(video);
+        operation = Operation.playVimeo;
+    }
+
+    private VimeoVideo recuperarVideoLocal() {
         for (VimeoVideo video : searchVideos.getVideos().getVideos()) {
             if (video.getId().equals(vimeoVideoId)) {
-                //vericicar se passar o id é suficiente
-                videoView = new VideoView(video);
+                return video;
             }
         }
-        operation = Operation.watching;
+        return null;
     }
 
     public void carregarDadosYoutube() throws IOException {
-        System.out.println("carregarDadosYoutube");
         videoView = new VideoView(youtubeVideoId);
-        operation = Operation.watching;
+        operation = Operation.playYoutube;
     }
 
     public void pesquisar() {
@@ -113,8 +149,9 @@ public class PesquisaBean {
         return youtubeVideoId;
     }
 
-    public void setYoutubeVideoId(String youtubeVideoId) {
+    public void setYoutubeVideoId(String youtubeVideoId) throws IOException {
         this.youtubeVideoId = youtubeVideoId;
+        carregarDadosYoutube();
     }
 
     public String getVimeoVideoId() {
@@ -147,10 +184,6 @@ public class PesquisaBean {
 
     public void setYoutubeVideo(SearchResult youtubeVideo) {
         this.youtubeVideo = youtubeVideo;
-    }
-
-    public void setMyUploads(List<PlaylistItem> myUploads) {
-        this.myUploads = myUploads;
     }
 
     public Operation getOperation() {

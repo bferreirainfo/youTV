@@ -18,7 +18,7 @@
 		<primefaces-theme-version>1.0.9</primefaces-theme-version>
 		<primefaces-extensions-version>0.6.3</primefaces-extensions-version>
 		<omnifaces-version>1.4.1</omnifaces-version>
-		<jsf-implementation-version>2.1.23</jsf-implementation-version>
+		<jsf-implementation-version>2.2.3</jsf-implementation-version>
 		<servlet-api-version>2.5</servlet-api-version>
 		<jsp-api-version>2.1</jsp-api-version>
 		<jstl-api-version>1.2</jstl-api-version>
@@ -162,15 +162,17 @@
 
 		<!-- Sun JSF implementation and Facelets -->
 		<dependency>
-			<groupId>com.sun.faces</groupId>
-			<artifactId>jsf-api</artifactId>
+			<groupId>org.apache.myfaces.core</groupId>
+			<artifactId>myfaces-api</artifactId>
 			<version>${jsf-implementation-version}</version>
 		</dependency>
+		
 		<dependency>
-			<groupId>com.sun.faces</groupId>
-			<artifactId>jsf-impl</artifactId>
+			<groupId>org.apache.myfaces.core</groupId>
+			<artifactId>myfaces-impl</artifactId>
 			<version>${jsf-implementation-version}</version>
 		</dependency>
+		
 
 		<!-- Hibernate -->
 		<dependency>

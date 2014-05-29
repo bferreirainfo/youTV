@@ -1,13 +1,14 @@
 package presentation;
 
 public enum Operation {
-    watching, searching;
+    playYoutube, playVimeo, search;
 
-    public boolean isWatching() {
-        return this.equals(watching);
+    public boolean isPlayYoutube() {
+        return this.equals(playYoutube);
     }
 
-    public boolean isSearching() {
-        return this.equals(searching);
+    public boolean isSearch() {
+        return this.equals(search);
     }
+
 }

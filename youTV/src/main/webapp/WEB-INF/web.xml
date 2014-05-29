@@ -8,6 +8,21 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns
 id="WebApp_ID" 
 version="2.5">
   <display-name>business</display-name>
+  <listener>
+  	<listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
+  </listener>
+  <context-param>
+    <param-name>org.apache.myfaces.annotation.SCAN_PACKAGES</param-name>
+    <param-value>business</param-value>
+  </context-param>
+  <context-param>
+      <param-name>facelets.DEVELOPMENT</param-name>
+      <param-value>true</param-value>
+  </context-param>
+  <context-param>
+      <param-name>facelets.REFRESH_PERIOD</param-name>
+      <param-value>1</param-value>
+  </context-param>
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>classpath:applicationContext.xml</param-value>

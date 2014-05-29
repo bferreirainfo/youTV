@@ -26,14 +26,14 @@
 							</ui:repeat>
 						</ul>
 						<h4>
-							Vimeo
+							Vimeo 
 						</h4>
 						<ul class="bxslider">
 							<h:panelGroup  rendered="#{pesquisaBean.searchVideos.statusOk}" >
 								<ui:repeat var="item" value="#{pesquisaBean.searchVideos.videos.videos}" varStatus="myVarStatus"  >
 									<li> 
 										<div>
-											<p:commandLink  action="#{pesquisaBean.carregarDadosVimeo}" process="@this" update=":form:videoInformations" onclick="playVimeo('#{item.id}');" >
+											<p:commandLink action="#{pesquisaBean.carregarDadosVimeo}" process="@this" update=":form:videoInformations" onclick="playVimeo('#{item.id}');" >
 												<f:setPropertyActionListener target="#{pesquisaBean.vimeoVideoId}" value="#{item.id}" />
 												<img class="thumbnailVideo" src="#{item.thumbnails.mediumThumbail.content}" /> <br/>
 											</p:commandLink>
