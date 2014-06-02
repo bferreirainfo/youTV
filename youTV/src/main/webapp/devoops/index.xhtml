@@ -54,7 +54,7 @@
 				<div class="cbp-hsmenu-wrapper" id="cbp-hsmenu-wrapper" style="height: 50px;top: 10px;left: 250px;" >
 						<ul class="cbp-hsmenu" style="margin: 0px" >
 							<li>
-								<a id="searchLTabLink" href="#" class="menulink" onclick="display('searchResult');" >Pesquisa</a>
+								<a id="searchLTabLink" href="#" class="menulink" onclick="display('searchResult');resizeSlider();" >Pesquisa</a>
  								<ul class="cbp-hssubmenu">
 								</ul>
 							</li>
@@ -84,7 +84,7 @@
 												 process="@this searchTerm" 
 												 update=":form:searchPanel"
 												 onclick="display('searchResult');"
-												 oncomplete="reloadSlider();"
+												 oncomplete="loadBxSlider();"
 												  >
 												  <div class="glyphicon glyphicon-search"  />
 											  </p:commandLink>
@@ -144,8 +144,7 @@
 	    height: 250px !important; 
 	}
 	.thumbnailVideo{
-		width: 100% !important;
-		width:146px !important;
+		width: 200px !important;
 		height:132px;
 	}
 	inverterDiv{

@@ -3,7 +3,7 @@
 $(window).ready(function(){
 abaAtual = 'searchResult';
 openInicialTab();
-loadBxSlider();
+loadSlider();
 });
 //============================== OnAjaxComplete =======================================
 // ============================== ProgressBar =======================================
@@ -20,7 +20,7 @@ loadBxSlider();
 	
 // ============================== bx slider configuration =======================================		
 		// Api  http://bxslider.com/options 
-		var bxSlider = $('.bxslider').bxSlider(sliderSettings);;
+		var sliderArray = new Array();
 		var sliderSettings =  {
 			  slideWidth: 200,
 			  slideHeight: 500,
@@ -36,16 +36,16 @@ loadBxSlider();
 				  //$('.bx-wrapper').each(function(index){$(this).attr('tabindex',index);});
 	 			 }
 			};
-		function loadBxSlider(){
-			bxSlider =  $('.bxslider').bxSlider(sliderSettings);
+		function loadSlider(){
+			 $('.bxslider').each(function(i){
+			        sliderArray[i] = $(this).bxSlider(sliderSettings);
+			    });
 		}
-		function reloadSlider(){
-			//this.bxSlider.reloadSlider($.extend(sliderSettings,{startSlide:this.bxSlider.getCurrentSlide()}));
-			if(bxSlider != null){
-				$('.bxslider li').css('width','146px');
-			}else{
-				loadBxSlider();
-			}
+		function resizeSlider(){
+			$.each(sliderArray, function( index, value ) {
+			  value.reloadSlider();
+			});
+
 		}
 // ============================== Abas =======================================		
 			
