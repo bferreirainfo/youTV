@@ -15,110 +15,92 @@
 		<meta name="description" content="description"/>
 		<meta name="author" content="DevOOPS"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<link href="plugins/jquery-ui/jquery-ui.min.css" rel="stylesheet"/>
-		<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"/>
-		<link href='http://fonts.googleapis.com/css?family=Righteous' rel='stylesheet' type='text/css'/>
-		<link href="plugins/fancybox/jquery.fancybox.css" rel="stylesheet"/>
-		<link href="plugins/fullcalendar/fullcalendar.css" rel="stylesheet"/>
-		<link href="plugins/xcharts/xcharts.min.css" rel="stylesheet"/>
-		<link href="plugins/select2/select2.css" rel="stylesheet"/>
+		<!-- não sei -->
 		<link href="#{request.contextPath}/bootstrap-3.1.1-dist/css/bootstrap.css" rel="stylesheet"/>
-		<!-- css template DevOOPS -->
-		<link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
 		<!-- imports bxSlider  -->
 		<script src="#{request.contextPath}/js/jquery.bxslider.min.js"></script>
 		<link href="#{request.contextPath}/css/jquery.bxslider.css" rel="stylesheet" />
 		<!-- progressbar Ajax -->
 		<link href='#{request.contextPath}/css/nprogress.css' rel='stylesheet' />
   		<script type="text/javascript" src='#{request.contextPath}/js/nprogress.js'></script>
-  		<!-- não tem maven depencies -->
+  		<!-- extensão para funcionar junto com API Vimeo não tem maven depencies -->
   		<script type="text/javascript" src='#{request.contextPath}/js/froogaloop.js'></script>
-  		
-  		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/layoutResources/HorizontalSlideOutMenu/css/default.css" />
+  		<!-- Menu JS -->
 		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/layoutResources/HorizontalSlideOutMenu/css/component.css" />
 		<script src="#{request.contextPath}/layoutResources/HorizontalSlideOutMenu/js/modernizr.custom.js"></script>
+		<script src="#{request.contextPath}/layoutResources/HorizontalSlideOutMenu/js/cbpHorizontalSlideOutMenu.min.js"></script>
+		<!-- Ellipsis -->
 		<script src="#{request.contextPath}/layoutResources/jqueryEllipises/jquery.ellipsis.js"></script>
   		
 	</h:head>
-<h:body style="background:white;">
+<h:body>
 <h:form id="form">
 <!--  código responsável por pega os parâmetros na url -->
 <f:event listener="#{pesquisaBean.resolveUrlAction}" type="preRenderView" />
 <!--Start Header-->
 <header class="navbar">
-	<div class="container-fluid expanded-panel" style="background: white" >
-		<div class="row"  >
-			<div class="col-xs-12 col-sm-1" style="background: #BE4040;height: 50px;width: 10%;font-color:white;"  >
-			</div>
-			<div class="col-xs-12 col-sm-2"  style="width: 45%;background: #BE4040" >
-				<div class="cbp-hsmenu-wrapper" id="cbp-hsmenu-wrapper" style="height: 50px;top: 10px;left: 250px;" >
-						<ul class="cbp-hsmenu" style="margin: 0px" >
-							<li>
-								<a id="searchLTabLink" href="#" class="menulink" onclick="display('searchResult');resizeSlider();" >Pesquisa</a>
- 								<ul class="cbp-hssubmenu">
-								</ul>
-							</li>
-							<li>
-								<a  id="watchingTabLink" href="#" onclick="#{pesquisaBean.operation} != 'search' ? display('playerView') : event.preventDefault()" > Assistindo</a>
-								<ul class="cbp-hssubmenu">
-								</ul>
-							</li>
-						</ul>
-				</div>
-			</div>
-			<div id="top-panel" class="col-xs-12 col-sm-3" style="width: 45%;height: 50px;background: #BE4040" >
-					<div  style="width:80%;height:20px;"  >
-						<div id="search" style="height: 50px;" >
-							<div class="input-group" style="line-height:0px;padding:5.5px" >
-						           <p:inputText 
-						           				id="searchTerm"
-						           				styleClass="form-control" 
-						           				style="width:100%;background:white;float:none;height:40px;"  
-						           				onkeypress="if (event.keyCode == 13){click('form:searchButton');event.preventDefault();}"
-						           				value="#{pesquisaBean.searchTerm}" />
-						          	<div class="input-group-addon"  >
-							            <p:commandLink
-							            		 id="searchButton" 
-							            		 style="margin:0px;"
-												 action="#{pesquisaBean.pesquisar}" 
-												 process="@this searchTerm" 
-												 update=":form:searchPanel"
-												 onclick="display('searchResult');"
-												 oncomplete="loadBxSlider();"
-												  >
-												  <div class="glyphicon glyphicon-search"  />
-											  </p:commandLink>
-				          			</div>
-					        </div>
-						</div>
-					</div>
-			</div>
+	<div style="width: 100%;background: #2a6496" >
+		<div class="cbp-hsmenu-wrapper" id="cbp-hsmenu-wrapper">
+			<ul class="cbp-hsmenu">
+				<li>
+					<a id="searchLTabLink" href="#" onclick="display('searchResult');resizeSlider();" >Pesquisa</a>
+						<ul class="cbp-hssubmenu">
+					</ul>
+				</li>
+				<li>
+					<a  id="watchingTabLink" href="#" onclick="#{pesquisaBean.operation} != 'search' ? display('playerView') : event.preventDefault()" > Assistindo</a>
+					<ul class="cbp-hssubmenu">
+					</ul>
+				</li>
+			</ul>
 		</div>
+		<div class="input-group" style="line-height:0px;padding:5.5px;width: 30%;left: 40%" >
+	           <p:inputText 
+	           				id="searchTerm"
+	           				onblur="event.preventDefault();"
+	           				styleClass="form-control" 
+	           				style="background:white;"  
+	           				value="#{pesquisaBean.searchTerm}" />
+	          	<div class="input-group-addon"  >
+		            <p:commandLink
+		            		 id="searchButton" 
+		            		 style="margin:0px;"
+							 action="#{pesquisaBean.pesquisar}" 
+							 process="@this searchTerm" 
+							 update=":form:searchPanel"
+							 onclick="display('searchResult');"
+							 oncomplete="loadSlider();"
+							  >
+							  <div class="glyphicon glyphicon-search"  />
+						  </p:commandLink>
+         			</div>
+        </div>
 	</div>
 </header>
 
 <!--End Header-->
 <!--Start Container-->
 <h:panelGroup id="main" class="container-fluid" layout="block" >
-	<div class="row"  style="background:white">
+	<div class="row">
 		<!--Start Content-->
 		<div id="custom_carousel" class="carousel slide" data-ride="carousel" data-interval="0" >
 	        <!-- conteudo dos menus -->
 	        	<!-- menu ativo inicial no caso data-slide-to="0" -->
 	                <div class="container-fluid" style="padding-left:1px;padding-right: 1px;" >
 	                	<!-- pagina pesquisa -->
-	                	<h:panelGroup id="contentPanel" >
+	                	<h:panelGroup id="contentPanel" style="top: -26px;box-shadow:none; line-height: 1.2;font-size: 14px;padding-bottom: 0px !important;margin-bottom: 0px !important;position: relative;"  >
+	                		<!-- Página da pesquisa -->
 	                		<ui:include src="/includes/searchContent.xhtml" />
 							<!-- Página do player -->
-							<div id="playerView" style="padding-top: 20px;display: none;padding: 3%;background: white" >
-                    			<div id="playerColumn" style="background: white" >
+							<div id="playerView" style="display: none;" >
+                    			<div id="playerColumn" >
                     				<!-- All iframe´s players will be rendered here -->
                     				<div id="youtubePlayerWrapper" />
                     				<div id="vimeoPlayerWrapper"/>
 		                        	<h:panelGroup id="videoInformations" >
-			                            <h2>#{pesquisaBean.videoView.title}</h2>
+			                            <h2 style="margin: 0px;" >#{pesquisaBean.videoView.title}</h2>
 			                            	publicado em:
-			                            <h:outputText style="padding-left:5px" value="#{pesquisaBean.vimeoVideo.uploadDate}" >
+			                            <h:outputText style="padding-left:5px" value="#{pesquisaBean.videoView.uploadDate}" >
 			                            </h:outputText>	 
 			                            <div style="float:right;" >
 			                            	views: #{pesquisaBean.videoView.views}
@@ -132,129 +114,10 @@
 	        
     	</div>
 	</div>
-	<!-- js interno -->
-	<ui:include src="/js/templateLocalJavaScript.xhtml" />
-<style>
-	.logosClass{
-		height: 60px;
-		width: 100px;
-		visibility: 
-	}
-	.bx-wrapper, .bx-viewport {
-	    height: 250px !important; 
-	}
-	.thumbnailVideo{
-		width: 200px !important;
-		height:132px;
-	}
-	inverterDiv{
-		-webkit-transform: rotate(90deg);
-	    -moz-transform: rotate(90deg);
-	    -o-transform: rotate(90deg);
-	    -ms-transform: rotate(90deg);
-	    transform: rotate(90deg);
-	}
-	
-	body {
-    padding-top:20px
-}
-#custom_carousel .item {
-
-    color:#000;
-    background-color:#eee;
-    padding:20px 0;
-}
-#custom_carousel .controls{
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding:0;
-    margin:0;
-    white-space: nowrap;
-    text-align: center;
-    position: relative;
-    background:#ddd
-}
-#custom_carousel .controls li {
-    display: table-cell;
-    width: 1%;
-    max-width:90px
-}
-#custom_carousel .controls li.active {
-    background-color:#eee;
-    border-top:3px solid orange;
-}
-#custom_carousel .controls a small {
-    overflow:hidden;
-    display:block;
-    font-size:10px;
-    margin-top:5px;
-    font-weight:bold
-}
-a:hover, a:focus{
-text-decoration: none;
-}
-.videoLinkTitle{
-	color: #BE4040;
-	font-weight: bold;
-	position: relative;
-	width:200px;
-	display: block;
-	overflow: hidden;
-}
-.thumbnailDescription{
-}
-.arrow{
-	display:none;
-	border-bottom: solid 30px transparent;
-	border-top: solid 30px transparent;
-	margin-top: -30px;
-	content: " ";
-	display: block;
-	top: 50%;
-	left: 50%;
-	position: absolute;
-}
-.bx-prev::before{
-	border-right: solid 22px #BE4040;
-	margin-left: 1px;
-	border-bottom: solid 22px transparent;
-	border-top: solid 22px transparent;
-	margin-top: -30px;
-	content: " ";
-	display: block;
-	top: 50%;
-	left: 19%;
-	position: absolute;
-}
-
-.bx-next::before{
-	border-left: solid 22px #BE4040;
-	margin-left: 1px;
-	border-bottom: solid 22px transparent;
-	border-top: solid 22px transparent;
-	margin-top: -30px;
-	content: " ";
-	display: block;
-	top: 50%;
-	left: 19%;
-	position: absolute;
-}
-</style>
-	<!--End Content-->
+	<ui:include src="/layoutResources/templateLocalJavaScript.xhtml" />
+	<ui:include src="/layoutResources/templateLocalCss.xhtml" />
  </h:panelGroup>
-<!--End Container-->
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<!--<script src="http://code.jquery.com/jquery.js"></script>-->
-<!-- Include all compiled plugins (below), or include individual files as needed -->
-<script src="plugins/bootstrap/bootstrap.min.js"></script>
-<script src="plugins/justified-gallery/jquery.justifiedgallery.min.js"></script>
-<script src="plugins/tinymce/tinymce.min.js"></script>
-<script src="plugins/tinymce/jquery.tinymce.min.js"></script>
-<!-- All functions for this theme + document.ready processing -->
-<script src="#{request.contextPath}/layoutResources/HorizontalSlideOutMenu/js/cbpHorizontalSlideOutMenu.min.js"></script>
-<script>
-var menu = new cbpHorizontalSlideOutMenu( document.getElementById( 'cbp-hsmenu-wrapper' ) );
-</script>
+
 </h:form>
 </h:body>
 </html>

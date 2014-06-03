@@ -1,9 +1,22 @@
 <script>
 //============================== OnPageLoad =======================================
 $(window).ready(function(){
+var menu = new cbpHorizontalSlideOutMenu( document.getElementById( 'cbp-hsmenu-wrapper' ) );
 abaAtual = 'searchResult';
 openInicialTab();
 loadSlider();
+document.getElementById("form:searchTerm").focus();
+with (document.getElementById("form:searchTerm")) {
+    onblur = function(e) {
+        setTimeout(function(){e.target.focus()});
+    }
+    onkeypress = function(e){
+    	if(e.keyCode == 13){
+    		document.getElementById('form:searchButton').click();
+    		e.preventDefault();
+    	}
+    }
+}
 });
 //============================== OnAjaxComplete =======================================
 // ============================== ProgressBar =======================================
@@ -11,7 +24,6 @@ loadSlider();
 	NProgress.configure({speed:500, showSpinner: false});
 	$(document).ajaxStart(function() {
 		NProgress.start();
-		$('.bar').css('margin-top','52px');
 		NProgress.set(0.5);
 	});
 	$(document).ajaxComplete(function() {
@@ -22,18 +34,16 @@ loadSlider();
 		// Api  http://bxslider.com/options 
 		var sliderArray = new Array();
 		var sliderSettings =  {
-			  slideWidth: 200,
-			  slideHeight: 500,
+			  slideWidth: 175,
+			  slideHeight: 80,
 			  minSlides: 2,
 			  maxSlides: 99,
 			  slideMargin: 10,
-			  infiniteLoop: false,
-			  hideControlOnEnd: true,
-			  hideControlOnStart: true,
 			  onSliderLoad: function(){
-				  $('.bx-wrapper').css('margin','0 auto 5px 3px');
+				  $('.bx-wrapper').css('margin','0 0 0 0');
 				  //adicionar funcões no on focus
 				  //$('.bx-wrapper').each(function(index){$(this).attr('tabindex',index);});
+				  $('.videoLinkTitle').ellipsis({row: 2});
 	 			 }
 			};
 		function loadSlider(){
@@ -43,7 +53,9 @@ loadSlider();
 		}
 		function resizeSlider(){
 			$.each(sliderArray, function( index, value ) {
-			  value.reloadSlider();
+				 var currentSlider = value.getCurrentSlide();
+			 	 value.reloadSlider();
+			 	 value.goToSlide(currentSlider);
 			});
 
 		}
@@ -177,6 +189,8 @@ function hiddeElementById(playerWrapper){
 }
 function showElementById(playerWrapper){
 	document.getElementById(playerWrapper).style.display='block';
+	document.getElementById('playerColumn').style.width= Math.round($(window).width()*0.75) + "px";
+	document.getElementById('playerColumn').style.height= Math.round($(window).height()*0.65) +"px";
 }
 function click(id){
 	document.getElementById(id).click();

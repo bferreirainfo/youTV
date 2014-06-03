@@ -7,48 +7,58 @@
 	<body>
 		<h:panelGroup id="searchPanel" >
 			<div id="searchResult">
-		       	<div id="content"   style="top:30px;background-color: white;box-shadow:none; line-height: 1.2;font-size: 14px;padding-bottom: 0px !important;margin-bottom: 0px !important;"  >
-					<div style="margin-left:auto; margin-right:auto; width:98%;padding:1%" >
-						<h4>
-							  Youtube
-						</h4>	
-						<ul class="bxslider">
-							<ui:repeat var="item" value="#{pesquisaBean.resultadoPesquisa}" varStatus="myVarStatus"  >
-								<li> 
-									<div >
-										<p:commandLink action="#{pesquisaBean.carregarDadosYoutube}" process="@this" update=":form:videoInformations" onclick="playYoutube('#{item.id.videoId}');" >
-												<f:setPropertyActionListener target="#{pesquisaBean.youtubeVideoId}" value="#{item.id.videoId}"/>
-												<img class="thumbnailVideo" src="#{item.snippet.thumbnails.default.url}" /> <br/>
-										</p:commandLink>
-										<a class="videoLinkTitle">#{item.snippet.title}</a>
-									</div>
-								</li>
-							</ui:repeat>
-						</ul>
-						<h4>
-							Vimeo 
-						</h4>
-						<ul class="bxslider">
-							<h:panelGroup  rendered="#{pesquisaBean.searchVideos.statusOk}" >
-								<ui:repeat var="item" value="#{pesquisaBean.searchVideos.videos.videos}" varStatus="myVarStatus"  >
-									<li> 
-										<div>
-											<p:commandLink action="#{pesquisaBean.carregarDadosVimeo}" process="@this" update=":form:videoInformations" onclick="playVimeo('#{item.id}');" >
-												<f:setPropertyActionListener target="#{pesquisaBean.vimeoVideoId}" value="#{item.id}" />
-												<img class="thumbnailVideo" src="#{item.thumbnails.mediumThumbail.content}" /> <br/>
-											</p:commandLink>
-												<a class="videoLinkTitle">#{item.title}</a>
-												<div class="thumbnailDescription" style="float:right" >
-													views: #{item.numberOfPlays}<br/>
+		       	<div id="content">
+					<div style="background: rgba(255, 255, 255, 0.56)" >
+						<div class="edgeBorder" >
+							<h4>
+								  Youtube
+							</h4>	
+								<ul class="bxslider">
+									<ui:repeat var="item" value="#{pesquisaBean.youTubeVideosSearchResult}" varStatus="myVarStatus"  >
+										<li> 
+											<div class="testando" style="width: 173px; height:80px">
+												<p:commandLink action="#{pesquisaBean.loadYoutubeVideo}" process="@this" update=":form:videoInformations" onclick="playYoutube('#{item.id}');" >
+														<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
+														<img class="thumbnailVideo" src="#{item.thumbnailUrl}" /><br/>
+														<div style="top:-17px;position:relative;" >
+															<div class="videoLinkTitle">#{item.title}</div>
+															<div class="thumbnailDescription" style="float: left" >#{item.likeCount} Likes</div>
+															<div class="thumbnailDescription" style="float: right">#{item.dislikeCount} Dislikes</div><br/>
+															<div class="thumbnailDescription" style="float: left" >#{item.uploadDate}   </div>
+															<div class="thumbnailDescription" >#{item.views} views</div>
+														</div>
+												</p:commandLink>
+											</div>
+										</li>
+									</ui:repeat>
+								</ul>
+							</div>
+							<div class="edgeBorder" >
+								<h4>
+									Vimeo 
+								</h4>
+								<ul class="bxslider">
+										<ui:repeat var="item" value="#{pesquisaBean.vimeoVideosSearchResult}" varStatus="myVarStatus"  >
+											<li> 
+												<div style="width: 173px; height:80px">
+													<p:commandLink action="#{pesquisaBean.loadVimeoVideo}" process="@this" update=":form:videoInformations" onclick="playVimeo('#{item.id}');" >
+														<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}" />
+														<img class="thumbnailVideo" src="#{item.thumbnailUrl}" /><br/>
+														<div style="top:-17px;position:relative;" >
+															<div class="videoLinkTitle">#{item.title}</div>
+															<div class="thumbnailDescription" style="float: left" >#{item.likeCount} Likes</div><br/>
+															<div class="thumbnailDescription" style="float: left" >#{item.uploadDate}   </div>
+															<div class="thumbnailDescription" >#{item.views} views</div>
+														</div>
+													</p:commandLink>
 												</div>
-										</div>
-									</li>
-								</ui:repeat>
-							</h:panelGroup>
-						</ul>
+											</li>
+										</ui:repeat>
+								</ul>
+							</div>
+						</div>
 					</div>
 				</div> 
-			</div>
 		</h:panelGroup>
 </body>
 </html>

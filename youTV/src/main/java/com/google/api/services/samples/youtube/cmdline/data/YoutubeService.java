@@ -16,27 +16,31 @@ package com.google.api.services.samples.youtube.cmdline.data;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+import business.usuario.VideoView;
+
+import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.services.samples.youtube.cmdline.Auth;
 import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.ResourceId;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
-import com.google.api.services.youtube.model.Thumbnail;
+import com.google.api.services.youtube.model.Video;
+import com.google.common.collect.Lists;
 
 /**
  * Print a list of videos matching a search term.
  * 
  * @author Jeremy Walker
  */
-public class Search {
+public class YoutubeService {
 
+    private static com.google.api.services.youtube.YouTube.Videos.List videosList;
     /**
      * Define a global variable that identifies the name of a file that contains the developer's
      * API key.
@@ -51,11 +55,23 @@ public class Search {
      */
     private static YouTube youtube;
 
-    public static List<SearchResult> pesquisar(String queryTerm) {
+    public static VideoView getVideoById(String videoId) {
+        VideoView result = null;
+        try {
+            videosList.setId(videoId);
+            result = new VideoView(videosList.execute().getItems().get(0));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+
+    }
+
+    public static List<VideoView> searchVideos(String queryTerm) {
         // Read the developer key from the properties file.
         Properties properties = new Properties();
         try {
-            InputStream in = Search.class.getResourceAsStream("/" + PROPERTIES_FILENAME);
+            InputStream in = YoutubeService.class.getResourceAsStream("/" + PROPERTIES_FILENAME);
             properties.load(in);
 
         } catch (IOException e) {
@@ -91,12 +107,16 @@ public class Search {
 
             // To increase efficiency, only retrieve the fields that the
             // application uses.
-            search.setFields("items(id/kind,id/videoId,snippet/title,snippet/thumbnails/default/url)");
+            search.setFields("items(id/videoId)");
             search.setMaxResults(NUMBER_OF_VIDEOS_RETURNED);
-            // Call the API and print results.
+            // Call the API with Ids
             SearchListResponse searchResponse = search.execute();
-            List<SearchResult> searchResultList = searchResponse.getItems();
-            return searchResultList;
+
+            StringBuilder videosList = new StringBuilder();
+            for (SearchResult item : searchResponse.getItems()) {
+                videosList.insert(0, "," + item.getId().getVideoId());
+            }
+            return findVideoListByIds(videosList.toString());
         } catch (GoogleJsonResponseException e) {
             System.err.println("There was a service error: 12" + e.getDetails().getCode() + " : "
                     + e.getDetails().getMessage());
@@ -108,41 +128,35 @@ public class Search {
         return null;
     }
 
-    /*
-     * Prints out all results in the Iterator. For each result, print the title, video ID, and
-     * thumbnail.
-     * 
-     * @param iteratorSearchResults Iterator of SearchResults to print
-     * 
-     * @param query Search query (String)
-     */
-    private static void prettyPrint(Iterator<SearchResult> iteratorSearchResults, String query) {
+    private static List<VideoView> findVideoListByIds(String ids) throws IOException {
+        List<VideoView> youtubeVideos = new ArrayList<VideoView>();
+        for (Video video : videosList.setId(ids).execute().getItems()) {
+            youtubeVideos.add(new VideoView(video));
+        }
+        return youtubeVideos;
+    }
 
-        System.out.println("\n=============================================================");
-        System.out.println("   First " + NUMBER_OF_VIDEOS_RETURNED + " videos for search on \""
-                + query + "\".");
-        System.out.println("=============================================================\n");
-
-        if (!iteratorSearchResults.hasNext()) {
-            System.out.println(" There aren't any results for your query.");
+    static {
+        List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
+        Credential credential = null;
+        try {
+            credential = Auth.authorize(scopes, "uploadvideo");
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
 
-        while (iteratorSearchResults.hasNext()) {
+        // This object is used to make YouTube Data API requests.
+        com.google.api.services.youtube.YouTube youtube =
+                new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
+                        .setApplicationName("youtv1988").build();
 
-            SearchResult singleVideo = iteratorSearchResults.next();
-            ResourceId rId = singleVideo.getId();
-
-            // Confirm that the result represents a video. Otherwise, the
-            // item will not contain a video ID.
-            if (rId.getKind().equals("youtube#video")) {
-                Thumbnail thumbnail = singleVideo.getSnippet().getThumbnails().getDefault();
-
-                System.out.println(" Video Id" + rId.getVideoId());
-                System.out.println(" Title: " + singleVideo.getSnippet().getTitle());
-                System.out.println(" Thumbnail: " + thumbnail.getUrl());
-                System.out
-                        .println("\n-------------------------------------------------------------\n");
-            }
+        try {
+            videosList = youtube.videos().list("statistics,snippet,contentDetails");
+            videosList
+                    .setFields("items(id,statistics/viewCount,statistics/likeCount,statistics/dislikeCount,snippet/title,snippet/thumbnails/default/url,snippet/publishedAt,contentDetails/duration)");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
+
 }

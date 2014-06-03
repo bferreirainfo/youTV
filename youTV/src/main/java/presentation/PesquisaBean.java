@@ -1,7 +1,6 @@
 package presentation;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,26 +13,26 @@ import org.springframework.stereotype.Controller;
 
 import business.usuario.VideoView;
 import business.usuario.VimeoService;
-import business.usuario.VimeoVideo;
-import business.usuario.VimeoVideoSearchResult;
 
-import com.google.api.services.samples.youtube.cmdline.data.Search;
-import com.google.api.services.youtube.model.SearchResult;
+import com.google.api.services.samples.youtube.cmdline.data.YoutubeService;
 
 @Controller
 @ManagedBean
 @Scope("session")
 public class PesquisaBean {
+    //Search Term
     private String searchTerm;
-    private List<SearchResult> resultadoPesquisa;
-    private VimeoVideoSearchResult searchVideos;
-    private String youtubeVideoId;
-    private String vimeoVideoId;
-    private VimeoVideo vimeoVideo;
-    private SearchResult youtubeVideo;
-    private VideoView videoView;
-    private Operation operation;
 
+    //Carrousel entities
+    private List<VideoView> youTubeVideosSearchResult;
+    private List<VideoView> vimeoVideosSearchResult;
+
+    //VideoView attributes
+    private String videoViewId;
+    private Operation operation;
+    private VideoView videoView;
+
+    //Determine the action to do when the view is rendered
     public void resolveUrlAction(ComponentSystemEvent event) throws IOException {
         FacesContext fc = FacesContext.getCurrentInstance();
         if (fc.getPartialViewContext().isAjaxRequest()) {
@@ -45,59 +44,57 @@ public class PesquisaBean {
         if (isUrlHeadertEmpty) {
             operation = Operation.search;
         } else if (requestParameterMap.containsKey("youtube")) {
-            youtubeVideoId = requestParameterMap.get("youtube");
-            carregarDadosYoutube();
+            videoViewId = requestParameterMap.get("youtube");
+            loadYoutubeVideo();
         } else if (requestParameterMap.containsKey("vimeo")) {
-            vimeoVideoId = requestParameterMap.get("vimeo");
-            carregarDadosVimeo();
+            videoViewId = requestParameterMap.get("vimeo");
+            loadVimeoVideo();
         } else {
-            throw new IOException("initial operation not defined");
+            throw new IOException("initial operation not recognized.");
         }
         clearValues();
     }
 
-    public void onLoad() {
-        System.out.println("onload callled");
-    }
-
+    //This method is need until the aplication scope is fixed
     private void clearValues() {
         searchTerm = null;
-        youtubeVideoId = null;
-        vimeoVideoId = null;
+        videoViewId = null;
+        //for develop porpuse dont clear carrousel entities
+        //        youTubeVideosSearchResult.clear();
+        //        vimeoVideosSearchResult.clear();
     }
 
-    public void carregarDadosVimeo() {
-        VimeoVideo video =
-                searchVideos == null ? VimeoService.getVideoById(vimeoVideoId)
-                        : recuperarVideoLocal();
-        videoView = new VideoView(video);
+    public void loadVimeoVideo() {
+        if (vimeoVideosSearchResult == null) {
+            videoView = VimeoService.getVideoById(videoViewId);
+        } else {
+            carregarLocal(vimeoVideosSearchResult);
+        }
         operation = Operation.playVimeo;
     }
 
-    private VimeoVideo recuperarVideoLocal() {
-        for (VimeoVideo video : searchVideos.getVideos().getVideos()) {
-            if (video.getId().equals(vimeoVideoId)) {
-                return video;
-            }
+    public void loadYoutubeVideo() {
+        if (youTubeVideosSearchResult == null) {
+            YoutubeService.getVideoById(videoViewId);
+        } else {
+            carregarLocal(youTubeVideosSearchResult);
         }
-        return null;
-    }
-
-    public void carregarDadosYoutube() throws IOException {
-        videoView = new VideoView(youtubeVideoId);
         operation = Operation.playYoutube;
     }
 
-    public void pesquisar() {
-        resultadoPesquisa = Search.pesquisar(searchTerm);
-        searchVideos = VimeoService.searchVideos(searchTerm);
-        List<SearchResult> aux = new ArrayList<SearchResult>();
-        for (SearchResult item : resultadoPesquisa) {
-            if ("youtube#video".equals(item.getId().getKind())) {
-                aux.add(item);
+    private void carregarLocal(List<VideoView> localVideos) {
+        for (VideoView videoView : localVideos) {
+            if (videoView.getId().equals(videoViewId)) {
+                this.videoView = videoView;
             }
         }
-        resultadoPesquisa = aux;
+    }
+
+    public void pesquisar() {
+        youTubeVideosSearchResult = YoutubeService.searchVideos(searchTerm);
+        vimeoVideosSearchResult = VimeoService.searchVideos(searchTerm);
+        System.out.println("youtube: " + youTubeVideosSearchResult.size());
+        System.out.println("vimeo: " + vimeoVideosSearchResult.size());
     }
 
     //    public void onTabChange(TabChangeEvent event) {
@@ -129,45 +126,28 @@ public class PesquisaBean {
         this.searchTerm = termoPesquisa;
     }
 
-    public List<SearchResult> getResultadoPesquisa() {
-        return resultadoPesquisa;
+    public List<VideoView> getYouTubeVideosSearchResult() {
+        return youTubeVideosSearchResult;
     }
 
-    public void setResultadoPesquisa(List<SearchResult> resultadoPesquisa) {
-        this.resultadoPesquisa = resultadoPesquisa;
+    public void setYouTubeVideosSearchResult(List<VideoView> resultadoPesquisa) {
+        this.youTubeVideosSearchResult = resultadoPesquisa;
     }
 
-    public VimeoVideoSearchResult getSearchVideos() {
-        return searchVideos;
+    public List<VideoView> getVimeoVideosSearchResult() {
+        return vimeoVideosSearchResult;
     }
 
-    public void setSearchVideos(VimeoVideoSearchResult searchVideos) {
-        this.searchVideos = searchVideos;
+    public void setVimeoVideosSearchResult(List<VideoView> searchVideos) {
+        this.vimeoVideosSearchResult = searchVideos;
     }
 
-    public String getYoutubeVideoId() {
-        return youtubeVideoId;
+    public String getVideoViewId() {
+        return videoViewId;
     }
 
-    public void setYoutubeVideoId(String youtubeVideoId) throws IOException {
-        this.youtubeVideoId = youtubeVideoId;
-        carregarDadosYoutube();
-    }
-
-    public String getVimeoVideoId() {
-        return vimeoVideoId;
-    }
-
-    public void setVimeoVideoId(String vimeoVideoId) {
-        this.vimeoVideoId = vimeoVideoId;
-    }
-
-    public VimeoVideo getVimeoVideo() {
-        return vimeoVideo;
-    }
-
-    public void setVimeoVideo(VimeoVideo vimeoVideo) {
-        this.vimeoVideo = vimeoVideo;
+    public void setVideoViewId(String vimeoVideoId) {
+        this.videoViewId = vimeoVideoId;
     }
 
     public VideoView getVideoView() {
@@ -176,14 +156,6 @@ public class PesquisaBean {
 
     public void setVideoView(VideoView videoView) {
         this.videoView = videoView;
-    }
-
-    public SearchResult getYoutubeVideo() {
-        return youtubeVideo;
-    }
-
-    public void setYoutubeVideo(SearchResult youtubeVideo) {
-        this.youtubeVideo = youtubeVideo;
     }
 
     public Operation getOperation() {

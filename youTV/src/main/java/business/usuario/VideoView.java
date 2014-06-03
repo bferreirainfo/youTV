@@ -1,14 +1,10 @@
 package business.usuario;
 
-import java.io.IOException;
-import java.util.List;
+import utils.Utils;
 
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.services.samples.youtube.cmdline.Auth;
-import com.google.api.services.youtube.YouTube;
+import com.google.api.client.util.DateTime;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoStatistics;
-import com.google.common.collect.Lists;
 
 public class VideoView {
     private String id;
@@ -18,44 +14,38 @@ public class VideoView {
     private String commentCount;
     private String dislikeCount;
     private String likeCount;
+    private String thumbnailUrl;
+    private String uploadDate;
+    private String duration;
 
     public VideoView(VimeoVideo vimeoVideo) {
         id = vimeoVideo.getId();
         title = vimeoVideo.getTitle();
-        views = vimeoVideo.getNumberOfPlays();
-        likeCount = vimeoVideo.getNumberOfLikes();
-        dislikeCount = "não disponível";
+        views = Utils.formatNumberWithDots(vimeoVideo.getNumberOfPlays());
+        likeCount = vimeoVideo.getLikeCount();
+        dislikeCount = "n/a";
+        uploadDate = vimeoVideo.getUploadDate();
+        duration = vimeoVideo.getDuration();
+        thumbnailUrl = vimeoVideo.getThumbnails().getMediumThumbail().getContent();
         videoType = "vimeo";
     }
 
-    public VideoView(String youtubeVideoId) throws IOException {
-        com.google.api.services.youtube.YouTube.Videos.List videosList =
-                loadVideoStatistics(youtubeVideoId);
-
-        Video video = videosList.execute().getItems().get(0);
+    public VideoView(Video video) {
         VideoStatistics videoStatistics = video.getStatistics();
-
-        id = youtubeVideoId;
-        title = video.getSnippet().getTitle();
-        views = videoStatistics.getViewCount().toString();
+        id = video.getId();
+        views = Utils.formatNumberWithDots(videoStatistics.getViewCount().toString());
         dislikeCount = videoStatistics.getDislikeCount().toString();
         likeCount = videoStatistics.getLikeCount().toString();
-        videoType = "youtube";
-    }
+        thumbnailUrl = video.getSnippet().getThumbnails().getDefault().getUrl();
+        duration = video.getContentDetails().getDuration();
+        String date = "";
+        DateTime publishedAt = video.getSnippet().getPublishedAt();
+        for (String datePart : publishedAt.toString().substring(0, 10).split("-")) {
+            date = datePart + (date != "" ? "/" + date : "");
+        }
+        uploadDate = date;
 
-    private com.google.api.services.youtube.YouTube.Videos.List loadVideoStatistics(
-            String youtubeVideoId) throws IOException {
-        List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
-        Credential credential = Auth.authorize(scopes, "uploadvideo");
-
-        // This object is used to make YouTube Data API requests.
-        com.google.api.services.youtube.YouTube youtube =
-                new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
-                        .setApplicationName("youtv1988").build();
-
-        com.google.api.services.youtube.YouTube.Videos.List videosList =
-                youtube.videos().list("statistics,snippet").setId(youtubeVideoId);
-        return videosList;
+        title = video.getSnippet().getTitle();
     }
 
     public boolean isVimeo() {
@@ -120,5 +110,29 @@ public class VideoView {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public void setThumbnailUrl(String url) {
+        thumbnailUrl = url;
+    }
+
+    public String getThumbnailUrl() {
+        return thumbnailUrl;
+    }
+
+    public String getUploadDate() {
+        return uploadDate;
+    }
+
+    public void setUploadDate(String uploadDate) {
+        this.uploadDate = uploadDate;
+    }
+
+    public String getDuration() {
+        return duration;
+    }
+
+    public void setDuration(String duration) {
+        this.duration = duration;
     }
 }

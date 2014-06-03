@@ -90,7 +90,8 @@
 
 /* Add a triangle to currently open menu item link */
 .cbp-hsmenu > li.cbp-hsitem-open > a:after {
-	top:55px;
+	top:47px;
+	position:absolute;
 	border: solid transparent;
 	content: " ";
 	height: 0;

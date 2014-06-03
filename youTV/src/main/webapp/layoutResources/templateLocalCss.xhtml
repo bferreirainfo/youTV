@@ -1,0 +1,167 @@
+<style>
+.bx-controls-direction a {
+    opacity: 0;
+    transition: opacity .25s ease-in-out;
+    -moz-transition: opacity .25s ease-in-out;
+    -webkit-transition: opacity .25s ease-in-out;
+}
+
+.bx-wrapper:hover .bx-controls-direction a {
+    opacity: 1;
+}
+
+body{
+	padding-top: 0px;
+	padding: 20px;
+	background: #e1e1e1;
+}
+h4{
+	margin-top:0px !important;
+}
+.edgeBorder{
+	padding: 1% 1% 0% 1%;border: 1px solid #e1e1e1;
+}
+.logosClass{
+	height: 60px;
+	width: 100px;
+	visibility: 
+}
+
+/*BxSlider Css */
+.bx-wrapper .bx-pager{
+		top:-26px;
+		height:20px;
+		padding: 0px;
+		
+	}
+	.thumbnailVideo{
+		width: 175px;
+		height:98px;
+	}
+	
+.arrow{
+	display:none;
+	border-bottom: solid 30px transparent;
+	border-top: solid 30px transparent;
+	margin-top: -30px;
+	content: " ";
+	display: block;
+	top: 50%;
+	left: 50%;
+	position: absolute;
+}
+inverterDiv{
+		-webkit-transform: rotate(90deg);
+	    -moz-transform: rotate(90deg);
+	    -o-transform: rotate(90deg);
+	    -ms-transform: rotate(90deg);
+	    transform: rotate(90deg);
+}
+.bx-prev::before{
+	border-right: solid 22px #EBEBEB;
+	margin-left: 1px;
+	border-bottom: solid 22px transparent;
+	border-top: solid 22px transparent;
+	margin-top: -30px;
+	content: " ";
+	display: block;
+	top: 50%;
+	left: 19%;
+	position: absolute;
+}
+
+.bx-next::before{
+	border-left: solid 22px #EBEBEB;
+	margin-left: 1px;
+	border-bottom: solid 22px transparent;
+	border-top: solid 22px transparent;
+	margin-top: -30px;
+	content: " ";
+	display: block;
+	top: 50%;
+	left: 19%;
+	position: absolute;
+}
+
+/*Menu Css */
+#custom_carousel .item {
+
+    color:#000;
+    background-color:#eee;
+    padding:20px 0;
+}
+#custom_carousel .controls{
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding:0;
+    margin:0;
+    white-space: nowrap;
+    text-align: center;
+    position: relative;
+    background:#ddd
+}
+#custom_carousel .controls li {
+    display: table-cell;
+    width: 1%;
+    max-width:90px
+}
+#custom_carousel .controls li.active {
+    background-color:#eee;
+    border-top:3px solid orange;
+}
+#custom_carousel .controls a small {
+    overflow:hidden;
+    display:block;
+    font-size:10px;
+    margin-top:5px;
+    font-weight:bold
+}
+a:hover, a:focus{
+text-decoration: none;
+}
+.videoLinkTitle{
+	font-size:12px;
+	position: relative;
+	display: block;
+	color:#2CA3FF;
+}
+.thumbnailDescription{
+	color:#706363;
+	float:right;
+	font-size:11px;
+}
+
+.bx-wrapper .bx-controls-direction a{
+	position: absolute;
+	top: -2%;
+	outline: 0;
+	width: 37px;
+	height: 141px;
+	text-indent: -9999px;
+	z-index: 9999;
+}
+.cbp-hsmenu-wrapper {
+	width: 30%;
+	left: 10%;
+	margin:0px;
+	float:left;
+	top:12px;
+}
+/* setinha do menu */
+.cbp-hsmenu > li.cbp-hsitem-open > a:after {
+	top:48px;
+	border: solid transparent;
+	content: " ";
+	height: 0;
+	width: 0;
+	position: absolute;
+	pointer-events: none;
+	border-color: transparent;
+	border-top-color: #2a6496;
+	opacity:0.9;
+	border-width: 10px;
+	left: 50%;
+	margin-left: -10px;
+	
+}
+</style>

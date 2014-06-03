@@ -1,5 +1,8 @@
 package business.usuario;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.VimeoApi;
 import org.scribe.model.OAuthRequest;
@@ -20,22 +23,30 @@ public class VimeoService {
         oathBuild();
     }
 
-    public static VimeoVideo getVideoById(String vimeoVideoId) {
+    public static VideoView getVideoById(String vimeoVideoId) {
         OAuthRequest request = createFindVideoByIdRequest(vimeoVideoId);
         service = oathBuild();
         service.signRequest(mytoken, request);
         Response response = request.send();
-        return new GsonBuilder().create()
-                .fromJson(response.getBody(), VimeoVideoSearchResult.class).getVideo()[0];
+        VimeoVideo vimeoVideo =
+                new GsonBuilder().create()
+                        .fromJson(response.getBody(), VimeoVideoSearchResult.class).getVideo()[0];
+        return new VideoView(vimeoVideo);
     }
 
-    public static VimeoVideoSearchResult searchVideos(String term) {
+    public static List<VideoView> searchVideos(String term) {
         OAuthRequest myrequest = createSearchRequest(term);
         service = oathBuild();
         service.signRequest(mytoken, myrequest);
         Response response = myrequest.send();
-        return new GsonBuilder().create()
-                .fromJson(response.getBody(), VimeoVideoSearchResult.class);
+        VimeoVideoSearchResult vimeoVideoSearchResult =
+                new GsonBuilder().create().fromJson(response.getBody(),
+                        VimeoVideoSearchResult.class);
+        List<VideoView> videos = new ArrayList<VideoView>();
+        for (VimeoVideo vimeoVideo : vimeoVideoSearchResult.getVideos().getVideos()) {
+            videos.add(new VideoView(vimeoVideo));
+        }
+        return videos;
     }
 
     private static OAuthRequest createSearchRequest(String term) {

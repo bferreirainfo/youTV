@@ -1,7 +1,5 @@
 package business.usuario;
 
-import java.text.ParseException;
-
 import com.google.gson.annotations.SerializedName;
 
 public class VimeoVideo {
@@ -24,7 +22,7 @@ public class VimeoVideo {
     @SerializedName(value = "number_of_plays")
     private String numberOfPlays;
     @SerializedName(value = "number_of_likes")
-    private String numberOfLikes;
+    private String likeCount;
     @SerializedName(value = "number_of_comments")
     private String numberOfComments;
     @SerializedName(value = "duration")
@@ -88,10 +86,10 @@ public class VimeoVideo {
         this.privacy = privacy;
     }
 
-    public String getUploadDate() throws ParseException {
-        String date = null;
+    public String getUploadDate() {
+        String date = "";
         for (String datePart : uploadDate.substring(0, 9).split("-")) {
-            date = datePart + "/" + date;
+            date = datePart + (date != "" ? "/" + date : "");
         }
         return date;
     }
@@ -116,12 +114,12 @@ public class VimeoVideo {
         this.numberOfPlays = numberOfPlays;
     }
 
-    public String getNumberOfLikes() {
-        return numberOfLikes;
+    public String getLikeCount() {
+        return likeCount;
     }
 
-    public void setNumberOfLikes(String numberOfLikes) {
-        this.numberOfLikes = numberOfLikes;
+    public void setLikeCount(String numberOfLikes) {
+        this.likeCount = numberOfLikes;
     }
 
     public String getNumberOfComments() {
