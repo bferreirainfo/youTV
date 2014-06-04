@@ -84,23 +84,28 @@
 	*zoom: 1;
 	*display: inline;
 }
-
+/* entidade responsável pelo paginator */
 .bx-wrapper .bx-pager.bx-default-pager a {
-	background: #666;
-	text-indent: -9999px;
-	display: block;
-	width: 10px;
-	height: 10px;
-	margin: 0 5px;
-	outline: 0;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
+	position: relative;
+	top:-10px;
+	float: left;
+	padding: 6px 12px;
+	margin-left: -1px;
+	line-height: 1.42857143;
+	color: #428bca;
+	text-decoration: none;
+	background-color:	rgba(255, 255, 255, 0.56);
+	border: 1px solid #ddd;
 }
+.bx-wrapper .bx-pager.bx-default-pager a:hover {
+	color: #2a6496;
+	background-color: #eee;
+	border-color: #ddd;
+}
+	
 
 .bx-wrapper .bx-pager.bx-default-pager a:hover,
 .bx-wrapper .bx-pager.bx-default-pager a.active {
-	background: #000;
 }
 
 /* DIRECTION CONTROLS (NEXT / PREV) */

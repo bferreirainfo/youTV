@@ -1,0 +1,123 @@
+<!DOCTYPE html  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml"
+	lang="en" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	>
+	
+	<h:head>
+		<meta charset="utf-8"/>
+		<title>YouTV</title>
+		<meta name="description" content="description"/>
+		<meta name="author" content="DevOOPS"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1"/>
+		<!-- não sei -->
+		<link href="#{request.contextPath}/bootstrap-3.1.1-dist/css/bootstrap.css" rel="stylesheet"/>
+		<!-- imports bxSlider  -->
+		<script src="#{request.contextPath}/js/jquery.bxslider.js"></script>
+		<link href="#{request.contextPath}/css/jquery.bxslider.css" rel="stylesheet" />
+		<!-- progressbar Ajax -->
+		<link href='#{request.contextPath}/css/nprogress.css' rel='stylesheet' />
+  		<script type="text/javascript" src='#{request.contextPath}/js/nprogress.js'></script>
+  		<!-- extensão para funcionar junto com API Vimeo não tem maven depencies -->
+  		<script type="text/javascript" src='#{request.contextPath}/js/froogaloop.js'></script>
+  		<!-- Menu JS -->
+		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/layoutResources/HorizontalSlideOutMenu/css/component.css" />
+		<script src="#{request.contextPath}/layoutResources/HorizontalSlideOutMenu/js/modernizr.custom.js"></script>
+		<script src="#{request.contextPath}/layoutResources/HorizontalSlideOutMenu/js/cbpHorizontalSlideOutMenu.min.js"></script>
+		<!-- Ellipsis -->
+		<script src="#{request.contextPath}/layoutResources/jqueryEllipises/jquery.ellipsis.js"></script>
+  		
+	</h:head>
+<h:body>
+<h:form id="form">
+<!--  código responsável por pega os parâmetros na url -->
+<!--Start Header-->
+<header class="navbar">
+	<div style="width: 100%;background: #2a6496" >
+		<div class="cbp-hsmenu-wrapper" id="cbp-hsmenu-wrapper">
+			<ul class="cbp-hsmenu">
+				<li>
+					<a id="searchLTabLink" href="#" onclick="display('searchResult');" >Pesquisa</a>
+						<ul class="cbp-hssubmenu">
+					</ul>
+				</li>
+				<li>
+					<a  id="watchingTabLink" href="#" onclick="#{pesquisaBean.operation} != 'search' ? display('playerView') : event.preventDefault()" > Assistindo</a>
+					<ul class="cbp-hssubmenu">
+					</ul>
+				</li>
+			</ul>
+		</div>
+		<div class="input-group" style="line-height:0px;padding:5.5px;width: 30%;left: 40%" >
+	           <p:inputText 
+	           				id="searchTerm"
+	           				styleClass="form-control" 
+	           				style="background:white;"  
+	           				value="#{pesquisaBean.searchTerm}" />
+	          	<div class="input-group-addon"  >
+		            <p:commandLink
+		            		 id="searchButton" 
+		            		 style="margin:0px;"
+							 action="#{pesquisaBean.pesquisar}" 
+							 process="@this searchTerm" 
+							 update=":form:searchPanel"
+							 onclick="display('searchResult');"
+							 oncomplete="loadSlider();"
+							  >
+							  <div class="glyphicon glyphicon-search"  />
+						  </p:commandLink>
+         			</div>
+        </div>
+	</div>
+</header>
+
+<!--End Header-->
+<!--Start Container-->
+<h:panelGroup id="main" class="container-fluid" layout="block">
+	<div class="row">
+		<!--Start Content-->
+		<div id="custom_carousel" class="carousel slide" data-ride="carousel" data-interval="0" >
+	        <!-- conteudo dos menus -->
+	        	<!-- menu ativo inicial no caso data-slide-to="0" -->
+	                <div class="container-fluid" style="padding-left:1px;padding-right: 1px;" >
+	                	<!-- pagina pesquisa -->
+	                	<h:panelGroup id="contentPanel" style="top: -26px;box-shadow:none; line-height: 1.2;font-size: 14px;padding-bottom: 0px !important;margin-bottom: 0px !important;position: relative;"  >
+	                		<!-- Página da pesquisa -->
+	                		<ui:include src="/includes/searchContent.xhtml"/>
+							<!-- Página do player -->
+							<div id="playerView" class="displayFalse"  style="background: white;width: 100%" >
+								<div >
+	                    			<div id="playerColumn" class="edgeBorder"  >
+	                    				<!-- All iframe´s players will be rendered here -->
+	                    				<div id="youtubePlayerWrapper" />
+	                    				<div id="vimeoPlayerWrapper"/>
+	                    			
+		                        	<h:panelGroup id="videoInformations" layout="block">
+			                            <h4 style="margin: 0px;" >#{pesquisaBean.videoView.title}</h4>
+			                            <h:outputText style="padding-left:5px" value="publicado em:#{pesquisaBean.videoView.uploadDate}" >
+			                            </h:outputText>	 
+			                            <div style="float:right;" >
+			                            	#{pesquisaBean.videoView.views} views
+			                            </div>	
+			                        </h:panelGroup>
+			                        </div>
+								</div>
+							</div>
+						</h:panelGroup>
+					<!-- resultado pesquisa /-->
+	        </div>
+	        
+    	</div>
+	</div>
+	<ui:include src="/layoutResources/templateLocalJavaScript.xhtml" />
+	<ui:include src="/layoutResources/templateLocalCss.xhtml" />
+ </h:panelGroup>
+
+</h:form>
+</h:body>
+</html>

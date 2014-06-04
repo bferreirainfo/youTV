@@ -1,12 +1,8 @@
 package presentation;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ComponentSystemEvent;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -32,33 +28,14 @@ public class PesquisaBean {
     private Operation operation;
     private VideoView videoView;
 
-    //Determine the action to do when the view is rendered
-    public void resolveUrlAction(ComponentSystemEvent event) throws IOException {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        if (fc.getPartialViewContext().isAjaxRequest()) {
-            return; // Skip ajax requests.
-        }
-        Map<String, String> requestParameterMap = fc.getExternalContext().getRequestParameterMap();
-
-        boolean isUrlHeadertEmpty = requestParameterMap.isEmpty();
-        if (isUrlHeadertEmpty) {
-            operation = Operation.search;
-        } else if (requestParameterMap.containsKey("youtube")) {
-            videoViewId = requestParameterMap.get("youtube");
-            loadYoutubeVideo();
-        } else if (requestParameterMap.containsKey("vimeo")) {
-            videoViewId = requestParameterMap.get("vimeo");
-            loadVimeoVideo();
-        } else {
-            throw new IOException("initial operation not recognized.");
-        }
+    public void setOperationToDefault() {
+        operation = Operation.search;
         clearValues();
     }
 
     //This method is need until the aplication scope is fixed
     private void clearValues() {
         searchTerm = null;
-        videoViewId = null;
         //for develop porpuse dont clear carrousel entities
         //        youTubeVideosSearchResult.clear();
         //        vimeoVideosSearchResult.clear();
@@ -68,21 +45,23 @@ public class PesquisaBean {
         if (vimeoVideosSearchResult == null) {
             videoView = VimeoService.getVideoById(videoViewId);
         } else {
-            carregarLocal(vimeoVideosSearchResult);
+            localLoad(vimeoVideosSearchResult);
         }
         operation = Operation.playVimeo;
+        clearValues();
     }
 
     public void loadYoutubeVideo() {
         if (youTubeVideosSearchResult == null) {
-            YoutubeService.getVideoById(videoViewId);
+            videoView = YoutubeService.getVideoById(videoViewId);
         } else {
-            carregarLocal(youTubeVideosSearchResult);
+            localLoad(youTubeVideosSearchResult);
         }
         operation = Operation.playYoutube;
+        clearValues();
     }
 
-    private void carregarLocal(List<VideoView> localVideos) {
+    private void localLoad(List<VideoView> localVideos) {
         for (VideoView videoView : localVideos) {
             if (videoView.getId().equals(videoViewId)) {
                 this.videoView = videoView;
@@ -91,10 +70,15 @@ public class PesquisaBean {
     }
 
     public void pesquisar() {
-        youTubeVideosSearchResult = YoutubeService.searchVideos(searchTerm);
-        vimeoVideosSearchResult = VimeoService.searchVideos(searchTerm);
-        System.out.println("youtube: " + youTubeVideosSearchResult.size());
-        System.out.println("vimeo: " + vimeoVideosSearchResult.size());
+        try {
+            youTubeVideosSearchResult = YoutubeService.searchVideos(searchTerm);
+            vimeoVideosSearchResult = VimeoService.searchVideos(searchTerm);
+            System.out.println("youtube: " + youTubeVideosSearchResult.size());
+            System.out.println("vimeo: " + vimeoVideosSearchResult.size());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     //    public void onTabChange(TabChangeEvent event) {

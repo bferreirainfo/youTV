@@ -5,10 +5,10 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
 	
-	<name>integratia</name>
+	<name>NomeExemplo</name>
 
 	<navigation-rule>
-
+		<!--  exemplos -->
 		<navigation-case>
 			<from-outcome>login</from-outcome>
 			<to-view-id>/views/login.xhtml</to-view-id>

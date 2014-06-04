@@ -2,7 +2,6 @@ package business.usuario;
 
 import utils.Utils;
 
-import com.google.api.client.util.DateTime;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoStatistics;
 
@@ -38,13 +37,7 @@ public class VideoView {
         likeCount = videoStatistics.getLikeCount().toString();
         thumbnailUrl = video.getSnippet().getThumbnails().getDefault().getUrl();
         duration = video.getContentDetails().getDuration();
-        String date = "";
-        DateTime publishedAt = video.getSnippet().getPublishedAt();
-        for (String datePart : publishedAt.toString().substring(0, 10).split("-")) {
-            date = datePart + (date != "" ? "/" + date : "");
-        }
-        uploadDate = date;
-
+        uploadDate = Utils.obtainFormatYoutubeVideoDate(video);
         title = video.getSnippet().getTitle();
     }
 

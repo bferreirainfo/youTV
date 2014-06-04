@@ -34,30 +34,24 @@ with (document.getElementById("form:searchTerm")) {
 		// Api  http://bxslider.com/options 
 		var sliderArray = new Array();
 		var sliderSettings =  {
-			  slideWidth: 175,
-			  slideHeight: 80,
+			  slideWidth: 173,
+			  height:105,
 			  minSlides: 2,
 			  maxSlides: 99,
 			  slideMargin: 10,
-			  onSliderLoad: function(){
-				  $('.bx-wrapper').css('margin','0 0 0 0');
-				  //adicionar funcões no on focus
-				  //$('.bx-wrapper').each(function(index){$(this).attr('tabindex',index);});
-				  $('.videoLinkTitle').ellipsis({row: 2});
-	 			 }
 			};
 		function loadSlider(){
 			 $('.bxslider').each(function(i){
 			        sliderArray[i] = $(this).bxSlider(sliderSettings);
 			    });
+			 $('.videoLinkTitle').ellipsis({row: 2});
+		  	 $('.bx-wrapper').css('height','144px');
 		}
 		function resizeSlider(){
 			$.each(sliderArray, function( index, value ) {
-				 var currentSlider = value.getCurrentSlide();
-			 	 value.reloadSlider();
-			 	 value.goToSlide(currentSlider);
+			 	 value.redrawSlider();
 			});
-
+			$('.videoLinkTitle').ellipsis({row: 2});
 		}
 // ============================== Abas =======================================		
 			
@@ -171,7 +165,7 @@ function display(abaId){
 var abaAtual;
 // ============================== Utility =======================================	
 function updateUrl(action,value){
-	history.pushState(null, null, 'index.faces?' + action + '=' + value);
+	history.pushState(null, null, '/youtv/home/' + action + '/' + value);
 }
 var currenctlyPlayerStopCommand;
 var currenctlyPlayerWrapper;
@@ -185,12 +179,12 @@ function visualizarApenasPlayer(playerWrapper){
 	showElementById(playerWrapper);
 }
 function hiddeElementById(playerWrapper){
-	document.getElementById(playerWrapper).style.display='none';
+	document.getElementById(playerWrapper).className='displayFalse';
 }
 function showElementById(playerWrapper){
-	document.getElementById(playerWrapper).style.display='block';
-	document.getElementById('playerColumn').style.width= Math.round($(window).width()*0.75) + "px";
-	document.getElementById('playerColumn').style.height= Math.round($(window).height()*0.65) +"px";
+	document.getElementById(playerWrapper).className='displayTrue';
+	//Tamanho setado devido ao player não ser aceitar o padding igual aos outros elementos na div
+	document.getElementById('playerColumn').style.width= Math.round($(window).width()*0.77) + "px";
 }
 function click(id){
 	document.getElementById(id).click();

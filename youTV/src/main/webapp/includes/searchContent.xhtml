@@ -9,53 +9,47 @@
 			<div id="searchResult">
 		       	<div id="content">
 					<div style="background: rgba(255, 255, 255, 0.56)" >
-						<div class="edgeBorder" >
-							<h4>
-								  Youtube
-							</h4>	
+						<h:panelGroup id="youtubeCarrousel" styleClass="edgeBorder" layout="block" rendered="#{not empty pesquisaBean.youTubeVideosSearchResult}" >
+							<h4>Youtube</h4>	
 								<ul class="bxslider">
 									<ui:repeat var="item" value="#{pesquisaBean.youTubeVideosSearchResult}" varStatus="myVarStatus"  >
 										<li> 
-											<div class="testando" style="width: 173px; height:80px">
+											<div style="width: 173px;height: 140px;" >
 												<p:commandLink action="#{pesquisaBean.loadYoutubeVideo}" process="@this" update=":form:videoInformations" onclick="playYoutube('#{item.id}');" >
 														<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
-														<img class="thumbnailVideo" src="#{item.thumbnailUrl}" /><br/>
-														<div style="top:-17px;position:relative;" >
+														<img class="thumbnailVideo" src="#{item.thumbnailUrl}" />
 															<div class="videoLinkTitle">#{item.title}</div>
 															<div class="thumbnailDescription" style="float: left" >#{item.likeCount} Likes</div>
 															<div class="thumbnailDescription" style="float: right">#{item.dislikeCount} Dislikes</div><br/>
 															<div class="thumbnailDescription" style="float: left" >#{item.uploadDate}   </div>
 															<div class="thumbnailDescription" >#{item.views} views</div>
-														</div>
 												</p:commandLink>
 											</div>
 										</li>
 									</ui:repeat>
 								</ul>
-							</div>
-							<div class="edgeBorder" >
-								<h4>
-									Vimeo 
-								</h4>
-								<ul class="bxslider">
-										<ui:repeat var="item" value="#{pesquisaBean.vimeoVideosSearchResult}" varStatus="myVarStatus"  >
-											<li> 
-												<div style="width: 173px; height:80px">
-													<p:commandLink action="#{pesquisaBean.loadVimeoVideo}" process="@this" update=":form:videoInformations" onclick="playVimeo('#{item.id}');" >
-														<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}" />
-														<img class="thumbnailVideo" src="#{item.thumbnailUrl}" /><br/>
-														<div style="top:-17px;position:relative;" >
-															<div class="videoLinkTitle">#{item.title}</div>
-															<div class="thumbnailDescription" style="float: left" >#{item.likeCount} Likes</div><br/>
-															<div class="thumbnailDescription" style="float: left" >#{item.uploadDate}   </div>
-															<div class="thumbnailDescription" >#{item.views} views</div>
-														</div>
-													</p:commandLink>
-												</div>
-											</li>
-										</ui:repeat>
-								</ul>
-							</div>
+							</h:panelGroup>
+							<h:panelGroup id="vimeoCarrousel" styleClass="edgeBorder" layout="block" rendered="#{not empty pesquisaBean.vimeoVideosSearchResult}" >
+									<h4>Vimeo</h4>
+									<ul class="bxslider">
+											<ui:repeat var="item" value="#{pesquisaBean.vimeoVideosSearchResult}" varStatus="myVarStatus"  >
+												<li> 
+													<div style="width: 173px; height:140px">
+														<p:commandLink action="#{pesquisaBean.loadVimeoVideo}" process="@this" update=":form:videoInformations" onclick="playVimeo('#{item.id}');" >
+															<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}" />
+															<img class="thumbnailVideo" src="#{item.thumbnailUrl}" /><br/>
+															<div style="top:-17px;position:relative;" >
+																<div class="videoLinkTitle">#{item.title}</div>
+																<div class="thumbnailDescription" style="float: left" >#{item.likeCount} Likes</div><br/>
+																<div class="thumbnailDescription" style="float: left" >#{item.uploadDate}   </div>
+																<div class="thumbnailDescription" >#{item.views} views</div>
+															</div>
+														</p:commandLink>
+													</div>
+												</li>
+											</ui:repeat>
+									</ul>
+							</h:panelGroup>
 						</div>
 					</div>
 				</div> 
