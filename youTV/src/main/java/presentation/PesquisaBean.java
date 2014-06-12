@@ -41,43 +41,46 @@ public class PesquisaBean {
         //        vimeoVideosSearchResult.clear();
     }
 
+    public void loadMiniplayerYoutubeVideo() {
+        operation = Operation.playYoutube;
+    }
+
+    public void loadMiniplayerVimeoVideo() {
+        operation = Operation.playVimeo;
+    }
+
     public void loadVimeoVideo() {
-        if (vimeoVideosSearchResult == null) {
-            videoView = VimeoService.getVideoById(videoViewId);
-        } else {
-            localLoad(vimeoVideosSearchResult);
-        }
+        VideoView result = localLoad(vimeoVideosSearchResult);
+        videoView = result == null ? VimeoService.getVideoById(videoViewId) : result;
         operation = Operation.playVimeo;
         clearValues();
     }
 
     public void loadYoutubeVideo() {
-        if (youTubeVideosSearchResult == null) {
-            videoView = YoutubeService.getVideoById(videoViewId);
-        } else {
-            localLoad(youTubeVideosSearchResult);
-        }
+        VideoView result = localLoad(youTubeVideosSearchResult);
+        videoView = result == null ? YoutubeService.getVideoById(videoViewId) : result;
         operation = Operation.playYoutube;
         clearValues();
     }
 
-    private void localLoad(List<VideoView> localVideos) {
-        for (VideoView videoView : localVideos) {
-            if (videoView.getId().equals(videoViewId)) {
-                this.videoView = videoView;
+    private VideoView localLoad(List<VideoView> localVideos) {
+        VideoView result = null;
+        if (localVideos != null) {
+            for (VideoView videoView : localVideos) {
+                if (videoView.getId().equals(videoViewId)) {
+                    result = videoView;
+                    break;
+                }
             }
         }
+        return result;
     }
 
     public void pesquisar() {
-        try {
-            youTubeVideosSearchResult = YoutubeService.searchVideos(searchTerm);
-            vimeoVideosSearchResult = VimeoService.searchVideos(searchTerm);
-            System.out.println("youtube: " + youTubeVideosSearchResult.size());
-            System.out.println("vimeo: " + vimeoVideosSearchResult.size());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        youTubeVideosSearchResult = YoutubeService.searchVideos(searchTerm);
+        vimeoVideosSearchResult = VimeoService.searchVideos(searchTerm);
+        System.out.println("youtube: " + youTubeVideosSearchResult.size());
+        System.out.println("vimeo: " + vimeoVideosSearchResult.size());
 
     }
 
@@ -130,8 +133,8 @@ public class PesquisaBean {
         return videoViewId;
     }
 
-    public void setVideoViewId(String vimeoVideoId) {
-        this.videoViewId = vimeoVideoId;
+    public void setVideoViewId(String videoViewId) {
+        this.videoViewId = videoViewId;
     }
 
     public VideoView getVideoView() {

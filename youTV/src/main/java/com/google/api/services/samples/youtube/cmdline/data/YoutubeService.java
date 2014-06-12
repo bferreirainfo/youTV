@@ -47,7 +47,7 @@ public class YoutubeService {
      */
     private static final String PROPERTIES_FILENAME = "youtube.properties";
 
-    private static final long NUMBER_OF_VIDEOS_RETURNED = 25;
+    private static final long NUMBER_OF_VIDEOS_RETURNED = 10;
 
     /**
      * Define a global instance of a Youtube object, which will be used to make YouTube Data API
@@ -59,7 +59,8 @@ public class YoutubeService {
         VideoView result = null;
         try {
             videosList.setId(videoId);
-            result = new VideoView(videosList.execute().getItems().get(0));
+            List<Video> items = videosList.execute().getItems();
+            result = items.isEmpty() ? null : new VideoView(items.get(0));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -68,7 +69,6 @@ public class YoutubeService {
     }
 
     public static List<VideoView> searchVideos(String queryTerm) {
-        // Read the developer key from the properties file.
         Properties properties = new Properties();
         try {
             InputStream in = YoutubeService.class.getResourceAsStream("/" + PROPERTIES_FILENAME);

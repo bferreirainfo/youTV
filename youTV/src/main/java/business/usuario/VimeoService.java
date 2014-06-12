@@ -35,24 +35,30 @@ public class VimeoService {
     }
 
     public static List<VideoView> searchVideos(String term) {
-        OAuthRequest myrequest = createSearchRequest(term);
-        service = oathBuild();
-        service.signRequest(mytoken, myrequest);
-        Response response = myrequest.send();
-        VimeoVideoSearchResult vimeoVideoSearchResult =
-                new GsonBuilder().create().fromJson(response.getBody(),
-                        VimeoVideoSearchResult.class);
         List<VideoView> videos = new ArrayList<VideoView>();
-        for (VimeoVideo vimeoVideo : vimeoVideoSearchResult.getVideos().getVideos()) {
-            videos.add(new VideoView(vimeoVideo));
+        try {
+            OAuthRequest myrequest = createSearchRequest(term);
+            service = oathBuild();
+            service.signRequest(mytoken, myrequest);
+            Response response = myrequest.send();
+            VimeoVideoSearchResult vimeoVideoSearchResult =
+                    new GsonBuilder().create().fromJson(response.getBody(),
+                            VimeoVideoSearchResult.class);
+
+            for (VimeoVideo vimeoVideo : vimeoVideoSearchResult.getVideos().getVideos()) {
+                videos.add(new VideoView(vimeoVideo));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return videos;
     }
 
     private static OAuthRequest createSearchRequest(String term) {
         OAuthRequest myrequest =
-                new OAuthRequest(Verb.GET,
-                        "http://vimeo.com/api/rest/v2?format=json&method=vimeo.videos.search&full_response=true&query="
+                new OAuthRequest(
+                        Verb.GET,
+                        "http://vimeo.com/api/rest/v2?format=json&method=vimeo.videos.search&full_response=true&page=1&per_page=10&query="
                                 + term.replace(" ", "+"));
         return myrequest;
     }

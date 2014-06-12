@@ -34,6 +34,7 @@
   		
 	</h:head>
 <h:body>
+<a id="proxyCommandOpenPopUp" style="visibility: hidden"/>
 <h:form id="form">
 <!--  código responsável por pega os parâmetros na url -->
 <!--Start Header-->
@@ -42,12 +43,12 @@
 		<div class="cbp-hsmenu-wrapper" id="cbp-hsmenu-wrapper">
 			<ul class="cbp-hsmenu">
 				<li>
-					<a id="searchLTabLink" href="#" onclick="display('searchResult');" >Pesquisa</a>
+					<a id="searchLTabLink" onclick="display('searchResult');" >Pesquisa</a>
 						<ul class="cbp-hssubmenu">
 					</ul>
 				</li>
 				<li>
-					<a  id="watchingTabLink" href="#" onclick="#{pesquisaBean.operation} != 'search' ? display('playerView') : event.preventDefault()" > Assistindo</a>
+					<a  id="watchingTabLink"  onclick="#{pesquisaBean.operation} != 'search' ? display('playerView') : event.preventDefault()" > Assistindo</a>
 					<ul class="cbp-hssubmenu">
 					</ul>
 				</li>
@@ -86,11 +87,11 @@
 	        	<!-- menu ativo inicial no caso data-slide-to="0" -->
 	                <div class="container-fluid" style="padding-left:1px;padding-right: 1px;" >
 	                	<!-- pagina pesquisa -->
-	                	<h:panelGroup id="contentPanel" style="top: -26px;box-shadow:none; line-height: 1.2;font-size: 14px;padding-bottom: 0px !important;margin-bottom: 0px !important;position: relative;"  >
+	                	<h:panelGroup id="contentPanel">
 	                		<!-- Página da pesquisa -->
 	                		<ui:include src="/includes/searchContent.xhtml"/>
 							<!-- Página do player -->
-							<div id="playerView" class="displayFalse"  style="background: white;width: 100%" >
+							<div id="playerView" class="displayFalse"  style="width: 100%" >
 								<div >
 	                    			<div id="playerColumn" class="edgeBorder"  >
 	                    				<!-- All iframe´s players will be rendered here -->
@@ -114,6 +115,9 @@
 	        
     	</div>
 	</div>
+	<script>
+		 context = "home";
+	</script>
 	<ui:include src="/layoutResources/templateLocalJavaScript.xhtml" />
 	<ui:include src="/layoutResources/templateLocalCss.xhtml" />
  </h:panelGroup>

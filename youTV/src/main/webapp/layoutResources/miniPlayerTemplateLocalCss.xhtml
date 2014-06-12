@@ -1,0 +1,27 @@
+<style>
+.displayFalse{
+	display: block;
+    -webkit-transition: opacity 1s ease-out;
+    opacity: 0; 
+    height: 0;
+    overflow: hidden;
+}.
+.displayTrue{
+	opacity: 1;
+    height: auto;
+}
+.video-container {
+    position: relative;
+    padding-bottom: 50%;
+    padding-top: 13.5%; height: 0; overflow: hidden;
+}
+.video-container iframe,
+.video-container object,
+.video-container embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+</style>

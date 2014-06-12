@@ -33,4 +33,16 @@ public class Utils {
         return date;
     }
 
+    public static int percentage(Float amount, Float total) {
+        int result = new Float(Math.ceil((amount * 100) / total)).intValue();
+        return result;
+    }
+
+    public static int[] calculateLikesAndDislikesPercentage(float likes, float dislikes) {
+        int[] result = new int[2];
+        int percentage = percentage(likes, likes + dislikes);
+        result[0] = percentage;
+        result[1] = percentage == 0 ? 0 : 100 - percentage;
+        return result;
+    }
 }

@@ -1,0 +1,21 @@
+{
+  "name": "Always On Top Window",
+  "description": "Always On Top Window",
+  "version": "1",
+  "manifest_version": 2,
+  "icons": {
+    "16": "icon.png",
+    "128": "icon.png"
+  },
+   "background": {
+      "scripts": ["background.js"]
+    },
+   "content_scripts": [
+    {
+        "matches": ["http://localhost:8080/youtv/home/*"],
+        "js": ["content.js"]
+    }
+  ],
+  "permissions": [ "tabs"]
+      
+ }

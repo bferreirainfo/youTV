@@ -1,5 +1,7 @@
 package business.usuario;
 
+import java.math.BigInteger;
+
 import utils.Utils;
 
 import com.google.api.services.youtube.model.Video;
@@ -16,11 +18,14 @@ public class VideoView {
     private String thumbnailUrl;
     private String uploadDate;
     private String duration;
+    private String likesPercentage;
+    private String dislikesPercentage;
 
     public VideoView(VimeoVideo vimeoVideo) {
         id = vimeoVideo.getId();
         title = vimeoVideo.getTitle();
-        views = Utils.formatNumberWithDots(vimeoVideo.getNumberOfPlays());
+        String numberOfPlays = vimeoVideo.getNumberOfPlays();
+        views = Utils.formatNumberWithDots(numberOfPlays);
         likeCount = vimeoVideo.getLikeCount();
         dislikeCount = "n/a";
         uploadDate = vimeoVideo.getUploadDate();
@@ -32,9 +37,20 @@ public class VideoView {
     public VideoView(Video video) {
         VideoStatistics videoStatistics = video.getStatistics();
         id = video.getId();
-        views = Utils.formatNumberWithDots(videoStatistics.getViewCount().toString());
-        dislikeCount = videoStatistics.getDislikeCount().toString();
-        likeCount = videoStatistics.getLikeCount().toString();
+
+        BigInteger viewCount = videoStatistics.getViewCount();
+        BigInteger likesCount = videoStatistics.getLikeCount();
+        BigInteger dislikesCount = videoStatistics.getDislikeCount();
+
+        views = Utils.formatNumberWithDots(viewCount.toString());
+        likeCount = likesCount.toString();
+        dislikeCount = dislikesCount.toString();
+        int[] likesAndDislikesPercentage =
+                Utils.calculateLikesAndDislikesPercentage(likesCount.floatValue(),
+                        dislikesCount.floatValue());
+        likesPercentage = likesAndDislikesPercentage[0] + "%";
+        dislikesPercentage = likesAndDislikesPercentage[1] + "%";
+
         thumbnailUrl = video.getSnippet().getThumbnails().getDefault().getUrl();
         duration = video.getContentDetails().getDuration();
         uploadDate = Utils.obtainFormatYoutubeVideoDate(video);
@@ -127,5 +143,21 @@ public class VideoView {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    public String getLikesPercentage() {
+        return likesPercentage;
+    }
+
+    public void setLikesPercentage(String likesPercentage) {
+        this.likesPercentage = likesPercentage;
+    }
+
+    public String getDislikesPercentage() {
+        return dislikesPercentage;
+    }
+
+    public void setDislikesPercentage(String dislikesPercentage) {
+        this.dislikesPercentage = dislikesPercentage;
     }
 }

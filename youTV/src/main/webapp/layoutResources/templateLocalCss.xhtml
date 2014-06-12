@@ -1,4 +1,11 @@
 <style>
+body, html {
+  height: 100%;
+}
+h4{
+	color: white;
+	font-weight: bold;
+}
 .bx-controls-direction a {
     opacity: 0;
     transition: opacity .25s ease-in-out;
@@ -12,13 +19,13 @@
 
 body{
 	padding-top: 0px;
-	padding: 20px;
-	background: #e1e1e1;
+	background: black;
 }
 h4{
 	margin-top:0px !important;
 }
 .edgeBorder{
+	background: black;
 	padding: 1% 1% 0% 1%;border: 1px solid #e1e1e1;
 }
 .logosClass{
@@ -35,12 +42,7 @@ h4{
 		height:20px;
 		padding: 0px;
 		
-	}
-	.thumbnailVideo{
-		width: 100%;
-		height:80px;
-	}
-	
+	}	
 .arrow{
 	display:none;
 	border-bottom: solid 30px transparent;
@@ -123,16 +125,67 @@ text-decoration: none;
 }
 .videoLinkTitle{
 	font-size:12px;
-	position: relative;
 	display: block;
 	color:#2CA3FF;
 }
 .thumbnailDescription{
-	color:#706363;
-	float:right;
-	font-size:11px;
+	color:white;
+	float:left;
+	font-size:10px;
 	position: relative;
 	top:3px;
+	margin-right:5px;
+}
+.progress{
+	height: 5px;
+	margin-bottom:0px;
+}
+.afterDot:after{
+	content: '\002022';
+	color: #999;
+	margin: 0 5px;
+}
+.miniPlayerAction{
+	position: relative;
+}
+.videoDescription{
+	padding: 10px 15px;
+}
+.itemSize  .miniPlayerAction{
+	visibility: hidden;
+}
+.itemSize:hover .miniPlayerAction {
+	visibility: visible;
+}
+.thumbnailVideo{
+	width: 175px;
+	height:104px;
+	margin-right:10px;
+	float:left
+}
+.author{
+	color: #B92A2A;
+	font-weight:bold;
+}
+.itemSize{
+	width: 463px;
+	height: 110px;
+}
+
+.bx-wrapper .bx-next{
+	right: -3%;
+}
+.bx-wrapper .bx-pager.bx-default-pager a{
+	background-color: rgba(0, 0, 0, 0);
+	border: 1px solid #FFF5F5;
+	border-radius: 20px;
+	margin-right: 5px;
+}
+.bx-wrapper .bx-pager.bx-default-pager a:hover, .bx-wrapper .bx-pager.bx-default-pager a.active{
+	border: 1px solid #FFF5F5;
+	border-radius: 20px;
+	margin-right: 5px;
+	background: white;
 }
 
 .bx-wrapper .bx-controls-direction a{

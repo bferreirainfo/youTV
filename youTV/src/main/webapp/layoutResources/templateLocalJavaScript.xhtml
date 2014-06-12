@@ -1,23 +1,55 @@
 <script>
+var context;
 //============================== OnPageLoad =======================================
 $(window).ready(function(){
-var menu = new cbpHorizontalSlideOutMenu( document.getElementById( 'cbp-hsmenu-wrapper' ) );
-abaAtual = 'searchResult';
-openInicialTab();
-loadSlider();
-document.getElementById("form:searchTerm").focus();
-with (document.getElementById("form:searchTerm")) {
-    onblur = function(e) {
-        setTimeout(function(){e.target.focus()});
-    }
-    onkeypress = function(e){
-    	if(e.keyCode == 13){
-    		document.getElementById('form:searchButton').click();
-    		e.preventDefault();
-    	}
-    }
-}
+switch(context){
+	case "home" : startHome(); break; 
+	case "miniplayer" : startMiniPlayer(); break;
+	default : startHome();
+}	
+
 });
+function startHome(){
+	var menu = new cbpHorizontalSlideOutMenu( document.getElementById( 'cbp-hsmenu-wrapper' ) );
+	abaAtual = 'searchResult';
+	openInicialTab();
+	loadSlider();
+	document.getElementById("form:searchTerm").focus();
+	
+	with (document.getElementById("form:searchTerm")) {
+	    onblur = function(e) {
+	        setTimeout(function(){e.target.focus()});
+	    }
+	    onkeypress = function(e){
+	    	if(e.keyCode == 13){
+	    		document.getElementById('form:searchButton').click();
+	    		e.preventDefault();
+	    	}
+	    }
+	}
+}
+function startMiniPlayer(){
+	
+}
+//============================== MiniPlayer =======================================
+function startMiniPlayer(){
+	switch('#{pesquisaBean.operation}'){
+		case 'playYoutube' : playYoutube('#{pesquisaBean.videoView.id}');break;
+		case 'playVimeo' : playVimeo('#{pesquisaBean.videoView.id}');break;
+	}
+}
+function playYoutubeMiniPlayer(videoId){
+	var proxy =  document.getElementById('proxyCommandOpenPopUp');
+	proxy.setAttribute("videoId",videoId);
+	proxy.setAttribute("videoType","youtube");
+	proxy.click();
+}
+function playVimeoMiniPlayer(videoId){
+	var proxy =  document.getElementById('proxyCommandOpenPopUp');
+	proxy.setAttribute("videoId",videoId);
+	proxy.setAttribute("videoType","vimeo");
+	proxy.click();
+}
 //============================== OnAjaxComplete =======================================
 // ============================== ProgressBar =======================================
 	//configurando  progress bar
@@ -34,18 +66,15 @@ with (document.getElementById("form:searchTerm")) {
 		// Api  http://bxslider.com/options 
 		var sliderArray = new Array();
 		var sliderSettings =  {
-			  slideWidth: 173,
-			  height:105,
-			  minSlides: 2,
-			  maxSlides: 99,
-			  slideMargin: 10,
+			  slideWidth: 530,
+			  mode: 'vertical',
+			  minSlides: Math.round($(window).height()*0.85/110)
 			};
 		function loadSlider(){
 			 $('.bxslider').each(function(i){
 			        sliderArray[i] = $(this).bxSlider(sliderSettings);
 			    });
-			 $('.videoLinkTitle').ellipsis({row: 2});
-		  	 $('.bx-wrapper').css('height','144px');
+			 $('.videoLinkTitle').ellipsis({row: 3});
 		}
 		function resizeSlider(){
 			$.each(sliderArray, function( index, value ) {
@@ -83,8 +112,8 @@ with (document.getElementById("form:searchTerm")) {
 		function onYouTubeIframeAPIReady() {
 		    player = new YT.Player('youtubePlayerWrapper', {
 		        videoId: youtubeVideoId,
-		        width:Math.round($(window).width()*0.75),
-		        height:Math.round($(window).height()*0.65),
+		        width:Math.round(context == "home" ? $(window).width()*0.75 : $(window).width())*.99 ,
+		        height:Math.round(context == "home" ? $(window).height()*0.65 : $(window).height()*.98),
 		        events: {
 		            'onReady': onYoutubePlayerReady,
 		          }
@@ -107,7 +136,7 @@ function playVimeo(videoVimeoId){
    // Tell Vimeo what function to call
    var callback = 'embedVideo';
    // Put together the URL
-   var url = endpoint + '?url=' + encodeURIComponent(videoUrl) + '&amp;callback=' + callback + '&amp;width='+ Math.round($(window).width()*0.75) + '&amp;height='+ Math.round($(window).height()*0.65) + '&amp;autoplay=true';
+   var url = endpoint + '?url=' + encodeURIComponent(videoUrl) + '&amp;callback=' + callback + '&amp;width='+ Math.round($(window).width()*0.93) + '&amp;height='+ Math.round($(window).height()*0.75) + '&amp;autoplay=true';
    // This function puts the video on the page
     
    var js = document.createElement('script');
@@ -165,13 +194,14 @@ function display(abaId){
 var abaAtual;
 // ============================== Utility =======================================	
 function updateUrl(action,value){
+	if(context == "home")
 	history.pushState(null, null, '/youtv/home/' + action + '/' + value);
 }
 var currenctlyPlayerStopCommand;
 var currenctlyPlayerWrapper;
 
 function visualizarApenasPlayer(playerWrapper){
-	click('watchingTabLink');
+	context == "home" ? click('watchingTabLink') : false;
 	if(currenctlyPlayerStopCommand != null){
 		currenctlyPlayerStopCommand();
 		hiddeElementById(currenctlyPlayerWrapper);
@@ -184,7 +214,8 @@ function hiddeElementById(playerWrapper){
 function showElementById(playerWrapper){
 	document.getElementById(playerWrapper).className='displayTrue';
 	//Tamanho setado devido ao player não ser aceitar o padding igual aos outros elementos na div
-	document.getElementById('playerColumn').style.width= Math.round($(window).width()*0.77) + "px";
+	if(context == "home")
+		document.getElementById('playerColumn').style.width= Math.round($(window).width()*0.77) + "px";
 }
 function click(id){
 	document.getElementById(id).click();
@@ -199,4 +230,5 @@ function testando(){
 	    alert(e.keyCode);
 	});
 }
+
 </script>
