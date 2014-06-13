@@ -1,6 +1,7 @@
 <style>
 body, html {
   height: 100%;
+  color: white;
 }
 h4{
 	color: white;
@@ -16,10 +17,15 @@ h4{
 .bx-wrapper:hover .bx-controls-direction a {
     opacity: 1;
 }
-
+a{
+	font-family: arial,sans-serif;
+}
+a:hover {
+	cursor: pointer;
+}
 body{
 	padding-top: 0px;
-	background: black;
+	background: rgb(56, 56, 56);
 }
 h4{
 	margin-top:0px !important;
@@ -42,7 +48,7 @@ h4{
 		height:20px;
 		padding: 0px;
 		
-	}	
+}	
 .arrow{
 	display:none;
 	border-bottom: solid 30px transparent;
@@ -143,8 +149,15 @@ text-decoration: none;
 	background-color: rgba(144, 22, 22, 0.89);
 }
 .progress{
-	height: 5px;
+	width:40%;
+	height: 3px;
 	margin-bottom:0px;
+	position: relative;
+	top: 1px;
+	background-color: black;
+}
+.bxslider{
+	padding: 0px;
 }
 .afterDot:after{
 	content: '\002022';
@@ -153,9 +166,12 @@ text-decoration: none;
 }
 .miniPlayerAction{
 	position: relative;
+	top:4px;
+	left:1px;
 }
 .videoDescription{
-	padding: 10px 15px;
+	font-family:cursive;
+	line-height: 15px;
 }
 .itemSize  .miniPlayerAction{
 	visibility: hidden;
@@ -164,21 +180,37 @@ text-decoration: none;
 	visibility: visible;
 }
 .thumbnailVideo{
-	width: 254px;
-	height:117px;
+	width: 180px;
+	height:100%;
 	margin-right:10px;
 	float:left
 }
 .itemSize{
-	width: 620px;
-	height: 117px;
-	padding:1%;
+	background-color: rgb(34, 34, 34);
+	width: 520px;
+	height: 140px;
+	padding: 1%;
 }
 .author{
 	color: #B92A2A;
 	font-weight:bold;
 }
-
+.descriptionArea{
+	padding:1%;
+	height: 80px !important;
+	display: block;
+}
+.bx-wrapper .bx-loading {
+min-height: 50px;
+background: url(images/bx_loader.gif) center center no-repeat #2CA3FF;
+height: 100%;
+width: 100%;
+position: absolute;
+top: 0;
+left: 0;
+z-index: 2000;
+content: "Carregando...";
+}
 
 .bx-wrapper .bx-next{
 	right: -3%;

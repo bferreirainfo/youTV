@@ -20,6 +20,7 @@ public class VideoView {
     private String duration;
     private String likesPercentage;
     private String dislikesPercentage;
+    private String description;
 
     public VideoView(VimeoVideo vimeoVideo) {
         id = vimeoVideo.getId();
@@ -35,9 +36,10 @@ public class VideoView {
     }
 
     public VideoView(Video video) {
-        VideoStatistics videoStatistics = video.getStatistics();
         id = video.getId();
+        description = video.getSnippet().getDescription();
 
+        VideoStatistics videoStatistics = video.getStatistics();
         BigInteger viewCount = videoStatistics.getViewCount();
         BigInteger likesCount = videoStatistics.getLikeCount();
         BigInteger dislikesCount = videoStatistics.getDislikeCount();
@@ -159,5 +161,13 @@ public class VideoView {
 
     public void setDislikesPercentage(String dislikesPercentage) {
         this.dislikesPercentage = dislikesPercentage;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

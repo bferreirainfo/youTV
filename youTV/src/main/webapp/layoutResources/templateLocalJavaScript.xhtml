@@ -15,7 +15,7 @@ function startHome(){
 	openInicialTab();
 	loadSlider();
 	//corrigir focus
-	document.getElementById("form:searchTerm").focus();
+	//document.getElementById("form:searchTerm").focus();
 	
 	with (document.getElementById("form:searchTerm")) {
 	    onblur = function(e) {
@@ -67,21 +67,26 @@ function playVimeoMiniPlayer(videoId){
 		// Api  http://bxslider.com/options 
 		var sliderArray = new Array();
 		var sliderSettings =  {
-			  slideWidth: 630,
+			  slideWidth: 590,
 			  mode: 'vertical',
-			  minSlides: Math.round($(window).height()*0.80/117)
+			  slideMargin:4,
+			  controls: false,
+			  minSlides: Math.round($(window).height()*0.70/140)
 			};
 		function loadSlider(){
 			 $('.bxslider').each(function(i){
 			        sliderArray[i] = $(this).bxSlider(sliderSettings);
 			    });
-			 $('.videoLinkTitle').ellipsis({row: 3});
+			 $('.ellipsis3').ellipsis({row: 3});
+			 $('.ellipsis2').ellipsis({row: 3});
 		}
 		function resizeSlider(){
+			$('.bx-wrapper').css("width","520");
 			$.each(sliderArray, function( index, value ) {
 			 	 value.redrawSlider();
 			});
-			$('.videoLinkTitle').ellipsis({row: 2});
+			$('.ellipsis3').ellipsis({row: 3});
+			 $('.ellipsis2').ellipsis({row: 2});
 		}
 // ============================== Abas =======================================		
 			
@@ -211,12 +216,12 @@ function visualizarApenasPlayer(playerWrapper){
 	showElementById(playerWrapper);
 }
 function hiddeElementById(playerWrapper){
-	document.getElementById(playerWrapper).className='displayFalse';
 	$("#"+playerWrapper).fadeOut('slow');
+	document.getElementById(playerWrapper).className='displayFalse';
 }
 function showElementById(playerWrapper){
 	document.getElementById(playerWrapper).className='displayTrue';
-	$("#" +playerWrapper).fadeIn(800);
+	$("#" +playerWrapper).fadeIn('slow');
 	//Tamanho setado devido ao player não ser aceitar o padding igual aos outros elementos na div
 		document.getElementById('playerColumn').style.width= Math.round($(window).width()*0.95) + "px";
 }

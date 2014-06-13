@@ -88,7 +88,7 @@ public class VimeoVideo {
 
     public String getUploadDate() {
         String date = "";
-        for (String datePart : uploadDate.substring(0, 9).split("-")) {
+        for (String datePart : uploadDate.substring(0, 10).split("-")) {
             date = datePart + (date != "" ? "/" + date : "");
         }
         return date;

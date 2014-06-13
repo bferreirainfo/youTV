@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:f="http://java.sun.com/jsf/core"
+ >
+	<body>
+		<div id="playerView" class="displayFalse"  style="width: 100%;padding: 1%;" >
+			<div >
+	   			<div id="playerColumn" class="edgeBorder"  >
+	   				<!-- All iframe´s players will be rendered here -->
+	   				<div id="youtubePlayerWrapper" />
+	   				<div id="vimeoPlayerWrapper"/>
+		        	<h:panelGroup id="videoInformations" layout="block">
+			             <h4 style="margin: 0px;" >#{pesquisaBean.videoView.title}</h4>
+			             <h:outputText style="padding-left:5px" value="publicado em:#{pesquisaBean.videoView.uploadDate}" >
+			             </h:outputText>	 
+			             <div style="float:right;" >
+			             	#{pesquisaBean.videoView.views} views
+			             </div>	
+		         	</h:panelGroup>
+	        	 </div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -19,24 +19,32 @@
 												<img class="thumbnailVideo" src="#{item.thumbnailUrl}" />
 											</p:commandLink>	
 											<div class="videoDescription" >
-														<div class="videoLinkTitle">#{item.title}</div>
 														<div class="descriptionArea">
+															<p:commandLink  styleClass="ellipsis2" action="#{pesquisaBean.loadYoutubeVideo}" process="@this" update=":form:videoInformations" onclick="playYoutube('#{item.id}');" >
+																<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
+																#{item.title}
+															</p:commandLink>
 															<div class="thumbnailDescription" >de </div>
 															<div class="thumbnailDescription author afterDot">autor</div>
 															<div class="thumbnailDescription afterDot">#{item.uploadDate}</div>
 															<div class="thumbnailDescription ">#{item.views} views</div>
 															<br/>
-															<div class="progress">
-															  <div class="progress-bar progress-bar-success" style="width: #{item.likesPercentage}"  >
-															    <span class="sr-only">35% Complete (success)</span>
-															  </div>
-															  <div class="progress-bar progress-bar-danger" style="width: #{item.dislikesPercentage}">
-															    <span class="sr-only">10% Complete (danger)</span>
-															  </div>
+															<div>
+																<div class="thumbnailDescription">#{item.likeCount} Likes</div>
+																<div class="thumbnailDescription">#{item.dislikeCount} Dislikes</div>
+																<br/>
+																<div class="progress">
+																  <div class="progress-bar progress-bar-success" style="width: #{item.likesPercentage}"  >
+																    <span class="sr-only">35% Complete (success)</span>
+																  </div>
+																  <div class="progress-bar progress-bar-danger" style="width: #{item.dislikesPercentage}">
+																    <span class="sr-only">10% Complete (danger)</span>
+																  </div>
+																</div>
 															</div>
-															<div class="thumbnailDescription">#{item.likeCount} Likes</div>
-															<div class="thumbnailDescription">#{item.dislikeCount} Dislikes</div>
+															<div class="ellipsis2" style="font-size: 11px;margin-top: 2px;" >#{item.description}</div>
 														</div>
+														<br/>
 														<br/>
 														<a class="miniPlayerAction" onClick="playYoutubeMiniPlayer('#{item.id}');" >
 															<span class="glyphicon glyphicon-new-window" />
@@ -58,23 +66,16 @@
 														<img class="thumbnailVideo" src="#{item.thumbnailUrl}" />
 													</p:commandLink>
 													<div class="videoDescription" >
-														<div class="videoLinkTitle">#{item.title}</div>
 														<div class="descriptionArea">
+														<div class="ellipsis2">#{item.title}</div>
 															<div class="thumbnailDescription" >de </div>
 															<div class="thumbnailDescription author afterDot">autor</div>
 															<div class="thumbnailDescription afterDot">#{item.uploadDate}</div>
 															<div class="thumbnailDescription ">#{item.views} views</div>
 															<br/>
-															<div class="progress">
-																 <div class="progress-bar progress-bar-success" style="width: #{item.likesPercentage}"  >
-																    <span class="sr-only">35% Complete (success)</span>
-																  </div>
-																  <div class="progress-bar progress-bar-danger" style="width: #{item.dislikesPercentage}">
-																    <span class="sr-only">10% Complete (danger)</span>
-																  </div>
-															</div>
 															<div class="thumbnailDescription">#{item.likeCount} Likes</div>
 														</div>
+														<br/>
 														<br/>
 														<a class="miniPlayerAction" onClick="playVimeoMiniPlayer('#{item.id}');" >
 															<span class="glyphicon glyphicon-new-window" />

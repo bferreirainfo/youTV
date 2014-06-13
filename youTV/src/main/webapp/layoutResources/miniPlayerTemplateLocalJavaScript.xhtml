@@ -37,6 +37,7 @@ function startMiniPlayer(){
 		function onYouTubeIframeAPIReady() {
 		    player = new YT.Player('youtubeContainer', {
 		        videoId: youtubeVideoId,
+		        playerVars:{autohide:1,egm:1},
 		        events: {
 		            'onReady': onYoutubePlayerReady,
 		          }

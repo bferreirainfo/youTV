@@ -139,7 +139,7 @@ public class YoutubeService {
     static {
         List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
         Credential credential = null;
-        
+
         try {
             credential = Auth.authorize(scopes, "uploadvideo");
         } catch (IOException e1) {
@@ -154,7 +154,7 @@ public class YoutubeService {
         try {
             videosList = youtube.videos().list("statistics,snippet,contentDetails");
             videosList
-                    .setFields("items(id,statistics/viewCount,statistics/likeCount,statistics/dislikeCount,snippet/title,snippet/thumbnails/medium/url,snippet/publishedAt,contentDetails/duration)");
+                    .setFields("items(id,statistics/viewCount,statistics/likeCount,statistics/dislikeCount,snippet/title,snippet/description,snippet/thumbnails/medium/url,snippet/publishedAt,contentDetails/duration)");
         } catch (IOException e) {
             e.printStackTrace();
         }
