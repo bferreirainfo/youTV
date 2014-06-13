@@ -58,9 +58,9 @@
 	           <p:inputText 
 	           				id="searchTerm"
 	           				styleClass="form-control" 
-	           				style="background:white;"  
+	           				style="background: black;border: black;border-radius: 1px;height: 28px;color:white;"  
 	           				value="#{pesquisaBean.searchTerm}" />
-	          	<div class="input-group-addon"  >
+	          	<div class="input-group-addon" style="background: black;border: black;" >
 		            <p:commandLink
 		            		 id="searchButton" 
 		            		 style="margin:0px;"
@@ -91,7 +91,7 @@
 	                		<!-- Página da pesquisa -->
 	                		<ui:include src="/includes/searchContent.xhtml"/>
 							<!-- Página do player -->
-							<div id="playerView" class="displayFalse"  style="width: 100%" >
+							<div id="playerView" class="displayFalse"  style="width: 100%;padding: 1%;" >
 								<div >
 	                    			<div id="playerColumn" class="edgeBorder"  >
 	                    				<!-- All iframe´s players will be rendered here -->

@@ -51,7 +51,7 @@ public class VideoView {
         likesPercentage = likesAndDislikesPercentage[0] + "%";
         dislikesPercentage = likesAndDislikesPercentage[1] + "%";
 
-        thumbnailUrl = video.getSnippet().getThumbnails().getDefault().getUrl();
+        thumbnailUrl = video.getSnippet().getThumbnails().getMedium().getUrl();
         duration = video.getContentDetails().getDuration();
         uploadDate = Utils.obtainFormatYoutubeVideoDate(video);
         title = video.getSnippet().getTitle();

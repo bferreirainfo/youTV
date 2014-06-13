@@ -74,8 +74,7 @@ public class Auth {
                 fileDataStoreFactory.getDataStore(credentialDatastore);
         GoogleAuthorizationCodeFlow flow =
                 new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
-                        clientSecrets, scopes).setAccessType("offline")
-                        .setCredentialDataStore(datastore).build();
+                        clientSecrets, scopes).setAccessType("offline").setApprovalPrompt("force").setCredentialDataStore(datastore).build();
         // Build the local server and bind it to port 8080
         LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(8089).build();
         //Desabilita debug do jetty
