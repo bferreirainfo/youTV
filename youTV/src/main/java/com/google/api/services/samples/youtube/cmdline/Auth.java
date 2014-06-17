@@ -72,9 +72,11 @@ public class Auth {
                         + CREDENTIALS_DIRECTORY));
         DataStore<StoredCredential> datastore =
                 fileDataStoreFactory.getDataStore(credentialDatastore);
+        //set configurations for the request token ex. offline acess(to get refresh token)
         GoogleAuthorizationCodeFlow flow =
                 new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT, JSON_FACTORY,
-                        clientSecrets, scopes).setAccessType("offline").setApprovalPrompt("force").setCredentialDataStore(datastore).build();
+                        clientSecrets, scopes).setAccessType("offline").setApprovalPrompt("force")
+                        .setCredentialDataStore(datastore).build();
         // Build the local server and bind it to port 8080
         LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(8089).build();
         //Desabilita debug do jetty

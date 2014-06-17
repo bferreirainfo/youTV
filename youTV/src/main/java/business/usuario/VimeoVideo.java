@@ -27,6 +27,8 @@ public class VimeoVideo {
     private String numberOfComments;
     @SerializedName(value = "duration")
     private String duration;
+    @SerializedName(value = "description")
+    private String description;
     @SerializedName(value = "thumbnails")
     private VimeoThumbnails thumbnails;
 
@@ -136,6 +138,14 @@ public class VimeoVideo {
 
     public void setDuration(String duration) {
         this.duration = duration;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }

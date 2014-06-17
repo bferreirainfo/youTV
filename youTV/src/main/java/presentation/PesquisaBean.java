@@ -57,8 +57,12 @@ public class PesquisaBean {
     }
 
     public void loadYoutubeVideo() {
-        VideoView result = localLoad(youTubeVideosSearchResult);
-        videoView = result == null ? YoutubeService.getVideoById(videoViewId) : result;
+        videoView = localLoad(youTubeVideosSearchResult);
+        if (videoView == null) {
+            videoView = YoutubeService.loadVideoByIdWithRelated(videoViewId);
+        } else if (videoView.getRelatedVideos() == null) {
+            YoutubeService.loadRelatedVideos(videoView);
+        }
         operation = Operation.playYoutube;
         clearValues();
     }

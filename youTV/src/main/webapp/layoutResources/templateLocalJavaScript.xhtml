@@ -29,9 +29,6 @@ function startHome(){
 	    }
 	}
 }
-function startMiniPlayer(){
-	
-}
 //============================== MiniPlayer =======================================
 function startMiniPlayer(){
 	switch('#{pesquisaBean.operation}'){
@@ -71,14 +68,28 @@ function playVimeoMiniPlayer(videoId){
 			  mode: 'vertical',
 			  slideMargin:4,
 			  controls: false,
-			  minSlides: Math.round($(window).height()*0.70/140)
+			  minSlides: Math.round($(window).height()*0.70/118)
+			};
+		var relatedVideoSettings =  {
+			  slideWidth: 180,
+			  slideHeight: 210,
+			  slideMargin:1,
+			  controls: true,
+			  pager: false,
+			  infiniteLoop:false,
+			  minSlides: 1,
+			  maxSlides: Math.round($(window).width()*0.90/180)
 			};
 		function loadSlider(){
 			 $('.bxslider').each(function(i){
 			        sliderArray[i] = $(this).bxSlider(sliderSettings);
 			    });
 			 $('.ellipsis3').ellipsis({row: 3});
-			 $('.ellipsis2').ellipsis({row: 3});
+			 $('.ellipsis2').ellipsis({row: 2});
+		}
+		function loadRelatedSlider(){
+			$('.relatedVideosSlider').bxSlider(relatedVideoSettings);
+			$('.ellipsis2').ellipsis({row: 2});
 		}
 		function resizeSlider(){
 			$('.bx-wrapper').css("width","520");
@@ -116,11 +127,11 @@ function playVimeoMiniPlayer(videoId){
 		// 3. This function creates an iframe (and YouTube player)
 		//	  after the API code downloads.
 		function onYouTubeIframeAPIReady() {
-		    player = new YT.Player('youtubePlayerWrapper', {
+		    player = new YT.Player('youtubeContainer', {
 		        videoId: youtubeVideoId,
 		        playerVars:{autohide:1,egm:1},
-		        width:Math.round(context == "home" ? $(window).width()*0.93 : $(window).width())*.99 ,
-		        height:Math.round(context == "home" ? $(window).height()*0.75 : $(window).height()*.98),
+		        width:Math.round(context == "home" ? $(window).width()*0.87 : $(window).width())*.99 ,
+		        height:Math.round(context == "home" ? $(window).height()*0.65 : $(window).height()*.98),
 		        events: {
 		            'onReady': onYoutubePlayerReady,
 		          }
@@ -185,7 +196,7 @@ function onVimeoPlayerRead(){
 function openInicialTab(){
 	switch('#{pesquisaBean.operation}'){
 		case 'search' : click('searchLTabLink'); break;
-		case 'playYoutube' : playYoutube('#{pesquisaBean.videoView.id}');break;
+		case 'playYoutube' : playYoutube('#{pesquisaBean.videoView.id}'); loadRelatedSlider(); break;
 		case 'playVimeo' : playVimeo('#{pesquisaBean.videoView.id}');break;
 		default : alert("operação não recohecida"); 
 	}
@@ -213,17 +224,16 @@ function visualizarApenasPlayer(playerWrapper){
 		currenctlyPlayerStopCommand();
 		hiddeElementById(currenctlyPlayerWrapper);
 	}
-	showElementById(playerWrapper);
+	showElementById(playerWrapper,"video-container");
 }
 function hiddeElementById(playerWrapper){
-	$("#"+playerWrapper).fadeOut('slow');
 	document.getElementById(playerWrapper).className='displayFalse';
+	$("#"+playerWrapper).fadeOut('slow');
 }
-function showElementById(playerWrapper){
-	document.getElementById(playerWrapper).className='displayTrue';
+function showElementById(playerWrapper,moreClasses){
+	document.getElementById(playerWrapper).className='displayTrue ' + moreClasses;
 	$("#" +playerWrapper).fadeIn('slow');
 	//Tamanho setado devido ao player não ser aceitar o padding igual aos outros elementos na div
-		document.getElementById('playerColumn').style.width= Math.round($(window).width()*0.95) + "px";
 }
 function click(id){
 	document.getElementById(id).click();

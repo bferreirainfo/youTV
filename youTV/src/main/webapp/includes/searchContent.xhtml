@@ -14,42 +14,43 @@
 								<ui:repeat var="item" value="#{pesquisaBean.youTubeVideosSearchResult}" varStatus="myVarStatus"  >
 									<li> 
 										<div class="itemSize" style="display: block;clear: both;">
-											<p:commandLink  action="#{pesquisaBean.loadYoutubeVideo}" process="@this" update=":form:videoInformations" onclick="playYoutube('#{item.id}');" >
+											<p:commandLink  action="#{pesquisaBean.loadYoutubeVideo}" process="@this" update=":form:videoInformations" onclick="playYoutube('#{item.id}');" oncomplete="loadRelatedSlider();" >
 												<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
 												<img class="thumbnailVideo" src="#{item.thumbnailUrl}" />
 											</p:commandLink>	
 											<div class="videoDescription" >
-														<div class="descriptionArea">
-															<p:commandLink  styleClass="ellipsis2" action="#{pesquisaBean.loadYoutubeVideo}" process="@this" update=":form:videoInformations" onclick="playYoutube('#{item.id}');" >
-																<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
-																#{item.title}
-															</p:commandLink>
-															<div class="thumbnailDescription" >de </div>
-															<div class="thumbnailDescription author afterDot">autor</div>
-															<div class="thumbnailDescription afterDot">#{item.uploadDate}</div>
-															<div class="thumbnailDescription ">#{item.views} views</div>
-															<br/>
-															<div>
-																<div class="thumbnailDescription">#{item.likeCount} Likes</div>
-																<div class="thumbnailDescription">#{item.dislikeCount} Dislikes</div>
-																<br/>
-																<div class="progress">
-																  <div class="progress-bar progress-bar-success" style="width: #{item.likesPercentage}"  >
-																    <span class="sr-only">35% Complete (success)</span>
-																  </div>
-																  <div class="progress-bar progress-bar-danger" style="width: #{item.dislikesPercentage}">
-																    <span class="sr-only">10% Complete (danger)</span>
-																  </div>
-																</div>
-															</div>
-															<div class="ellipsis2" style="font-size: 11px;margin-top: 2px;" >#{item.description}</div>
-														</div>
-														<br/>
-														<br/>
-														<a class="miniPlayerAction" onClick="playYoutubeMiniPlayer('#{item.id}');" >
-															<span class="glyphicon glyphicon-new-window" />
-														</a>
+												<p:commandLink value="#{item.title}" 
+															   styleClass="ellipsis2 thumbnailTitle" 
+															   action="#{pesquisaBean.loadYoutubeVideo}" 
+															   process="@this" update=":form:videoInformations" 
+															   onclick="playYoutube('#{item.id}');" >
+													<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
+												</p:commandLink>
+												<div class="thumbnailDescription" >de </div>
+												<div class="thumbnailDescription author afterDot">autor</div>
+												<div class="thumbnailDescription afterDot">#{item.uploadDate}</div>
+												<div class="thumbnailDescription ">#{item.views} views</div>
+												<br/>
+												<a class="miniPlayerAction" onClick="playYoutubeMiniPlayer('#{item.id}');" >
+													<span class="glyphicon glyphicon-new-window" />
+												</a>
+												<div style="float:right" >
+													<div class="thumbnailDescription afterDot">#{item.likeCount} Likes</div>
+													<div class="thumbnailDescription">#{item.dislikeCount} Dislikes</div>
+													<br/>
+													<div class="progress">
+													  <div class="progress-bar progress-bar-success" style="width: #{item.likesPercentage}"  >
+													    <span class="sr-only">35% Complete (success)</span>
+													  </div>
+													  <div class="progress-bar progress-bar-danger" style="width: #{item.dislikesPercentage}">
+													    <span class="sr-only">10% Complete (danger)</span>
+													  </div>
 													</div>
+												</div>
+												<div class="ellipsis2 description" style="font-size: 11px;margin-top: 5px;" >#{item.description}</div>
+												<br/>
+												<br/>
+											</div>
 										</div>
 									</li>
 								</ui:repeat>
@@ -66,20 +67,24 @@
 														<img class="thumbnailVideo" src="#{item.thumbnailUrl}" />
 													</p:commandLink>
 													<div class="videoDescription" >
-														<div class="descriptionArea">
-														<div class="ellipsis2">#{item.title}</div>
+														<p:commandLink 
+																		value="#{item.title}" 
+																		styleClass="ellipsis2 thumbnailTitle" 
+																		action="#{pesquisaBean.loadVimeoVideo}" 
+																		process="@this" update=":form:videoInformations" 
+																		onclick="playVimeo('#{item.id}');" >
+															<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}" />
+														</p:commandLink>
 															<div class="thumbnailDescription" >de </div>
 															<div class="thumbnailDescription author afterDot">autor</div>
 															<div class="thumbnailDescription afterDot">#{item.uploadDate}</div>
-															<div class="thumbnailDescription ">#{item.views} views</div>
-															<br/>
+															<div class="thumbnailDescription afterDot">#{item.views} views</div>
 															<div class="thumbnailDescription">#{item.likeCount} Likes</div>
-														</div>
-														<br/>
-														<br/>
-														<a class="miniPlayerAction" onClick="playVimeoMiniPlayer('#{item.id}');" >
-															<span class="glyphicon glyphicon-new-window" />
-														</a>
+															<br/>
+															<a class="miniPlayerAction" onClick="playVimeoMiniPlayer('#{item.id}');" >
+																<span class="glyphicon glyphicon-new-window" />
+															</a>	
+															<div class="ellipsis2 description" style="font-size: 11px;margin-top: 5px;" >#{item.description}</div>
 													</div>
 												</div>
 											</li>

@@ -1,6 +1,7 @@
 package business.usuario;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import utils.Utils;
 
@@ -11,7 +12,7 @@ public class VideoView {
     private String id;
     private String title;
     private String views;
-    private String videoType;
+    private VideoTypeEnum videoType;
     private String commentCount;
     private String dislikeCount;
     private String likeCount;
@@ -21,21 +22,24 @@ public class VideoView {
     private String likesPercentage;
     private String dislikesPercentage;
     private String description;
+    private List<VideoView> relatedVideos;
 
     public VideoView(VimeoVideo vimeoVideo) {
+        videoType = VideoTypeEnum.vimeo;
         id = vimeoVideo.getId();
         title = vimeoVideo.getTitle();
         String numberOfPlays = vimeoVideo.getNumberOfPlays();
         views = Utils.formatNumberWithDots(numberOfPlays);
-        likeCount = vimeoVideo.getLikeCount();
+        likeCount = Utils.formatNumberWithDots(vimeoVideo.getLikeCount());
         dislikeCount = "n/a";
         uploadDate = vimeoVideo.getUploadDate();
         duration = vimeoVideo.getDuration();
         thumbnailUrl = vimeoVideo.getThumbnails().getMediumThumbail().getContent();
-        videoType = "vimeo";
+        description = vimeoVideo.getDescription();
     }
 
     public VideoView(Video video) {
+        videoType = VideoTypeEnum.youtube;
         id = video.getId();
         description = video.getSnippet().getDescription();
 
@@ -45,8 +49,8 @@ public class VideoView {
         BigInteger dislikesCount = videoStatistics.getDislikeCount();
 
         views = Utils.formatNumberWithDots(viewCount.toString());
-        likeCount = likesCount.toString();
-        dislikeCount = dislikesCount.toString();
+        likeCount = Utils.formatNumberWithDots(likesCount.toString());
+        dislikeCount = Utils.formatNumberWithDots(dislikesCount.toString());
         int[] likesAndDislikesPercentage =
                 Utils.calculateLikesAndDislikesPercentage(likesCount.floatValue(),
                         dislikesCount.floatValue());
@@ -57,14 +61,6 @@ public class VideoView {
         duration = video.getContentDetails().getDuration();
         uploadDate = Utils.obtainFormatYoutubeVideoDate(video);
         title = video.getSnippet().getTitle();
-    }
-
-    public boolean isVimeo() {
-        return "vimeo".equals(videoType);
-    }
-
-    public boolean isYoutube() {
-        return "youtube".equals(videoType);
     }
 
     public String getTitle() {
@@ -81,14 +77,6 @@ public class VideoView {
 
     public void setViews(String views) {
         this.views = views;
-    }
-
-    public String getVideoType() {
-        return videoType;
-    }
-
-    public void setVideoType(String videoType) {
-        this.videoType = videoType;
     }
 
     public String getCommentCount() {
@@ -167,7 +155,32 @@ public class VideoView {
         return description;
     }
 
+    public List<VideoView> getRelatedVideos() {
+        return relatedVideos;
+    }
+
+    public void setRelatedVideos(List<VideoView> relatedVideos) {
+        this.relatedVideos = relatedVideos;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public VideoTypeEnum getVideoType() {
+        return videoType;
+    }
+
+    public void setVideoType(VideoTypeEnum videoType) {
+        this.videoType = videoType;
+    }
+
+    public boolean isYoutubeVideo() {
+        return VideoTypeEnum.youtube.equals(videoType);
+    }
+
+    public boolean isVimeoVideo() {
+        return VideoTypeEnum.vimeo.equals(videoType);
+    }
+
 }

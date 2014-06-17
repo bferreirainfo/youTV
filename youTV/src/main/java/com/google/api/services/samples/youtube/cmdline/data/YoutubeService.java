@@ -24,8 +24,6 @@ import business.usuario.VideoView;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestInitializer;
 import com.google.api.services.samples.youtube.cmdline.Auth;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchListResponse;
@@ -40,12 +38,13 @@ import com.google.common.collect.Lists;
  */
 public class YoutubeService {
 
-    private static com.google.api.services.youtube.YouTube.Videos.List videosList;
+    private static com.google.api.services.youtube.YouTube.Videos.List youtubeVideosListBydId;
     /**
      * Define a global variable that identifies the name of a file that contains the developer's
      * API key.
      */
     private static final String PROPERTIES_FILENAME = "youtube.properties";
+    private static Properties properties;
 
     private static final long NUMBER_OF_VIDEOS_RETURNED = 10;
 
@@ -55,51 +54,68 @@ public class YoutubeService {
      */
     private static YouTube youtube;
 
-    public static VideoView getVideoById(String videoId) {
-        VideoView result = null;
+    public static void loadRelatedVideos(VideoView video) {
+        if (video.isYoutubeVideo())
+            try {
+                StringBuilder relatedVideosIds = obtainRelatedVideosIds(video.getId());
+                video.setRelatedVideos(findVideosByIds(relatedVideosIds.toString()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        else {
+
+        }
+    }
+
+    public static VideoView loadVideoByIdWithRelated(String videoId) {
+        VideoView actualVideo = null;
         try {
-            videosList.setId(videoId);
-            List<Video> items = videosList.execute().getItems();
-            result = items.isEmpty() ? null : new VideoView(items.get(0));
+
+            StringBuilder relatedVideosIds = obtainRelatedVideosIds(videoId);
+            //insert the original video on the query at position 0.
+            String ids = relatedVideosIds.insert(0, videoId + ",").toString();
+            List<VideoView> findResult = findVideosByIds(ids);
+            //the actual video is at position 0, after that, all others videos are related to this. 
+            actualVideo = findResult.get(0);
+            //remove this video to get only related
+            findResult.remove(actualVideo);
+            actualVideo.setRelatedVideos(findResult);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return actualVideo;
 
     }
 
-    public static List<VideoView> searchVideos(String queryTerm) {
-        Properties properties = new Properties();
-        try {
-            InputStream in = YoutubeService.class.getResourceAsStream("/" + PROPERTIES_FILENAME);
-            properties.load(in);
+    private static StringBuilder obtainRelatedVideosIds(String videoId) throws IOException {
+        com.google.api.services.youtube.YouTube.Search.List listService =
+                youtube.search().list("id,snippet");
+        listService.setRelatedToVideoId(videoId);
+        listService.setType("video");
+        // To increase efficiency, only retrieve the fields that the
+        // application uses.
+        listService.setFields("items(id/videoId)");
+        listService.setMaxResults(NUMBER_OF_VIDEOS_RETURNED);
+        SearchListResponse response = listService.execute();
 
-        } catch (IOException e) {
-            System.err.println("There was an error reading " + PROPERTIES_FILENAME + ": "
-                    + e.getCause() + " : " + e.getMessage());
-            System.exit(1);
+        StringBuilder videosList = new StringBuilder();
+        for (SearchResult item : response.getItems()) {
+            videosList.insert(0, item.getId().getVideoId() + ",");
         }
+        return videosList;
+    }
+
+    public static List<VideoView> searchVideos(String queryTerm) {
 
         try {
-            // This object is used to make YouTube Data API requests. The last
-            // argument is required, but since we don't need anything
-            // initialized when the HttpRequest is initialized, we override
-            // the interface and provide a no-op function.
-            youtube =
-                    new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY,
-                            new HttpRequestInitializer() {
-                                public void initialize(HttpRequest request) throws IOException {
-                                }
-                            }).setApplicationName("youtube-cmdline-search-sample").build();
-
             // Define the API request for retrieving search results.
             YouTube.Search.List search = youtube.search().list("id,snippet");
 
             // Set your developer key from the {{ Google Cloud Console }} for
             // non-authenticated requests. See:
             // {{ https://cloud.google.com/console }}
-            String apiKey = properties.getProperty("youtube.apikey");
-            search.setKey(apiKey);
+            //String apiKey = properties.getProperty("youtube.apikey");
+            //search.setKey(apiKey);
             search.setQ(queryTerm);
             // Restrict the search results to only include videos. See:
             // https://developers.google.com/youtube/v3/docs/search/list#type
@@ -110,13 +126,7 @@ public class YoutubeService {
             search.setFields("items(id/videoId)");
             search.setMaxResults(NUMBER_OF_VIDEOS_RETURNED);
             // Call the API with Ids
-            SearchListResponse searchResponse = search.execute();
-
-            StringBuilder videosList = new StringBuilder();
-            for (SearchResult item : searchResponse.getItems()) {
-                videosList.insert(0, "," + item.getId().getVideoId());
-            }
-            return findVideoListByIds(videosList.toString());
+            return findVideosById(search.execute());
         } catch (GoogleJsonResponseException e) {
             System.err.println("There was a service error: 12" + e.getDetails().getCode() + " : "
                     + e.getDetails().getMessage());
@@ -128,15 +138,60 @@ public class YoutubeService {
         return null;
     }
 
-    private static List<VideoView> findVideoListByIds(String ids) throws IOException {
+    private static List<VideoView> findVideosById(SearchListResponse searchResponse)
+            throws IOException {
+        StringBuilder videosList = new StringBuilder();
+        for (SearchResult item : searchResponse.getItems()) {
+            videosList.insert(0, "," + item.getId().getVideoId());
+        }
+        return findVideosByIds(videosList.toString());
+    }
+
+    /**
+     * ids must be separeted by comma.
+     * 
+     * */
+    private static List<VideoView> findVideosByIds(String ids) throws IOException {
         List<VideoView> youtubeVideos = new ArrayList<VideoView>();
-        for (Video video : videosList.setId(ids).execute().getItems()) {
+        for (Video video : youtubeVideosListBydId.setId(ids).execute().getItems()) {
             youtubeVideos.add(new VideoView(video));
         }
         return youtubeVideos;
     }
 
     static {
+        properties = new Properties();
+        try {
+            InputStream in = YoutubeService.class.getResourceAsStream("/" + PROPERTIES_FILENAME);
+            properties.load(in);
+
+        } catch (IOException e) {
+            System.err.println("There was an error reading " + PROPERTIES_FILENAME + ": "
+                    + e.getCause() + " : " + e.getMessage());
+            System.exit(1);
+        }
+
+    }
+    static {
+        youtube = obtainYoutubeService();
+        loadYoutubeSearchVideosByIdConfig(youtube);
+    }
+
+    private static com.google.api.services.youtube.YouTube obtainYoutubeService() {
+        Credential credential = obtainAutorization();
+        // This object is used to make YouTube Data API requests.
+        return constructYoutubeService(credential);
+    }
+
+    private static com.google.api.services.youtube.YouTube constructYoutubeService(
+            Credential credential) {
+        com.google.api.services.youtube.YouTube youtube =
+                new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
+                        .setApplicationName("youtv").build();
+        return youtube;
+    }
+
+    private static Credential obtainAutorization() {
         List<String> scopes = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
         Credential credential = null;
 
@@ -145,15 +200,14 @@ public class YoutubeService {
         } catch (IOException e1) {
             e1.printStackTrace();
         }
+        return credential;
+    }
 
-        // This object is used to make YouTube Data API requests.
-        com.google.api.services.youtube.YouTube youtube =
-                new YouTube.Builder(Auth.HTTP_TRANSPORT, Auth.JSON_FACTORY, credential)
-                        .setApplicationName("youtv1988").build();
-
+    private static void loadYoutubeSearchVideosByIdConfig(
+            com.google.api.services.youtube.YouTube youtube) {
         try {
-            videosList = youtube.videos().list("statistics,snippet,contentDetails");
-            videosList
+            youtubeVideosListBydId = youtube.videos().list("statistics,snippet,contentDetails");
+            youtubeVideosListBydId
                     .setFields("items(id,statistics/viewCount,statistics/likeCount,statistics/dislikeCount,snippet/title,snippet/description,snippet/thumbnails/medium/url,snippet/publishedAt,contentDetails/duration)");
         } catch (IOException e) {
             e.printStackTrace();
