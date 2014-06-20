@@ -1,10 +1,8 @@
 <style>
 body, html {
   height: 100%;
-  color: white;
 }
 h4{
-	color: white;
 	font-weight: bold;
 }
 .bx-controls-direction a {
@@ -18,14 +16,19 @@ h4{
     opacity: 1;
 }
 a{
+	color:#2CA3FF
 	font-family: arial,sans-serif;
 }
 a:hover {
+	text-decoration: underline;
 	cursor: pointer;
 }
 body{
-	padding-top: 0px;
+	margin:0px;
+	padding:0px;
 	background: black;
+	background:white;
+  	color: black;
 }
 h4{
 	margin-top:0px !important;
@@ -135,7 +138,6 @@ text-decoration: none;
 	color:#2CA3FF;
 }
 .thumbnailDescription{
-	color:white;
 	float:left;
 	font-size:10px;
 	position: relative;
@@ -148,14 +150,17 @@ text-decoration: none;
 	background-color: rgba(144, 22, 22, 0.89);
 }
 .description{
-	color: rgb(185, 185, 185);
+	font-size: 10px;
+	margin-top: 5px;
+	color: rgb(117, 115, 115);
 }
 .progress{
-	width:120px;
+	float:right;
+	width:80px;
 	height: 3px;
 	margin-bottom:0px;
 	position: relative;
-	top: 1px;
+	top: 8px;
 	background-color: black;
 }
 .bxslider{
@@ -180,39 +185,31 @@ text-decoration: none;
 .thumbnailTitle{
 	display: block;
 }
-.thumbnailVideo:before{
-	display:inline-block;
-    background:#000;
-    z-index: 1;
-}
 .thumbnailVideo{
 	width: 180px;
 	height:100%;
 	margin-right:10px;
 	float:left
 }
-.thumbnailWrapper:hover .miniPlayerAction{display:block}
+.thumbnailWrapper:hover .miniPlayerAction{display:block;}
 .thumbnailWrapper:hover img{opacity:0.3;}
 .thumbnailWrapper:hover {
-    float:left;
-    position:relative
 }
 .miniPlayerAction{
 	position: absolute;
-	top:2px;
-	left:2px;
+	top: 1px;
+	left: 30%;
 	display:none;
-	z-index:100
+	z-index: 200;
 }
 .relatedVideoThumbnail{
-	width: 175px;
+	width: 180px;
 	height:98px;
 	margin-right:5px;
 }
 .itemSize{
-	width: 520px;
+	width: 534px;
 	height: 118px;
-	padding: 1%;
 }
 .relatedItemSize{
 	width: 320px;
@@ -225,7 +222,7 @@ text-decoration: none;
 }
 .bx-wrapper .bx-loading {
 min-height: 50px;
-background: url(images/bx_loader.gif) center center no-repeat #2CA3FF;
+background: url(images/bx_loader.gif) center center no-repeat;
 height: 100%;
 width: 100%;
 position: absolute;
@@ -236,7 +233,10 @@ content: "Carregando...";
 }
 
 .bx-wrapper .bx-next{
-	right: -3%;
+	right: -37px;
+}
+.bx-wrapper .bx-prev{
+	left:-35px;
 }
 .bx-wrapper .bx-pager.bx-default-pager a{
 	background-color: rgba(0, 0, 0, 0);
@@ -261,6 +261,7 @@ content: "Carregando...";
 	z-index: 9999;
 }
 .cbp-hsmenu-wrapper {
+	height:39px;
 	width: 30%;
 	left: 10%;
 	margin:0px;
@@ -269,7 +270,7 @@ content: "Carregando...";
 }
 /* setinha do menu */
 .cbp-hsmenu > li.cbp-hsitem-open > a:after {
-	top:48px;
+	top:42px;
 	border: solid transparent;
 	content: " ";
 	height: 0;
@@ -277,23 +278,18 @@ content: "Carregando...";
 	position: absolute;
 	pointer-events: none;
 	border-color: transparent;
-	border-top-color: #2a6496;
+	border-top-color: #BE4040;
 	opacity:0.9;
 	border-width: 10px;
 	left: 50%;
 	margin-left: -10px;
 	
 }
-.bx-wrapper .bx-prev{
-left:-3%;
-}
 .displayFalse{
-    opacity: 0; 
     height: 0;
     overflow: hidden;
 }.
 .displayTrue{
-	opacity: 1;
     height: auto;
 }
 .video-container {
@@ -310,5 +306,11 @@ left:-3%;
     left: 0;
     width: 100%;
     height: 100%;
+}
+.navbar{
+	margin: 0px;
+}
+.centralized{
+	display: block; margin: 0 auto;
 }
 </style>

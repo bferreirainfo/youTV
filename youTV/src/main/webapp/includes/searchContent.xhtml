@@ -5,19 +5,23 @@
 	  xmlns:f="http://java.sun.com/jsf/core"
  >
 	<body>
-		<h:panelGroup id="searchPanel" >
-			<div id="searchResult">
-		       	<div id="content" style="padding-left: 4%;" >
-						<h:panelGroup id="youtubeCarrousel" style="float:left;float: left;border-right: 1px white solid;padding-right: 1%;margin-right: 1%;" layout="block" rendered="#{not empty pesquisaBean.youTubeVideosSearchResult}" >
+		<h:panelGroup id="searchPanel" style="position:relative; top:10px;" >
+			<div id="searchResult" style="padding-left: 2%;"  >
+						<h:panelGroup id="youtubeCarrousel" style="width:540px;float: left;box-shadow:1px 1px 1px #888888" layout="block" rendered="#{not empty pesquisaBean.youTubeVideosSearchResult}" >
 							<h4>Youtube</h4>	
 							<ul class="bxslider">
 								<ui:repeat var="item" value="#{pesquisaBean.youTubeVideosSearchResult}" varStatus="myVarStatus"  >
 									<li> 
-										<div class="itemSize" style="display: block;clear: both;">
-											<p:commandLink  action="#{pesquisaBean.loadYoutubeVideo}" process="@this" update=":form:videoInformations" onclick="playYoutube('#{item.id}');" oncomplete="loadRelatedSlider();" >
-												<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
-												<img class="thumbnailVideo" src="#{item.thumbnailUrl}" />
-											</p:commandLink>	
+										<div class="itemSize">
+											<span class="thumbnailWrapper" >		
+												<p:commandLink  action="#{pesquisaBean.loadYoutubeVideo}" process="@this" update=":form:videoInformations" onclick="playYoutube('#{item.id}');" oncomplete="loadRelatedSlider();" >
+													<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
+													<img class="thumbnailVideo" src="#{item.thumbnailUrl}" />
+												</p:commandLink>	
+												<a class="miniPlayerAction" onClick="playYoutubeMiniPlayer('#{item.id}');" >
+														<span class="glyphicon glyphicon-new-window" />
+												</a>
+											</span>
 											<div class="videoDescription" >
 												<p:commandLink value="#{item.title}" 
 															   styleClass="ellipsis2 thumbnailTitle" 
@@ -27,17 +31,12 @@
 													<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
 												</p:commandLink>
 												<div class="thumbnailDescription" >de </div>
-												<div class="thumbnailDescription author afterDot">autor</div>
-												<div class="thumbnailDescription afterDot">#{item.uploadDate}</div>
-												<div class="thumbnailDescription ">#{item.views} views</div>
+												<div class="thumbnailDescription author afterDot">#{item.channelTitle}</div>
+												<div class="thumbnailDescription">#{item.uploadDate}</div>
 												<br/>
-												<a class="miniPlayerAction" onClick="playYoutubeMiniPlayer('#{item.id}');" >
-													<span class="glyphicon glyphicon-new-window" />
-												</a>
-												<div style="float:right" >
+												<div class="thumbnailDescription afterDot">#{item.views} views</div>
 													<div class="thumbnailDescription afterDot">#{item.likeCount} Likes</div>
 													<div class="thumbnailDescription">#{item.dislikeCount} Dislikes</div>
-													<br/>
 													<div class="progress">
 													  <div class="progress-bar progress-bar-success" style="width: #{item.likesPercentage}"  >
 													    <span class="sr-only">35% Complete (success)</span>
@@ -46,8 +45,8 @@
 													    <span class="sr-only">10% Complete (danger)</span>
 													  </div>
 													</div>
-												</div>
-												<div class="ellipsis2 description" style="font-size: 11px;margin-top: 5px;" >#{item.description}</div>
+												<br/>
+												<div class="ellipsis3 description" >#{item.description}</div>
 												<br/>
 												<br/>
 											</div>
@@ -56,16 +55,21 @@
 								</ui:repeat>
 							</ul>
 						</h:panelGroup>
-						<h:panelGroup id="vimeoCarrousel" style="float:left;border-right:white;" layout="block" rendered="#{not empty pesquisaBean.vimeoVideosSearchResult}" >
+						<h:panelGroup id="vimeoCarrousel" style="width:540px;float:left;margin-left:10px;box-shadow:1px 1px 1px #888888" layout="block" rendered="#{not empty pesquisaBean.vimeoVideosSearchResult}" >
 								<h4>Vimeo</h4>
 								<ul class="bxslider">
 										<ui:repeat var="item" value="#{pesquisaBean.vimeoVideosSearchResult}" varStatus="myVarStatus"  >
 											<li> 
 												<div class="itemSize" style="display: block;clear: both;" >
-													<p:commandLink action="#{pesquisaBean.loadVimeoVideo}" process="@this" update=":form:videoInformations" onclick="playVimeo('#{item.id}');" >
-														<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}" />
-														<img class="thumbnailVideo" src="#{item.thumbnailUrl}" />
-													</p:commandLink>
+													<span class="thumbnailWrapper" >		
+														<p:commandLink action="#{pesquisaBean.loadVimeoVideo}" process="@this" update=":form:videoInformations" onclick="playVimeo('#{item.id}');" oncomplete="loadRelatedSlider();" >
+															<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}" />
+															<img class="thumbnailVideo" src="#{item.thumbnailUrl}" />
+														</p:commandLink>
+														<a class="miniPlayerAction" onClick="playYoutubeMiniPlayer('#{item.id}');" >
+																<span class="glyphicon glyphicon-new-window" />
+														</a>
+													</span>
 													<div class="videoDescription" >
 														<p:commandLink 
 																		value="#{item.title}" 
@@ -76,7 +80,7 @@
 															<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}" />
 														</p:commandLink>
 															<div class="thumbnailDescription" >de </div>
-															<div class="thumbnailDescription author afterDot">autor</div>
+															<div class="thumbnailDescription author afterDot">#{item.channelTitle}</div>
 															<div class="thumbnailDescription afterDot">#{item.uploadDate}</div>
 															<div class="thumbnailDescription afterDot">#{item.views} views</div>
 															<div class="thumbnailDescription">#{item.likeCount} Likes</div>
@@ -84,7 +88,7 @@
 															<a class="miniPlayerAction" onClick="playVimeoMiniPlayer('#{item.id}');" >
 																<span class="glyphicon glyphicon-new-window" />
 															</a>	
-															<div class="ellipsis2 description" style="font-size: 11px;margin-top: 5px;" >#{item.description}</div>
+															<div class="ellipsis3 description">#{item.description}</div>
 													</div>
 												</div>
 											</li>
@@ -92,7 +96,6 @@
 								</ul>
 						</h:panelGroup>
 				</div>
-			</div> 
 		</h:panelGroup>
 </body>
 </html>

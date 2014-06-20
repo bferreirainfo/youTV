@@ -29,6 +29,7 @@
 		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/layoutResources/HorizontalSlideOutMenu/css/component.css" />
 		<script src="#{request.contextPath}/layoutResources/HorizontalSlideOutMenu/js/modernizr.custom.js"></script>
 		<script src="#{request.contextPath}/layoutResources/HorizontalSlideOutMenu/js/cbpHorizontalSlideOutMenu.min.js"></script>
+		<script src="#{request.contextPath}/layoutResources/bxSlider/jquery.easing.1.3.js"></script>
 		<!-- Ellipsis -->
 		<script src="#{request.contextPath}/layoutResources/jqueryEllipises/jquery.ellipsis.js"></script>
   		
@@ -38,21 +39,20 @@
 <h:form id="form">
 <!--  código responsável por pega os parâmetros na url -->
 <!--Start Header-->
-<header class="navbar">
-	
-	<div style="width: 100%;background: #2a6496" >
+<header>
+	<div style="width: 100%;background:black" >
 		<p:outputPanel id="menu" autoUpdate="true" >
 			<div class="cbp-hsmenu-wrapper" id="cbp-hsmenu-wrapper">
 				<ul class="cbp-hsmenu">
 					<li>
-						<a id="searchLTabLink"  onclick="display('searchResult');resizeSlider();" >Pesquisa</a>
+						<a id="searchLTabLink"  onclick="display('searchResult');" onmouseover="click('searchLTabLink');" >Pesquisa</a>
 							<ul class="cbp-hssubmenu">
 						</ul>
 					</li>
 					<li>
 							<a   id="watchingTabLink" 
 								 style="display: #{pesquisaBean.operation.playing ? 'block' : 'none'}  "
-								 onclick="display('playerView')" > Assistindo</a>
+								 onclick="display('playerView');" onmouseover="click('watchingTabLink');" > Assistindo</a>
 						<ul class="cbp-hssubmenu">
 						</ul>
 					</li>
@@ -63,7 +63,10 @@
 	           <p:inputText 
 	           				id="searchTerm"
 	           				styleClass="form-control" 
-	           				style="background: black;border: black;border-radius: 1px;height: 28px;color:white;"  
+	           				style=" border-radius: 0px;
+									border-color: black;
+									height: 28px;
+									"  
 	           				value="#{pesquisaBean.searchTerm}" />
 	          	<div class="input-group-addon" style="background: black;border: black;" >
 		            <p:commandLink
@@ -84,30 +87,18 @@
 
 <!--End Header-->
 <!--Start Container-->
-<h:panelGroup id="main" class="container-fluid" layout="block">
-	<div class="row">
-		<!--Start Content-->
-		<div id="custom_carousel" class="carousel slide" data-ride="carousel" data-interval="0" >
-	        <!-- conteudo dos menus -->
-	        	<!-- menu ativo inicial no caso data-slide-to="0" -->
-	                <div class="container-fluid" style="padding-left:1px;padding-right: 1px;" >
-	                	<!-- pagina pesquisa -->
-	                	<h:panelGroup id="contentPanel">
-	                		<!-- Página da pesquisa -->
-	                		<ui:include src="/includes/searchContent.xhtml"/>
-							<!-- Página do player -->
-	                		<ui:include src="/includes/players.xhtml"/>
-						</h:panelGroup>
-					<!-- resultado pesquisa /-->
-	        </div>
-	        
-    	</div>
-	</div>
-	<script>
-		 context = "home";
-	</script>
-	<ui:include src="/layoutResources/templateLocalJavaScript.xhtml" />
-	<ui:include src="/layoutResources/templateLocalCss.xhtml" />
+<h:panelGroup id="main"  layout="block"  style="clear:both;" >
+    	<h:panelGroup id="contentPanel">
+             		<!-- Página da pesquisa -->
+             		<ui:include src="/includes/searchContent.xhtml"/>
+					<!-- Página do player -->
+             		<ui:include src="/includes/players.xhtml"/>
+		</h:panelGroup>
+<script>
+	 context = "home";
+</script>
+<ui:include src="/layoutResources/templateLocalJavaScript.xhtml" />
+<ui:include src="/layoutResources/templateLocalCss.xhtml" />
  </h:panelGroup>
 
 </h:form>

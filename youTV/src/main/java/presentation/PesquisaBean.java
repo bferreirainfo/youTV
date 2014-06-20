@@ -27,6 +27,7 @@ public class PesquisaBean {
     private String videoViewId;
     private Operation operation;
     private VideoView videoView;
+    private VideoView relatedVideoView;
 
     public void setOperationToDefault() {
         operation = Operation.search;
@@ -49,9 +50,22 @@ public class PesquisaBean {
         operation = Operation.playVimeo;
     }
 
+    public void loadRelatedVideoView() {
+        videoView = relatedVideoView;
+        if (videoView.isYoutubeVideo()) {
+            YoutubeService.loadRelatedVideos(videoView);
+        } else if (videoView.isVimeoVideo()) {
+            VimeoService.loadRelatedVideos(videoView);
+        }
+    }
+
     public void loadVimeoVideo() {
-        VideoView result = localLoad(vimeoVideosSearchResult);
-        videoView = result == null ? VimeoService.getVideoById(videoViewId) : result;
+        videoView = localLoad(vimeoVideosSearchResult);
+        if (videoView == null) {
+            videoView = VimeoService.loadVideoByIdWithRelated(videoViewId);
+        } else if (videoView.getRelatedVideos() == null) {
+            VimeoService.loadRelatedVideos(videoView);
+        }
         operation = Operation.playVimeo;
         clearValues();
     }
@@ -155,5 +169,13 @@ public class PesquisaBean {
 
     public void setOperation(Operation operation) {
         this.operation = operation;
+    }
+
+    public VideoView getRelatedVideoView() {
+        return relatedVideoView;
+    }
+
+    public void setRelatedVideoView(VideoView relatedVideoView) {
+        this.relatedVideoView = relatedVideoView;
     }
 }

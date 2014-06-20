@@ -4,15 +4,15 @@ import com.google.gson.annotations.SerializedName;
 
 public class Owner {
 
-    @SerializedName(value = "tags")
-    private Tags tags;
+    @SerializedName(value = "display_name")
+    private String channelTitle;
 
-    public Tags getTags() {
-        return tags;
+    public String getChannelTitle() {
+        return channelTitle;
     }
 
-    public void setTags(Tags tags) {
-        this.tags = tags;
+    public void setChannelTitle(String channelTitle) {
+        this.channelTitle = channelTitle;
     }
 
 }

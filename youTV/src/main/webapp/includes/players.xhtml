@@ -5,36 +5,40 @@
 	  xmlns:f="http://java.sun.com/jsf/core"
  >
 	<body>
-		<div id="playerView" class="displayFalse"  style="width: 100%;padding: 0px 2% 0px 2%;" >
-			<div >
-	   			<div id="playerColumn">
+		<div id="playerView" class="displayFalse"  style="width: 100%;overflow: hidden;" >
+			<div style="background: black" >
+	   			<div id="playerColumn" style="width: 950px;display: block; margin: 0 auto;">
 	   				<!-- All iframe´s players will be rendered here -->
-	   				<div id="youtubePlayerWrapper" class="displayFalse" >
+	   				<div id="youtubePlayerWrapper" class="displayFalse">
 		   				<div id="youtubeContainer" style="display: block; margin: 0 auto; "  />
 	   				</div>
 	   				<div id="vimeoPlayerWrapper" class="displayFalse" />
-	        	  <h:panelGroup id="videoInformations" layout="block">
+	        	 </div>
+			</div>
+			<h:panelGroup id="videoInformations" layout="block" style="padding-top:1px" >
 		        		 <ul class="relatedVideosSlider">
 							<ui:repeat var="item" value="#{pesquisaBean.videoView.relatedVideos}" varStatus="myVarStatus"  >
 								<li> 
 									<div class="relatedItemSize">
-										<div class="thumbnailWrapper" >
-											<a class="miniPlayerAction" onClick="playYoutubeMiniPlayer('#{item.id}');" >
+										<span class="thumbnailWrapper" >
+											<p:commandLink action="#{pesquisaBean.loadRelatedVideoView}" process="@this" update=":form:videoInformations" onclick="playVideoView('#{item.id}','#{item.videoType}');" oncomplete="loadRelatedSlider();" >
+												<f:setPropertyActionListener target="#{pesquisaBean.relatedVideoView}" value="#{item}" />
+												<img class="relatedVideoThumbnail" src="#{item.thumbnailUrl}" />
+											</p:commandLink>
+											<a class="miniPlayerAction" style="left:92%" onClick="playYoutubeMiniPlayer('#{item.id}');" >
 													<span class="glyphicon glyphicon-new-window" />
 											</a>
-											<p:commandLink  action="#{pesquisaBean.loadYoutubeVideo}" process="@this" update=":form:videoInformations" onclick="playYoutube('#{item.id}');" oncomplete="loadRelatedSlider();" >
-												<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
-												<img class="relatedVideoThumbnail" src="#{item.thumbnailUrl}" />
-											</p:commandLink>	
-										</div>
+										</span>
 										<div class="relatedVideoDescription" >
 											<p:commandLink value="#{item.title}" 
 														   styleClass="ellipsis2 thumbnailTitle" 
 														   style="font-size:11px"
-														   action="#{pesquisaBean.loadYoutubeVideo}" 
+														   action="#{pesquisaBean.loadRelatedVideoView}" 
 														   process="@this" update=":form:videoInformations" 
-														   onclick="playYoutube('#{item.id}');" >
-												<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
+														   onclick="playVideoView('#{item.id}','#{item.videoType}');"
+														   oncomplete="loadRelatedSlider();"
+														   >
+												<f:setPropertyActionListener target="#{pesquisaBean.relatedVideoView}" value="#{item}" />
 											</p:commandLink>
 											<div class="thumbnailDescription" >de </div>
 											<div class="thumbnailDescription author afterDot">autor</div>
@@ -42,7 +46,7 @@
 											<div class="thumbnailDescription ">#{item.views} views</div>
 											<br/>
 											<div class="thumbnailDescription afterDot">#{item.likeCount} Likes</div>
-											<div class="thumbnailDescription">#{item.dislikeCount} Dislikes</div>
+											<h:outputText styleClass="thumbnailDescription" rendered="#{not item.vimeoVideo}" value="#{item.dislikeCount} Dislikes" />
 											<br/>
 											<div style="width: 100px;" class="progress">
 											  <div class="progress-bar progress-bar-success" style="width: #{item.likesPercentage}"  >
@@ -58,8 +62,6 @@
 							</ui:repeat>
 						</ul>
 		         	</h:panelGroup>
-	        	 </div>
-			</div>
 		</div>
 	</body>
 </html>

@@ -3,14 +3,15 @@ package business.usuario;
 import com.google.gson.annotations.SerializedName;
 
 public class Tag {
-    @SerializedName(value = "thumbnails")
-    private VimeoThumbnails thumbnails;
+    @SerializedName(value = "normalized")
+    private String normalized;
 
-    public VimeoThumbnails getThumbnails() {
-        return thumbnails;
+    public String getNormalized() {
+        return normalized;
     }
 
-    public void setThumbnails(VimeoThumbnails thumbnails) {
-        this.thumbnails = thumbnails;
+    public void setNormalized(String normalized) {
+        this.normalized = normalized;
     }
+
 }

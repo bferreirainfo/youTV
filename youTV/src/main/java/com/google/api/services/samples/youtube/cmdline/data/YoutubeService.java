@@ -208,7 +208,7 @@ public class YoutubeService {
         try {
             youtubeVideosListBydId = youtube.videos().list("statistics,snippet,contentDetails");
             youtubeVideosListBydId
-                    .setFields("items(id,statistics/viewCount,statistics/likeCount,statistics/dislikeCount,snippet/title,snippet/description,snippet/thumbnails/medium/url,snippet/publishedAt,contentDetails/duration)");
+                    .setFields("items(id,statistics/viewCount,statistics/likeCount,statistics/dislikeCount,snippet/title,snippet/description,snippet/channelTitle,snippet/thumbnails/medium/url,snippet/publishedAt,contentDetails/duration)");
         } catch (IOException e) {
             e.printStackTrace();
         }

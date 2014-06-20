@@ -23,8 +23,10 @@ public class VideoView {
     private String dislikesPercentage;
     private String description;
     private List<VideoView> relatedVideos;
+    private String channelTitle;
 
     public VideoView(VimeoVideo vimeoVideo) {
+        //https://developer.vimeo.com/apis/advanced/methods
         videoType = VideoTypeEnum.vimeo;
         id = vimeoVideo.getId();
         title = vimeoVideo.getTitle();
@@ -36,13 +38,15 @@ public class VideoView {
         duration = vimeoVideo.getDuration();
         thumbnailUrl = vimeoVideo.getThumbnails().getMediumThumbail().getContent();
         description = vimeoVideo.getDescription();
+        channelTitle = vimeoVideo.getOwner().getChannelTitle();
     }
 
     public VideoView(Video video) {
+        //https://developer.vimeo.com/apis/advanced/methods/vimeo.videos.search
         videoType = VideoTypeEnum.youtube;
         id = video.getId();
         description = video.getSnippet().getDescription();
-
+        channelTitle = video.getSnippet().getChannelTitle();
         VideoStatistics videoStatistics = video.getStatistics();
         BigInteger viewCount = videoStatistics.getViewCount();
         BigInteger likesCount = videoStatistics.getLikeCount();
@@ -179,8 +183,41 @@ public class VideoView {
         return VideoTypeEnum.youtube.equals(videoType);
     }
 
+    public String getChannelTitle() {
+        return channelTitle;
+    }
+
+    public void setChannelTitle(String channelTitle) {
+        this.channelTitle = channelTitle;
+    }
+
     public boolean isVimeoVideo() {
         return VideoTypeEnum.vimeo.equals(videoType);
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        VideoView other = (VideoView) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        return true;
     }
 
 }

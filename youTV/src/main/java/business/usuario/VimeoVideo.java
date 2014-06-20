@@ -31,6 +31,8 @@ public class VimeoVideo {
     private String description;
     @SerializedName(value = "thumbnails")
     private VimeoThumbnails thumbnails;
+    @SerializedName(value = "owner")
+    private Owner owner;
 
     public VimeoThumbnails getThumbnails() {
         return thumbnails;
@@ -146,6 +148,14 @@ public class VimeoVideo {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Owner getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Owner owner) {
+        this.owner = owner;
     }
 
 }

@@ -2,6 +2,8 @@
 var context;
 //============================== OnPageLoad =======================================
 $(window).ready(function(){
+loadSlider(); 
+loadRelatedSlider();
 switch(context){
 	case "home" : startHome(); break; 
 	case "miniplayer" : startMiniPlayer(); break;
@@ -13,7 +15,6 @@ function startHome(){
 	var menu = new cbpHorizontalSlideOutMenu( document.getElementById( 'cbp-hsmenu-wrapper' ) );
 	abaAtual = 'searchResult';
 	openInicialTab();
-	loadSlider();
 	//corrigir focus
 	//document.getElementById("form:searchTerm").focus();
 	
@@ -32,8 +33,15 @@ function startHome(){
 //============================== MiniPlayer =======================================
 function startMiniPlayer(){
 	switch('#{pesquisaBean.operation}'){
-		case 'playYoutube' : playYoutube('#{pesquisaBean.videoView.id}');break;
+		case 'playYoutube ' : playYoutube('#{pesquisaBean.videoView.id}');break;
 		case 'playVimeo' : playVimeo('#{pesquisaBean.videoView.id}');break;
+	}
+}
+
+function playVideoView(videoId,videoType){
+	switch(videoType){
+		case 'youtube' : playYoutube(videoId);break;
+		case 'vimeo' : playVimeo(videoId);break;
 	}
 }
 function playYoutubeMiniPlayer(videoId){
@@ -63,41 +71,52 @@ function playVimeoMiniPlayer(videoId){
 // ============================== bx slider configuration =======================================		
 		// Api  http://bxslider.com/options 
 		var sliderArray = new Array();
+		var relatedSlide;
+		
 		var sliderSettings =  {
-			  slideWidth: 590,
+			  slideWidth: 534,
 			  mode: 'vertical',
-			  slideMargin:4,
+			  slideMargin:7,
 			  controls: false,
-			  minSlides: Math.round($(window).height()*0.70/118)
-			};
+			  useCSS: false,
+			  easing:'easeOutExpo',
+			  minSlides: Math.round(700/118)
+		  	};
 		var relatedVideoSettings =  {
 			  slideWidth: 180,
 			  slideHeight: 210,
-			  slideMargin:1,
+			  slideMargin:5,
 			  controls: true,
 			  pager: false,
 			  infiniteLoop:false,
+			  hideControlOnEnd: true,
 			  minSlides: 1,
 			  maxSlides: Math.round($(window).width()*0.90/180)
 			};
 		function loadSlider(){
+			var windowHeight = Math.round($(window).height()*0.70);
 			 $('.bxslider').each(function(i){
 			        sliderArray[i] = $(this).bxSlider(sliderSettings);
+			        sliderArray[i].parent().css("min-height",windowHeight);
 			    });
-			 $('.ellipsis3').ellipsis({row: 3});
 			 $('.ellipsis2').ellipsis({row: 2});
+			 $('.ellipsis3').ellipsis({row: 3});
 		}
 		function loadRelatedSlider(){
-			$('.relatedVideosSlider').bxSlider(relatedVideoSettings);
+			relatedSlide = $('.relatedVideosSlider').bxSlider(relatedVideoSettings);
 			$('.ellipsis2').ellipsis({row: 2});
 		}
 		function resizeSlider(){
-			$('.bx-wrapper').css("width","520");
-			$.each(sliderArray, function( index, value ) {
-			 	 value.redrawSlider();
-			});
-			$('.ellipsis3').ellipsis({row: 3});
+			if(sliderArray.length > 0){
+				$.each(sliderArray, function( index, value ) {
+				 	 value.redrawSlider();
+				});
+			}
+			if(relatedSlide != null){
+				relatedSlide.redrawSlider();
+			}
 			 $('.ellipsis2').ellipsis({row: 2});
+			 $('.ellipsis3').ellipsis({row: 3});
 		}
 // ============================== Abas =======================================		
 			
@@ -130,8 +149,8 @@ function playVimeoMiniPlayer(videoId){
 		    player = new YT.Player('youtubeContainer', {
 		        videoId: youtubeVideoId,
 		        playerVars:{autohide:1,egm:1},
-		        width:Math.round(context == "home" ? $(window).width()*0.87 : $(window).width())*.99 ,
-		        height:Math.round(context == "home" ? $(window).height()*0.65 : $(window).height()*.98),
+		        width:Math.round(context == "home" ? $(window).width()*0.60 : $(window).width())*.99 ,
+		        height:Math.round(context == "home" ? $(window).height()*0.40 : $(window).height()*.98),
 		        events: {
 		            'onReady': onYoutubePlayerReady,
 		          }
@@ -195,8 +214,8 @@ function onVimeoPlayerRead(){
 // ============================== Controle Abas =======================================	
 function openInicialTab(){
 	switch('#{pesquisaBean.operation}'){
-		case 'search' : click('searchLTabLink'); break;
-		case 'playYoutube' : playYoutube('#{pesquisaBean.videoView.id}'); loadRelatedSlider(); break;
+		case 'search' : click('searchLTabLink');break;
+		case 'playYoutube' : playYoutube('#{pesquisaBean.videoView.id}');break;
 		case 'playVimeo' : playVimeo('#{pesquisaBean.videoView.id}');break;
 		default : alert("operação não recohecida"); 
 	}
@@ -233,7 +252,7 @@ function hiddeElementById(playerWrapper){
 function showElementById(playerWrapper,moreClasses){
 	document.getElementById(playerWrapper).className='displayTrue ' + moreClasses;
 	$("#" +playerWrapper).fadeIn('slow');
-	//Tamanho setado devido ao player não ser aceitar o padding igual aos outros elementos na div
+	resizeSlider();
 }
 function click(id){
 	document.getElementById(id).click();

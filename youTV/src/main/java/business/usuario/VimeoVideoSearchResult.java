@@ -3,7 +3,6 @@ package business.usuario;
 import com.google.gson.annotations.SerializedName;
 
 public class VimeoVideoSearchResult {
-    //    {"generated_in":"0.6005","stat":"ok","videos":{
     @SerializedName("generated_in")
     private String generatedIn;
     @SerializedName("stat")
