@@ -15,43 +15,50 @@
 		<meta name="description" content="description"/>
 		<meta name="author" content="DevOOPS"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1"/>
-		<!-- não sei -->
+		
+		<!-- bootstrap -->
 		<link href="#{request.contextPath}/bootstrap-3.1.1-dist/css/bootstrap.css" rel="stylesheet"/>
-		<!-- imports bxSlider  -->
+		
+		<!-- bxSlider  -->
 		<script src="#{request.contextPath}/js/jquery.bxslider.js"></script>
 		<link href="#{request.contextPath}/css/jquery.bxslider.css" rel="stylesheet" />
+		
 		<!-- progressbar Ajax -->
 		<link href='#{request.contextPath}/css/nprogress.css' rel='stylesheet' />
   		<script type="text/javascript" src='#{request.contextPath}/js/nprogress.js'></script>
+  		
   		<!-- extensão para funcionar junto com API Vimeo não tem maven depencies -->
   		<script type="text/javascript" src='#{request.contextPath}/js/froogaloop.js'></script>
+  		
   		<!-- Menu JS -->
 		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/layoutResources/HorizontalSlideOutMenu/css/component.css" />
 		<script src="#{request.contextPath}/layoutResources/HorizontalSlideOutMenu/js/modernizr.custom.js"></script>
 		<script src="#{request.contextPath}/layoutResources/HorizontalSlideOutMenu/js/cbpHorizontalSlideOutMenu.min.js"></script>
+		
+		<!-- Extensão de animação para transição do bxslider -->
 		<script src="#{request.contextPath}/layoutResources/bxSlider/jquery.easing.1.3.js"></script>
 		<!-- Ellipsis -->
 		<script src="#{request.contextPath}/layoutResources/jqueryEllipises/jquery.ellipsis.js"></script>
+		
+		<!-- jqueryUI serve para utilizar Drag and Drop -->
+		<script src="#{request.contextPath}/layoutResources/jqueryUI/jquery-ui-1.10.4.custom.min.js"></script>
   		
 	</h:head>
 <h:body>
 <a id="proxyCommandOpenPopUp" style="visibility: hidden"/>
 <h:form id="form">
-<!--  código responsável por pega os parâmetros na url -->
-<!--Start Header-->
-<header>
 	<div style="width: 100%;background:black" >
 		<p:outputPanel id="menu" autoUpdate="true" >
 			<div class="cbp-hsmenu-wrapper" id="cbp-hsmenu-wrapper">
 				<ul class="cbp-hsmenu">
 					<li>
-						<a id="searchLTabLink"  onclick="display('searchResult');" onmouseover="click('searchLTabLink');" >Pesquisa</a>
+						<a id="searchLTabLink" style="height:0px;" onclick="display('searchResult');" onmouseover="click('searchLTabLink');" >Pesquisa</a>
 							<ul class="cbp-hssubmenu">
 						</ul>
 					</li>
 					<li>
 							<a   id="watchingTabLink" 
-								 style="display: #{pesquisaBean.operation.playing ? 'block' : 'none'}  "
+								 style="height:0px;display: #{pesquisaBean.operation.playing ? 'block' : 'none'} "
 								 onclick="display('playerView');" onmouseover="click('watchingTabLink');" > Assistindo</a>
 						<ul class="cbp-hssubmenu">
 						</ul>
@@ -83,9 +90,7 @@
          			</div>
         </div>
 	</div>
-</header>
 
-<!--End Header-->
 <!--Start Container-->
 <h:panelGroup id="main"  layout="block"  style="clear:both;" >
     	<h:panelGroup id="contentPanel">

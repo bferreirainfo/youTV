@@ -4,13 +4,35 @@ var context;
 $(window).ready(function(){
 loadSlider(); 
 loadRelatedSlider();
+loadDrag();
 switch(context){
 	case "home" : startHome(); break; 
 	case "miniplayer" : startMiniPlayer(); break;
 	default : startHome();
 }	
-
 });
+function loadDrag(){
+	//http://www.dropzonejs.com/ sugestão de drag and drop para fileupload
+	$('.button').draggable({
+	    cursor: 'pointer',
+	    connectWith: '.dropme',
+	    helper: 'clone',
+	    opacity: 0.5,
+	    zIndex: 10
+	});
+
+	$('.dropme').sortable({
+	    connectWith: '.dropme',
+	    cursor: 'pointer'
+	}).droppable({
+	    accept: '.button',
+	    activeClass: 'highlight',
+	    drop: function(event, ui) {
+	        var $li = $('<div/>').html('List ' + ui.draggable.html());
+	        $li.appendTo(this);
+	    }
+	});
+}
 function startHome(){
 	var menu = new cbpHorizontalSlideOutMenu( document.getElementById( 'cbp-hsmenu-wrapper' ) );
 	abaAtual = 'searchResult';
@@ -164,6 +186,7 @@ function playVimeoMiniPlayer(videoId){
 // ============================== Vimeo =======================================	
 
 function playVimeo(videoVimeoId){
+	//https://github.com/vimeo/player-api/blob/master/javascript/playground.html
    visualizarApenasPlayer('vimeoPlayerWrapper');
    var videoUrl = 'http://www.vimeo.com/'+videoVimeoId+'api=1&amp;player_id=vimeoIframe';
    // This is the oEmbed endpoint for Vimeo (we're using JSON)
