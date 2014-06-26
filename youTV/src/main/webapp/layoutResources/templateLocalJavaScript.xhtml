@@ -4,23 +4,82 @@ var context;
 $(window).ready(function(){
 loadSlider(); 
 loadRelatedSlider();
-loadDrag();
 switch(context){
 	case "home" : startHome(); break; 
 	case "miniplayer" : startMiniPlayer(); break;
 	default : startHome();
 }	
 });
-function loadDrag(){
-	//http://www.dropzonejs.com/ sugestão de drag and drop para fileupload
-	$('.button').draggable({
+var videoThmbnail;
+var draggableSettings = {
 	    cursor: 'pointer',
-	    connectWith: '.dropme',
-	    helper: 'clone',
+	    helper: function(){return $('<span style="border 1px solide black;width:100px;height:50px" ></span>').append($(this).find("img").attr("title"));},
 	    opacity: 0.5,
-	    zIndex: 10
-	});
+	    appendTo: "body",
+	    cursorAt:{top: 15,  left: 5},
+	    stop: function(event, ui) {
+	        // event.toElement is the element that was responsible
+	        // for triggering this event. The handle, in case of a draggable.
+	        $( event.toElement ).one('click', function(e){ e.stopImmediatePropagation(); } );
+	    }
+};
+	    
+function loadDrag(){
+	var drag = $( ".draggable" );
+    var playerList = $( "#playerList" );
+	//http://www.dropzonejs.com/ sugestão de drag and drop para fileupload
+	drag.draggable(draggableSettings);
+	playerList.droppable({
+	      accept: '.draggable',
+	      activeClass:"ui-state-active",
+	      drop: function( event, ui ) {
+	    	  var defaultMsg =  $(this).find(".placeholder");
+	    	  videoThmbnail =   $("<li></li>").append($(ui.draggable).clone());
+	    	  videoThmbnail.find("img").toggleClass("thumbnailVideo thumbnailPlayer");
+	    	  if (defaultMsg.length > 0) //add first element when cart is empty
+	    		  	defaultMsg.remove();
 
+            	  videoThmbnail.appendTo(this).hide().fadeIn(2000);
+                  /*
+                  $item.append( recycle_icon ).appendTo( $list ).fadeIn(function() {
+                      $item
+                        .animate({ width: "48px" })
+                        .find( "img" )
+                          .animate({ height: "36px" });
+                    });*/
+
+	      }
+	}).sortable(jQuery.extend(draggableSettings,
+			{helper:'clone',
+			appendTo:"parent",
+			placeholder: "ui-sortable-placeholder",
+ items: "li", axis: "x",
+			start: function(e, ui){
+		        ui.placeholder.height(ui.item.height());
+		    }
+			}));
+	
+	/*
+	$( "#playerList" ).sortable({ 
+		revert: true,
+        update: function( event, ui ) {
+        	//WTF
+            //var basketItems = $(this).sortable('toArray').toString();
+            //alert("backet item: " + ui);
+            //$.get('updatebasket.cfm', {basketItems:basketItems});
+        }
+    });
+	*/
+	
+	/*
+	$( ".draggable" ).droppable({
+        drop: function  (event, ui) {
+               // $("#sortable").find(".draggable").remove();
+        } 
+
+    }); 
+
+	/*
 	$('.dropme').sortable({
 	    connectWith: '.dropme',
 	    cursor: 'pointer'
@@ -32,6 +91,7 @@ function loadDrag(){
 	        $li.appendTo(this);
 	    }
 	});
+	*/
 }
 function startHome(){
 	var menu = new cbpHorizontalSlideOutMenu( document.getElementById( 'cbp-hsmenu-wrapper' ) );
@@ -123,6 +183,7 @@ function playVimeoMiniPlayer(videoId){
 			    });
 			 $('.ellipsis2').ellipsis({row: 2});
 			 $('.ellipsis3').ellipsis({row: 3});
+			 loadDrag();
 		}
 		function loadRelatedSlider(){
 			relatedSlide = $('.relatedVideosSlider').bxSlider(relatedVideoSettings);

@@ -6,37 +6,22 @@
  >
 	<body>
 		<h:panelGroup id="searchPanel" style="margin-top:10px;" layout="block" >
-			<div class="row">
-			    <div class="button" >Item 10</div>
-			    <div class="button" data-item="11">Item 11</div>
-			    <div class="button" data-item="12">Item 12</div>
-			</div>
-			<div class="dropme">
-			    <div>List Item 1</div>
-			    <div>List Item 2</div>
-			    <div>List Item 3</div>
-			    <div>List Item 4</div>
-			    <div>List Item 5</div>
-			</div>
-			<br />
-			<div class="dropme">
-			    <div>List Item 1</div>
-			    <div>List Item 2</div>
-			    <div>List Item 3</div>
-			    <div>List Item 4</div>
-			    <div>List Item 5</div>
-			</div>
 			<div id="searchResult" style="padding-left: 2%;"  >
+					 	<div id="playerPrototype">
+					 		<ul id="playerList" >
+					            <li class="placeholder">Add your items here</li>
+					        </ul>
+					 	</div>
 						<h:panelGroup id="youtubeCarrousel" style="width:540px;float: left;box-shadow:1px 1px 1px #888888" layout="block" rendered="#{not empty pesquisaBean.youTubeVideosSearchResult}" >
 							<h4>Youtube</h4>	
 							<ul class="bxslider">
 								<ui:repeat var="item" value="#{pesquisaBean.youTubeVideosSearchResult}" varStatus="myVarStatus"  >
 									<li> 
-										<div class="itemSize row">
+										<div class="itemSize">
 											<span class="thumbnailWrapper" >		
-												<p:commandLink  action="#{pesquisaBean.loadYoutubeVideo}" process="@this" update=":form:videoInformations" onclick="playYoutube('#{item.id}');" oncomplete="loadRelatedSlider();" >
+												<p:commandLink  styleClass="draggable" action="#{pesquisaBean.loadYoutubeVideo}" process="@this" update=":form:videoInformations" onclick="playYoutube('#{item.id}');" oncomplete="loadRelatedSlider();" >
 													<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
-													<img class="thumbnailVideo button" src="#{item.thumbnailUrl}" />
+													<img alt="erro ao gerar img" title="#{item.title}"   class="thumbnailVideo" src="#{item.thumbnailUrl}" />
 												</p:commandLink>	
 												<a class="miniPlayerAction" onClick="playYoutubeMiniPlayer('#{item.id}');" >
 														<span class="glyphicon glyphicon-new-window" />

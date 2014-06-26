@@ -185,12 +185,22 @@ text-decoration: none;
 .thumbnailTitle{
 	display: block;
 }
+.ui-draggable{
+ width: auto;
+ height: auto;
+}
 .thumbnailVideo{
 	width: 180px;
-	height:100%;
+	height:119px;
 	margin-right:10px;
 	float:left
 }
+.thumbnailPlayer{
+	width: 90px;
+	height:60px;
+	margin-right:10px;
+}
+
 .thumbnailWrapper:hover .miniPlayerAction{display:block;}
 .thumbnailWrapper:hover img{opacity:0.3;}
 .thumbnailWrapper:hover {
@@ -318,23 +328,6 @@ content: "Carregando...";
     width: 100%;
     height: auto;
 }
-.button {
-    display: inline-block;
-    width: auto;
-    height: auto;
-    padding: 8px 15px;
-    border: 1px solid #ccc;
-    text-align: center;
-    background: #eee;
-}
-
-.dropme {
-    display: inline-block;
-    width: auto;
-    height: auto;
-    overflow: hidden;
-    margin-top: 20px;
-}
 
 .dropme div {
     display: block;
@@ -347,5 +340,25 @@ content: "Carregando...";
     border: 2px dotted #fff09f;
     background: #fffef5;
 }
+#playerList{
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  width:800px;
+  height:360px;
+  overflow-x: auto;
+  background-color: #ddd;
+  display: block;
+}
 
+#playerList li{
+  list-style-type: none;
+  display: inline;
+}
+.dark{
+	background-color: black;
+}
+.ui-sortable-placeholder{
+	border: solid 1px green;
+}
 </style>
