@@ -6,12 +6,13 @@
  >
 	<body>
 		<h:panelGroup id="searchPanel" style="margin-top:10px;" layout="block" >
-			<div id="searchResult" style="padding-left: 2%;"  >
-					 	<div id="playerPrototype">
+			<div id="searchResult" style="padding-left: 2%;">
+					 	<div id="playerPrototype" >
 					 		<ul id="playerList" >
 					            <li class="placeholder">Add your items here</li>
 					        </ul>
 					 	</div>
+					 	<br/>
 						<h:panelGroup id="youtubeCarrousel" style="width:540px;float: left;box-shadow:1px 1px 1px #888888" layout="block" rendered="#{not empty pesquisaBean.youTubeVideosSearchResult}" >
 							<h4>Youtube</h4>	
 							<ul class="bxslider">
@@ -19,7 +20,7 @@
 									<li> 
 										<div class="itemSize">
 											<span class="thumbnailWrapper" >		
-												<p:commandLink  styleClass="draggable" action="#{pesquisaBean.loadYoutubeVideo}" process="@this" update=":form:videoInformations" onclick="playYoutube('#{item.id}');" oncomplete="loadRelatedSlider();" >
+												<p:commandLink  styleClass="draggable sortable" action="#{pesquisaBean.loadYoutubeVideo}" process="@this" update=":form:videoInformations" onclick="playYoutube('#{item.id}');" oncomplete="loadRelatedSlider();" >
 													<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
 													<img alt="erro ao gerar img" title="#{item.title}"   class="thumbnailVideo" src="#{item.thumbnailUrl}" />
 												</p:commandLink>	
@@ -65,13 +66,13 @@
 								<ul class="bxslider">
 										<ui:repeat var="item" value="#{pesquisaBean.vimeoVideosSearchResult}" varStatus="myVarStatus"  >
 											<li> 
-												<div class="itemSize" style="display: block;clear: both;" >
+												<div class="itemSize" >
 													<span class="thumbnailWrapper" >		
-														<p:commandLink action="#{pesquisaBean.loadVimeoVideo}" process="@this" update=":form:videoInformations" onclick="playVimeo('#{item.id}');" oncomplete="loadRelatedSlider();" >
+														<p:commandLink styleClass="draggable" action="#{pesquisaBean.loadVimeoVideo}" process="@this" update=":form:videoInformations" onclick="playVimeo('#{item.id}');" oncomplete="loadRelatedSlider();" >
 															<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}" />
-															<img class="thumbnailVideo" src="#{item.thumbnailUrl}" />
+															<img alt="erro ao gerar img" title="#{item.title}"   class="thumbnailVideo" src="#{item.thumbnailUrl}" />
 														</p:commandLink>
-														<a class="miniPlayerAction" onClick="playYoutubeMiniPlayer('#{item.id}');" >
+														<a class="miniPlayerAction" onClick="playVimeoMiniPlayer('#{item.id}');" >
 																<span class="glyphicon glyphicon-new-window" />
 														</a>
 													</span>

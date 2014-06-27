@@ -42,6 +42,7 @@
 		
 		<!-- jqueryUI serve para utilizar Drag and Drop -->
 		<script src="#{request.contextPath}/layoutResources/jqueryUI/jquery-ui-1.10.4.custom.min.js"></script>
+		
   		
 	</h:head>
 <h:body>
@@ -59,7 +60,7 @@
 					<li>
 							<a   id="watchingTabLink" 
 								 style="height:0px;display: #{pesquisaBean.operation.playing ? 'block' : 'none'} "
-								 onclick="display('playerView');" onmouseover="click('watchingTabLink');loadDrag();" > Assistindo</a>
+								 onclick="display('playerView');" onmouseover="click('watchingTabLink');" > Assistindo</a>
 						<ul class="cbp-hssubmenu">
 						</ul>
 					</li>

@@ -196,9 +196,9 @@ text-decoration: none;
 	float:left
 }
 .thumbnailPlayer{
-	width: 90px;
-	height:60px;
-	margin-right:10px;
+	width: 176px;
+	height:90px;
+	padding: 3px;
 }
 
 .thumbnailWrapper:hover .miniPlayerAction{display:block;}
@@ -341,24 +341,31 @@ content: "Carregando...";
     background: #fffef5;
 }
 #playerList{
+  background: white;
+  border: 1px solid black;
   margin: 0;
-  padding: 0;
+  padding-left:3px;
+  width:80%;
+  height:105px;
+  overflow-y:hidden;
   white-space: nowrap;
-  width:800px;
-  height:360px;
-  overflow-x: auto;
-  background-color: #ddd;
-  display: block;
+  position: relative !important;
+  
 }
 
 #playerList li{
+  padding: 0px;
   list-style-type: none;
-  display: inline;
-}
-.dark{
-	background-color: black;
+  display: inline-block !important;
 }
 .ui-sortable-placeholder{
-	border: solid 1px green;
+	background: #7fba23;
+	width: 2px !important;
+	height:100%;
+	position: absolute !important;
+	margin-left:-1px !important;
+}
+img {
+	vertical-align: initial;
 }
 </style>

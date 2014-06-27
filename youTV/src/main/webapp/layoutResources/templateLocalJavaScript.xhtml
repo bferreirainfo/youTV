@@ -13,9 +13,9 @@ switch(context){
 var videoThmbnail;
 var draggableSettings = {
 	    cursor: 'pointer',
-	    helper: function(){return $('<span style="border 1px solide black;width:100px;height:50px" ></span>').append($(this).find("img").attr("title"));},
-	    opacity: 0.5,
+	    helper: function(){return $('<div style="border 1px solid black;width:100px;height:50px" ></div>').append($(this).find("img").attr("title"));},
 	    appendTo: "body",
+	    placeholder: "ui-sortable-placeholder",
 	    cursorAt:{top: 15,  left: 5},
 	    stop: function(event, ui) {
 	        // event.toElement is the element that was responsible
@@ -23,10 +23,12 @@ var draggableSettings = {
 	        $( event.toElement ).one('click', function(e){ e.stopImmediatePropagation(); } );
 	    }
 };
-	    
+	
+
 function loadDrag(){
-	var drag = $( ".draggable" );
-    var playerList = $( "#playerList" );
+	drag = $(".draggable");
+	playerList =  $("#playerList");
+	
 	//http://www.dropzonejs.com/ sugestão de drag and drop para fileupload
 	drag.draggable(draggableSettings);
 	playerList.droppable({
@@ -34,29 +36,20 @@ function loadDrag(){
 	      activeClass:"ui-state-active",
 	      drop: function( event, ui ) {
 	    	  var defaultMsg =  $(this).find(".placeholder");
+	    	  if (defaultMsg.length > 0) defaultMsg.remove();
 	    	  videoThmbnail =   $("<li></li>").append($(ui.draggable).clone());
 	    	  videoThmbnail.find("img").toggleClass("thumbnailVideo thumbnailPlayer");
-	    	  if (defaultMsg.length > 0) //add first element when cart is empty
-	    		  	defaultMsg.remove();
-
-            	  videoThmbnail.appendTo(this).hide().fadeIn(2000);
-                  /*
-                  $item.append( recycle_icon ).appendTo( $list ).fadeIn(function() {
-                      $item
-                        .animate({ width: "48px" })
-                        .find( "img" )
-                          .animate({ height: "36px" });
-                    });*/
-
+           	  videoThmbnail.appendTo(this).hide().fadeIn(2000);
 	      }
-	}).sortable(jQuery.extend(draggableSettings,
-			{helper:'clone',
+	}).sortable(jQuery.extend(
+			draggableSettings,{
+			helper: 'clone',
+			opacity: 0.8,
 			appendTo:"parent",
-			placeholder: "ui-sortable-placeholder",
- items: "li", axis: "x",
+ 			items: "li",
+ 			axis:"x",
 			start: function(e, ui){
-		        ui.placeholder.height(ui.item.height());
-		    }
+		    		}
 			}));
 	
 	/*
@@ -162,7 +155,8 @@ function playVimeoMiniPlayer(videoId){
 			  controls: false,
 			  useCSS: false,
 			  easing:'easeOutExpo',
-			  minSlides: Math.round(700/118)
+			  minSlides: Math.round(700/118),
+			  onSliderLoad: notifySlideReady
 		  	};
 		var relatedVideoSettings =  {
 			  slideWidth: 180,
@@ -175,15 +169,25 @@ function playVimeoMiniPlayer(videoId){
 			  minSlides: 1,
 			  maxSlides: Math.round($(window).width()*0.90/180)
 			};
+		var slidesCallbackCount;
+		var slidesTotal;
 		function loadSlider(){
 			var windowHeight = Math.round($(window).height()*0.70);
-			 $('.bxslider').each(function(i){
+			var slidesDivs = $('.bxslider');
+			slidesCallbackCount = 0;
+			slidesTotal = slidesDivs.length;
+			slidesDivs.each(function(i){
 			        sliderArray[i] = $(this).bxSlider(sliderSettings);
 			        sliderArray[i].parent().css("min-height",windowHeight);
 			    });
 			 $('.ellipsis2').ellipsis({row: 2});
 			 $('.ellipsis3').ellipsis({row: 3});
-			 loadDrag();
+		}
+		function notifySlideReady(){
+			slidesCallbackCount += 1;
+			if(slidesCallbackCount == slidesTotal){
+				loadDrag();
+			}
 		}
 		function loadRelatedSlider(){
 			relatedSlide = $('.relatedVideosSlider').bxSlider(relatedVideoSettings);
