@@ -2,55 +2,86 @@
 var context;
 //============================== OnPageLoad =======================================
 $(window).ready(function(){
-loadSlider(); 
-loadRelatedSlider();
-switch(context){
-	case "home" : startHome(); break; 
-	case "miniplayer" : startMiniPlayer(); break;
-	default : startHome();
-}	
+	$('#searchResult').on('mouseover', '.drag',  function(){ $(this).draggable(draggableSettings).disableSelection();});
+	loadSlider(); 
+	loadRelatedSlider();
+	loadDrag();
+	switch(context){
+		case "home" : startHome(); break; 
+		case "miniplayer" : startMiniPlayer(); break;
+		default : startHome();
+	}	
 });
+
 var videoThmbnail;
+var playerOpen = false;
+function togglePlayer(){
+	$("#playerList").toggleClass("displayTrue displayFalse");
+	$("#content").toggleClass("contentFull contentParcial");
+	playerOpen = !playerOpen;
+}
 var draggableSettings = {
-	    cursor: 'pointer',
-	    helper: function(){return $('<div style="border 1px solid black;width:100px;height:50px" ></div>').append($(this).find("img").attr("title"));},
+		connectToSortable:'#playerList',
+		//.append($(this).find("img").attr("title"));
+	    helper: function(){return $('<div style="background: black;width:5px;height:5px" ></div>')},
 	    appendTo: "body",
-	    placeholder: "ui-sortable-placeholder",
-	    cursorAt:{top: 15,  left: 5},
+	    cursorAt:{top: 0,  left: 0},
 	    stop: function(event, ui) {
 	        // event.toElement is the element that was responsible
 	        // for triggering this event. The handle, in case of a draggable.
 	        $( event.toElement ).one('click', function(e){ e.stopImmediatePropagation(); } );
 	    }
 };
-	
+var sortableSettings ={
+	    helper: 'clone',
+		opacity: 0.8,
+		distance:1,
+		placeholder:'placeholder',
+		receive:
+            function(event,ui) {
+			
+               var newItem = $(this).data().uiSortable.currentItem;
+               
+               newItem.find(".thumbnailTitle").css("display","block").ellipsis({row: 3});
+               newItem.find(".author").css("display","block");
+              
+               newItem.find("img").toggleClass("thumbnailVideo thumbnailPlayer");
+              /* onclick = playYoutube('G_cToAe_hKA');
+              type
+              id
+              title
+              time
+              autor
+              category
+               PrimeFaces.ab(
+            		   {
+            			source:'@none',process:'@none',update:'form:videoInformations',
+            			oncomplete:function(xhr,status,args){loadRelatedSlider();;}
+            		   });return false;
+               return newItem;
+               */
+            },
+	    stop: function(event, ui) {
+		        // event.toElement is the element that was responsible
+		        // for triggering this event. The handle, in case of a draggable.
+		        $( event.toElement ).one('click', function(e){ e.stopImmediatePropagation(); } );
+		    }
+};
+var droppableSettings = {
+		      accept: '.draggable',
+		      activeClass:"ui-state-active",
+		      
+};
 
 function loadDrag(){
+	/*
 	drag = $(".draggable");
-	playerList =  $("#playerList");
 	
 	//http://www.dropzonejs.com/ sugestão de drag and drop para fileupload
 	drag.draggable(draggableSettings);
-	playerList.droppable({
-	      accept: '.draggable',
-	      activeClass:"ui-state-active",
-	      drop: function( event, ui ) {
-	    	  var defaultMsg =  $(this).find(".placeholder");
-	    	  if (defaultMsg.length > 0) defaultMsg.remove();
-	    	  videoThmbnail =   $("<li></li>").append($(ui.draggable).clone());
-	    	  videoThmbnail.find("img").toggleClass("thumbnailVideo thumbnailPlayer");
-           	  videoThmbnail.appendTo(this).hide().fadeIn(2000);
-	      }
-	}).sortable(jQuery.extend(
-			draggableSettings,{
-			helper: 'clone',
-			opacity: 0.8,
-			appendTo:"parent",
- 			items: "li",
- 			axis:"x",
-			start: function(e, ui){
-		    		}
-			}));
+	*/
+	playerList =  $("#playerList");
+	playerList.sortable(sortableSettings).disableSelection();
 	
 	/*
 	$( "#playerList" ).sortable({ 
@@ -156,7 +187,6 @@ function playVimeoMiniPlayer(videoId){
 			  useCSS: false,
 			  easing:'easeOutExpo',
 			  minSlides: Math.round(700/118),
-			  onSliderLoad: notifySlideReady
 		  	};
 		var relatedVideoSettings =  {
 			  slideWidth: 180,
@@ -169,25 +199,14 @@ function playVimeoMiniPlayer(videoId){
 			  minSlides: 1,
 			  maxSlides: Math.round($(window).width()*0.90/180)
 			};
-		var slidesCallbackCount;
-		var slidesTotal;
 		function loadSlider(){
 			var windowHeight = Math.round($(window).height()*0.70);
-			var slidesDivs = $('.bxslider');
-			slidesCallbackCount = 0;
-			slidesTotal = slidesDivs.length;
-			slidesDivs.each(function(i){
+			$('.bxslider').each(function(i){
 			        sliderArray[i] = $(this).bxSlider(sliderSettings);
 			        sliderArray[i].parent().css("min-height",windowHeight);
 			    });
 			 $('.ellipsis2').ellipsis({row: 2});
 			 $('.ellipsis3').ellipsis({row: 3});
-		}
-		function notifySlideReady(){
-			slidesCallbackCount += 1;
-			if(slidesCallbackCount == slidesTotal){
-				loadDrag();
-			}
 		}
 		function loadRelatedSlider(){
 			relatedSlide = $('.relatedVideosSlider').bxSlider(relatedVideoSettings);

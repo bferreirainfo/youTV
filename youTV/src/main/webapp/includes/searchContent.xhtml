@@ -5,29 +5,28 @@
 	  xmlns:f="http://java.sun.com/jsf/core"
  >
 	<body>
-		<h:panelGroup id="searchPanel" style="margin-top:10px;" layout="block" >
-			<div id="searchResult" style="padding-left: 2%;">
-					 	<div id="playerPrototype" >
-					 		<ul id="playerList" >
-					            <li class="placeholder">Add your items here</li>
-					        </ul>
-					 	</div>
-					 	<br/>
+		<div id="searchResult"  style="margin-top:10px;" >
+			<h:panelGroup id="searchPanel" style="padding-left: 2%;" layout="block" >
 						<h:panelGroup id="youtubeCarrousel" style="width:540px;float: left;box-shadow:1px 1px 1px #888888" layout="block" rendered="#{not empty pesquisaBean.youTubeVideosSearchResult}" >
 							<h4>Youtube</h4>	
 							<ul class="bxslider">
 								<ui:repeat var="item" value="#{pesquisaBean.youTubeVideosSearchResult}" varStatus="myVarStatus"  >
-									<li> 
-										<div class="itemSize">
-											<span class="thumbnailWrapper" >		
-												<p:commandLink  styleClass="draggable sortable" action="#{pesquisaBean.loadYoutubeVideo}" process="@this" update=":form:videoInformations" onclick="playYoutube('#{item.id}');" oncomplete="loadRelatedSlider();" >
-													<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
-													<img alt="erro ao gerar img" title="#{item.title}"   class="thumbnailVideo" src="#{item.thumbnailUrl}" />
-												</p:commandLink>	
+									<li class="itemSize" > 
+											<div class="thumbnailWrapper" style="float: left"  >
+												<div class="drag" >
+													<p:commandLink action="#{pesquisaBean.loadYoutubeVideo}" process="@this" update=":form:videoInformations" onclick="playYoutube('#{item.id}');" oncomplete="loadRelatedSlider();" >
+														<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
+														<img alt="erro ao gerar img" title="#{item.title}"   class="thumbnailVideo" src="#{item.thumbnailUrl}" />
+													</p:commandLink>	
+													<div style="display: none;font-size: 11px;white-space: normal;color: #2a6496" class="thumbnailTitle" >
+														#{item.title}
+													</div>
+													<div style="display: none;font-size: 11px;" class="thumbnailDescription author">#{item.channelTitle}</div>
+												</div>
 												<a class="miniPlayerAction" onClick="playYoutubeMiniPlayer('#{item.id}');" >
 														<span class="glyphicon glyphicon-new-window" />
 												</a>
-											</span>
+											</div>
 											<div class="videoDescription" >
 												<p:commandLink value="#{item.title}" 
 															   styleClass="ellipsis2 thumbnailTitle" 
@@ -56,7 +55,6 @@
 												<br/>
 												<br/>
 											</div>
-										</div>
 									</li>
 								</ui:repeat>
 							</ul>
@@ -67,15 +65,21 @@
 										<ui:repeat var="item" value="#{pesquisaBean.vimeoVideosSearchResult}" varStatus="myVarStatus"  >
 											<li> 
 												<div class="itemSize" >
-													<span class="thumbnailWrapper" >		
-														<p:commandLink styleClass="draggable" action="#{pesquisaBean.loadVimeoVideo}" process="@this" update=":form:videoInformations" onclick="playVimeo('#{item.id}');" oncomplete="loadRelatedSlider();" >
-															<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}" />
-															<img alt="erro ao gerar img" title="#{item.title}"   class="thumbnailVideo" src="#{item.thumbnailUrl}" />
-														</p:commandLink>
+													<div class="thumbnailWrapper" style="float: left"  >
+														<div class="drag" >		
+															<p:commandLink styleClass="draggable" action="#{pesquisaBean.loadVimeoVideo}" process="@this" update=":form:videoInformations" onclick="playVimeo('#{item.id}');" oncomplete="loadRelatedSlider();" >
+																<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}" />
+																<img alt="erro ao gerar img" title="#{item.title}"   class="thumbnailVideo" src="#{item.thumbnailUrl}" />
+															</p:commandLink>
+															<div style="display: none;font-size: 11px;white-space: normal;color: #2a6496" class="thumbnailTitle" >
+																#{item.title}
+															</div>
+															<div style="display: none;font-size: 11px;" class="thumbnailDescription author">#{item.channelTitle}</div>
+														</div>
 														<a class="miniPlayerAction" onClick="playVimeoMiniPlayer('#{item.id}');" >
 																<span class="glyphicon glyphicon-new-window" />
 														</a>
-													</span>
+													</div>
 													<div class="videoDescription" >
 														<p:commandLink 
 																		value="#{item.title}" 
@@ -101,7 +105,7 @@
 										</ui:repeat>
 								</ul>
 						</h:panelGroup>
-				</div>
 		</h:panelGroup>
+				</div>
 </body>
 </html>

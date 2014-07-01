@@ -47,7 +47,9 @@
 	</h:head>
 <h:body>
 <a id="proxyCommandOpenPopUp" style="visibility: hidden"/>
+<h:inputHidden value="#{pesquisaBean.videoViewId}" />
 <h:form id="form">
+	<div id="content" class="contentFull" >
 	<div style="width: 100%;background:black" >
 		<p:outputPanel id="menu" autoUpdate="true" >
 			<div class="cbp-hsmenu-wrapper" id="cbp-hsmenu-wrapper">
@@ -106,7 +108,17 @@
 <ui:include src="/layoutResources/templateLocalJavaScript.xhtml" />
 <ui:include src="/layoutResources/templateLocalCss.xhtml" />
  </h:panelGroup>
-
+</div>
+<nav class="navbar navbar-blend navbar-fixed-bottom" role="navigation">
+	
+	  <a class="playerLogo" onclick="togglePlayer();" >
+	  	YouTv PLayer
+	  </a>
+      <ul id="playerList" class="playerList displayFalse">
+			<!-- o drag funciona mais rapido se iniciar com pelo menos um elemento dentro -->
+			<span id="marcador" />
+       </ul>
+</nav>
 </h:form>
 </h:body>
 </html>
