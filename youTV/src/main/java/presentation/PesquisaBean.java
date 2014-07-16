@@ -59,6 +59,9 @@ public class PesquisaBean {
         }
     }
 
+    public void showPerfil() {
+    }
+
     public void loadVimeoVideo() {
         videoView = localLoad(vimeoVideosSearchResult);
         if (videoView == null) {

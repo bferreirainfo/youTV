@@ -5,6 +5,7 @@ import java.util.List;
 
 import utils.Utils;
 
+import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoStatistics;
 
@@ -65,6 +66,33 @@ public class VideoView {
         duration = video.getContentDetails().getDuration();
         uploadDate = Utils.obtainFormatYoutubeVideoDate(video);
         title = video.getSnippet().getTitle();
+    }
+
+    public VideoView(PlaylistItem playlistItem) {
+        videoType = VideoTypeEnum.youtube;
+         id = playlistItem.getId();
+        description = playlistItem.getSnippet().getDescription();
+        channelTitle = playlistItem.getSnippet().getChannelTitle();
+        VideoStatistics videoStatistics = playlistItem.getStatistics();
+        BigInteger viewCount = videoStatistics.getViewCount();
+        BigInteger likesCount = videoStatistics.getLikeCount();
+        BigInteger dislikesCount = videoStatistics.getDislikeCount();
+
+        views = Utils.formatNumberWithDots(viewCount.toString());
+        likeCount = Utils.formatNumberWithDots(likesCount.toString());
+        dislikeCount = Utils.formatNumberWithDots(dislikesCount.toString());
+        int[] likesAndDislikesPercentage =
+                Utils.calculateLikesAndDislikesPercentage(likesCount.floatValue(),
+                        dislikesCount.floatValue());
+        likesPercentage = likesAndDislikesPercentage[0] + "%";
+        dislikesPercentage = likesAndDislikesPercentage[1] + "%";
+
+        thumbnailUrl = playlistItem.getSnippet().getThumbnails().getMedium().getUrl();
+        duration = playlistItem.getContentDetails().getDuration();
+        uploadDate = Utils.obtainFormatYoutubeVideoDate(playlistItem);
+        title = playlistItem.getSnippet().getTitle();
+         */
+
     }
 
     public String getTitle() {

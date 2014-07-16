@@ -2,6 +2,8 @@
 var context;
 //============================== OnPageLoad =======================================
 $(window).ready(function(){
+	// free player possivelmente usar no futuro
+	//http://www.projekktor.com/demos/playlist/
 	$('#searchResult').on('mouseover', '.drag',  function(){ $(this).draggable(draggableSettings).disableSelection();});
 	loadSlider(); 
 	loadRelatedSlider();

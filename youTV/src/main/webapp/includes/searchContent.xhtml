@@ -21,7 +21,10 @@
 													<div style="display: none;font-size: 11px;white-space: normal;color: #2a6496" class="thumbnailTitle" >
 														#{item.title}
 													</div>
-													<div style="display: none;font-size: 11px;" class="thumbnailDescription author">#{item.channelTitle}</div>
+													<p:commandLink action="#{pesquisaBean.showPerfil}" process="@this" update="@none" onclick="playYoutube('#{item.id}');" oncomplete="loadRelatedSlider();" >
+														<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
+														<div style="display: none;font-size: 11px;" class="thumbnailDescription author">#{item.channelTitle}</div>
+													</p:commandLink>
 												</div>
 												<a class="miniPlayerAction" onClick="playYoutubeMiniPlayer('#{item.id}');" >
 														<span class="glyphicon glyphicon-new-window" />
@@ -74,6 +77,7 @@
 															<div style="display: none;font-size: 11px;white-space: normal;color: #2a6496" class="thumbnailTitle" >
 																#{item.title}
 															</div>
+															
 															<div style="display: none;font-size: 11px;" class="thumbnailDescription author">#{item.channelTitle}</div>
 														</div>
 														<a class="miniPlayerAction" onClick="playVimeoMiniPlayer('#{item.id}');" >

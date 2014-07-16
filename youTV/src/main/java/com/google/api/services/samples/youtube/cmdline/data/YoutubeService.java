@@ -17,15 +17,20 @@ package com.google.api.services.samples.youtube.cmdline.data;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
+import business.PlayListView;
 import business.usuario.VideoView;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.services.samples.youtube.cmdline.Auth;
 import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.Playlist;
+import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Video;
@@ -53,6 +58,41 @@ public class YoutubeService {
      * requests.
      */
     private static YouTube youtube;
+
+    public static void main(String[] args) throws IOException {
+        //método para testes
+        com.google.api.services.youtube.YouTube.Playlists.List listService =
+                youtube.playlists().list("snippet");
+        listService.setId("UCVtFOytbRpEvzLjvqGG5gxQ");
+        listService.setFields("items(id,snippet/title,snippet/description)");
+
+        Map<PlayListView, List<VideoView>> playListVideosMap =
+                new HashMap<PlayListView, List<VideoView>>();
+
+        StringBuilder idsList = new StringBuilder();
+
+        for (Playlist playList : listService.execute().getItems()) {
+            PlayListView playListView = new PlayListView();
+            playListView.setTitle(playList.getSnippet().getTitle());
+            playListView.setDescription(playList.getSnippet().getDescription());
+            playListView.setId(playList.getId());
+            idsList.append(playList.getId());
+            if (idsList.length() > 0)
+                idsList.append(",");
+            playListVideosMap.put(playListView, null);
+        }
+        com.google.api.services.youtube.YouTube.PlaylistItems.List playsLIstService =
+                youtube.playlistItems().list("snippet").setPlaylistId(idsList.toString());
+        playsLIstService
+                .setFields("items(id,snippet/title,snippet/description,snippet/thumbnails/medium/url,snippet/playlistId)");
+        for (PlaylistItem playlistItem : playsLIstService.execute().getItems()) {
+            PlayListView playListView = new PlayListView();
+            playListView.setId(playlistItem.getSnippet().getPlaylistId());
+            playListVideosMap.get(playListView).add(new VideoView(playlistItem));
+
+        }
+        System.out.println(playsLIstService.execute());
+    }
 
     public static void loadRelatedVideos(VideoView video) {
         if (video.isYoutubeVideo())
