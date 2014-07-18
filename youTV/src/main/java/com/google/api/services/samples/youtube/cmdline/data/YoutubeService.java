@@ -69,28 +69,29 @@ public class YoutubeService {
         Map<PlayListView, List<VideoView>> playListVideosMap =
                 new HashMap<PlayListView, List<VideoView>>();
 
-        StringBuilder idsList = new StringBuilder();
+        StringBuilder playListIds = new StringBuilder();
 
         for (Playlist playList : listService.execute().getItems()) {
             PlayListView playListView = new PlayListView();
             playListView.setTitle(playList.getSnippet().getTitle());
             playListView.setDescription(playList.getSnippet().getDescription());
             playListView.setId(playList.getId());
-            idsList.append(playList.getId());
-            if (idsList.length() > 0)
-                idsList.append(",");
+            playListIds.append(playList.getId());
+            if (playListIds.length() > 0)
+                playListIds.append(",");
             playListVideosMap.put(playListView, null);
         }
         com.google.api.services.youtube.YouTube.PlaylistItems.List playsLIstService =
-                youtube.playlistItems().list("snippet").setPlaylistId(idsList.toString());
-        playsLIstService
-                .setFields("items(id,snippet/title,snippet/description,snippet/thumbnails/medium/url,snippet/playlistId)");
+                youtube.playlistItems().list("snippet").setPlaylistId(playListIds.toString());
+        playsLIstService.setFields("items(id,snippet/playlistId)");
         for (PlaylistItem playlistItem : playsLIstService.execute().getItems()) {
             PlayListView playListView = new PlayListView();
+            playlistItem.getId();
             playListView.setId(playlistItem.getSnippet().getPlaylistId());
             playListVideosMap.get(playListView).add(new VideoView(playlistItem));
 
         }
+        //snippet/title,snippet/description,snippet/thumbnails/medium/url,
         System.out.println(playsLIstService.execute());
     }
 

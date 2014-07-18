@@ -30,11 +30,6 @@
   		<!-- extensão para funcionar junto com API Vimeo não tem maven depencies -->
   		<script type="text/javascript" src='#{request.contextPath}/js/froogaloop.js'></script>
   		
-  		<!-- Menu JS -->
-		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/layoutResources/HorizontalSlideOutMenu/css/component.css" />
-		<script src="#{request.contextPath}/layoutResources/HorizontalSlideOutMenu/js/modernizr.custom.js"></script>
-		<script src="#{request.contextPath}/layoutResources/HorizontalSlideOutMenu/js/cbpHorizontalSlideOutMenu.min.js"></script>
-		
 		<!-- Extensão de animação para transição do bxslider -->
 		<script src="#{request.contextPath}/layoutResources/bxSlider/jquery.easing.1.3.js"></script>
 		<!-- Ellipsis -->
@@ -50,35 +45,35 @@
 <h:inputHidden value="#{pesquisaBean.videoViewId}" />
 <h:form id="form">
 	<div id="content" class="contentFull" >
-	<div style="width: 100%;background:black" >
-		<p:outputPanel id="menu" autoUpdate="true" >
-			<div class="cbp-hsmenu-wrapper" id="cbp-hsmenu-wrapper">
-				<ul class="cbp-hsmenu">
+	<div class="menu"  style="width: 100%;background:black" >
+		<div  class="menuLogo" style="font-family: systemFont !important;color:white;width: 170px;text-align: center;padding-bottom: 12px;float:left;" >
+						 	YOU TV
+		</div>
+		<div class="menuOptions" >
+			<p:outputPanel id="menu" autoUpdate="true" >
+				<ul style="padding: 0px;width: 300px;" >
 					<li>
-						<a id="searchLTabLink" style="height:0px;" onclick="display('searchResult');" onmouseover="click('searchLTabLink');" >Pesquisa</a>
-							<ul class="cbp-hssubmenu">
-						</ul>
+						<a id="searchLTabLink" onclick="display('searchResult');" onmouseover="click('searchLTabLink');" >Pesquisa</a>
 					</li>
 					<li>
-							<a   id="watchingTabLink" 
-								 style="height:0px;display: #{pesquisaBean.operation.playing ? 'block' : 'none'} "
-								 onclick="display('playerView');" onmouseover="click('watchingTabLink');" > Assistindo</a>
-						<ul class="cbp-hssubmenu">
-						</ul>
+						<a   id="watchingTabLink" 
+							 style="display: #{pesquisaBean.operation.playing ? 'block' : 'none'} "
+							 onclick="display('playerView');" onmouseover="click('watchingTabLink');" > Assistindo</a>
 					</li>
 				</ul>
-			</div>
-		</p:outputPanel>
-		<div class="input-group" style="line-height:0px;padding:5.5px;width: 30%;left: 40%" >
-	           <p:inputText 
-	           				id="searchTerm"
-	           				styleClass="form-control" 
-	           				style=" border-radius: 0px;
-									border-color: black;
-									height: 28px;
-									"  
-	           				value="#{pesquisaBean.searchTerm}" />
-	          	<div class="input-group-addon" style="background: black;border: black;" >
+			</p:outputPanel>
+		</div>
+		<div class="searchInput input-group">
+       		<h:inputText 
+           				id="searchTerm"
+           				styleClass="form-control" 
+           				style=" border-radius: 0px;
+								border-color: black;
+								width: 200px;
+								height: 28px;
+								"  
+           				value="#{pesquisaBean.searchTerm}" />
+	        <div class="input-group-addon" style="background: black;border: black;" >
 		            <p:commandLink
 		            		 id="searchButton" 
 		            		 style="margin:0px;"
@@ -89,9 +84,9 @@
 							 oncomplete="loadSlider();"
 							  >
 							  <div class="glyphicon glyphicon-search"  />
-						  </p:commandLink>
-         			</div>
-        </div>
+				    </p:commandLink>
+        		</div>
+		 </div>
 	</div>
 
 <!--Start Container-->
