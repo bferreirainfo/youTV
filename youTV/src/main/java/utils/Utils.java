@@ -1,5 +1,10 @@
 package utils;
 
+import java.util.Date;
+import java.util.Locale;
+
+import org.ocpsoft.prettytime.PrettyTime;
+
 import com.google.api.client.util.DateTime;
 import com.google.api.services.youtube.model.Video;
 
@@ -25,12 +30,11 @@ public class Utils {
     }
 
     public static String obtainFormatYoutubeVideoDate(Video video) {
-        String date = "";
         DateTime publishedAt = video.getSnippet().getPublishedAt();
-        for (String datePart : publishedAt.toString().substring(0, 10).split("-")) {
-            date = datePart + (date != "" ? "/" + date : "");
-        }
-        return date;
+        PrettyTime t = new PrettyTime();
+        t.setLocale(new Locale("pt", "BR"));
+
+        return t.format(new Date(publishedAt.getValue()));
     }
 
     public static int percentage(Float amount, Float total) {

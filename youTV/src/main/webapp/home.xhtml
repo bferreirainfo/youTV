@@ -51,7 +51,7 @@
 		</div>
 		<div class="menuOptions" >
 			<p:outputPanel id="menu" autoUpdate="true" >
-				<ul style="padding: 0px;width: 300px;" >
+				<ul style="padding: 0px;" >
 					<li>
 						<a id="searchLTabLink" onclick="display('searchResult');" onmouseover="click('searchLTabLink');" >Pesquisa</a>
 					</li>
@@ -69,11 +69,11 @@
            				styleClass="form-control" 
            				style=" border-radius: 0px;
 								border-color: black;
-								width: 200px;
+								width: width:350px;
 								height: 28px;
 								"  
            				value="#{pesquisaBean.searchTerm}" />
-	        <div class="input-group-addon" style="background: black;border: black;" >
+	        <div  style="background: black;border: black;" >
 		            <p:commandLink
 		            		 id="searchButton" 
 		            		 style="margin:0px;"
@@ -83,9 +83,8 @@
 							 onclick="display('searchResult');"
 							 oncomplete="loadSlider();"
 							  >
-							  <div class="glyphicon glyphicon-search"  />
 				    </p:commandLink>
-        		</div>
+       		</div>
 		 </div>
 	</div>
 

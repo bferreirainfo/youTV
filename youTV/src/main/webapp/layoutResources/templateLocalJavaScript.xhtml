@@ -181,13 +181,16 @@ function playVimeoMiniPlayer(videoId){
 		var relatedSlide;
 		
 		var sliderSettings =  {
-			  slideWidth: 534,
-			  mode: 'vertical',
-			  slideMargin:7,
+			  slideWidth: 180,
+			  slideHeight: 250,
+			  slideMargin:5,
 			  controls: false,
 			  useCSS: false,
 			  easing:'easeOutExpo',
-			  minSlides: Math.round(700/118),
+			  infiniteLoop:false,
+			  minSlides: 1,
+			  maxSlides: Math.round($(window).width()*0.90/180),
+			  easing:'easeOutExpo',
 		  	};
 		var relatedVideoSettings =  {
 			  slideWidth: 180,
@@ -201,10 +204,8 @@ function playVimeoMiniPlayer(videoId){
 			  maxSlides: Math.round($(window).width()*0.90/180)
 			};
 		function loadSlider(){
-			var windowHeight = Math.round($(window).height()*0.70);
 			$('.bxslider').each(function(i){
 			        sliderArray[i] = $(this).bxSlider(sliderSettings);
-			        sliderArray[i].parent().css("min-height",windowHeight);
 			    });
 			 $('.ellipsis2').ellipsis({row: 2});
 			 $('.ellipsis3').ellipsis({row: 3});
@@ -255,7 +256,7 @@ function playVimeoMiniPlayer(videoId){
 		function onYouTubeIframeAPIReady() {
 		    player = new YT.Player('youtubeContainer', {
 		        videoId: youtubeVideoId,
-		        playerVars:{autohide:1,egm:1},
+		        playerVars:{autohide:1,egm:1,showinfo:0,frameborder:0},
 		        width:Math.round(context == "home" ? $(window).width()*0.60 : $(window).width())*.99 ,
 		        height:Math.round(context == "home" ? $(window).height()*0.40 : $(window).height()*.98),
 		        events: {
