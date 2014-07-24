@@ -35,9 +35,10 @@ public class VideoView {
         views = Utils.formatNumberWithDots(numberOfPlays);
         likeCount = Utils.formatNumberWithDots(vimeoVideo.getLikeCount());
         dislikeCount = "n/a";
-        uploadDate = vimeoVideo.getUploadDate();
-        duration = vimeoVideo.getDuration();
-        thumbnailUrl = vimeoVideo.getThumbnails().getMediumThumbail().getContent();
+        uploadDate = Utils.obtainFormatVimeoVideoDate(vimeoVideo.getUploadDate());
+        duration = obtainDurationFromVimeo(vimeoVideo.getDuration());
+        String content = vimeoVideo.getThumbnails().getMediumThumbail().getContent();
+        thumbnailUrl = content;
         description = vimeoVideo.getDescription();
         channelTitle = vimeoVideo.getOwner().getChannelTitle();
     }
@@ -63,9 +64,51 @@ public class VideoView {
         dislikesPercentage = likesAndDislikesPercentage[1] + "%";
 
         thumbnailUrl = video.getSnippet().getThumbnails().getMedium().getUrl();
-        duration = video.getContentDetails().getDuration();
+        duration = obtainDurationFromYoutube(video.getContentDetails().getDuration());
         uploadDate = Utils.obtainFormatYoutubeVideoDate(video);
         title = video.getSnippet().getTitle();
+    }
+
+    private String obtainDurationFromYoutube(String duration) {
+        String durationReplaced =
+                duration.replace("PT", "").replace("H", ":").replace("M", ":").replace("S", "");
+        StringBuilder durationAux = new StringBuilder();
+        for (String durationPart : durationReplaced.split(":")) {
+            if (durationAux.length() > 1)
+                durationAux.append(":");
+            if (durationPart.length() == 1) {
+                durationAux.append("0");
+            }
+            durationAux.append(durationPart);
+        }
+        return durationAux.toString();
+    }
+
+    private String obtainDurationFromVimeo(String vimeoVideo) {
+        Integer totalSeconds = Integer.valueOf(vimeoVideo);
+        int hours = Math.round(totalSeconds / 3600);
+        int minutes = Math.round((totalSeconds % 3600) / 60);
+        int seconds = Math.round(totalSeconds % 60);
+        StringBuilder durationAux = new StringBuilder();
+        if (hours > 0) {
+            if (String.valueOf(hours).length() == 1) {
+                durationAux.append("0");
+            }
+            durationAux.append(hours);
+            durationAux.append(":");
+        }
+        if (minutes > 0) {
+            if (String.valueOf(minutes).length() == 1) {
+                durationAux.append("0");
+            }
+            durationAux.append(minutes);
+            durationAux.append(":");
+        }
+        if (String.valueOf(seconds).length() == 1) {
+            durationAux.append("0");
+        }
+        durationAux.append(seconds);
+        return durationAux.toString();
     }
 
     public VideoView(PlaylistItem playlistItem) {

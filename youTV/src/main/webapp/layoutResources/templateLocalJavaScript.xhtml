@@ -19,7 +19,6 @@ var videoThmbnail;
 var playerOpen = false;
 function togglePlayer(){
 	$("#playerList").toggleClass("displayTrue displayFalse");
-	$("#content").toggleClass("contentFull contentParcial");
 	playerOpen = !playerOpen;
 }
 var draggableSettings = {
@@ -163,6 +162,7 @@ function playVimeoMiniPlayer(videoId){
 	proxy.setAttribute("videoType","vimeo");
 	proxy.click();
 }
+
 //============================== OnAjaxComplete =======================================
 // ============================== ProgressBar =======================================
 	//configurando  progress bar
@@ -183,7 +183,7 @@ function playVimeoMiniPlayer(videoId){
 		var sliderSettings =  {
 			  slideWidth: 180,
 			  slideHeight: 250,
-			  slideMargin:5,
+			  slideMargin:10,
 			  controls: false,
 			  useCSS: false,
 			  easing:'easeOutExpo',

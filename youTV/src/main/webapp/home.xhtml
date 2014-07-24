@@ -44,12 +44,11 @@
 <a id="proxyCommandOpenPopUp" style="visibility: hidden"/>
 <h:inputHidden value="#{pesquisaBean.videoViewId}" />
 <h:form id="form">
-	<div id="content" class="contentFull" >
-	<div class="menu"  style="width: 100%;background:black" >
+	<div class="menu"  style="width: 100%;background:rgb(169, 44, 44)" >
 		<div  class="menuLogo" style="font-family: systemFont !important;color:white;width: 170px;text-align: center;padding-bottom: 12px;float:left;" >
-						 	YOU TV
+						 	LyoutvI
 		</div>
-		<div class="menuOptions" >
+		<div class="menuOptions">
 			<p:outputPanel id="menu" autoUpdate="true" >
 				<ul style="padding: 0px;" >
 					<li>
@@ -73,46 +72,66 @@
 								height: 28px;
 								"  
            				value="#{pesquisaBean.searchTerm}" />
-	        <div  style="background: black;border: black;" >
+           				<script>
+           					var txt = "Videos, Filmes e Músicas";
+	           				$(window).load(function(){
+	           					var input = document.getElementById('form:searchTerm');
+	           					if(input.value.length == 0) input.value = txt;
+	           					with(input){
+		           					 onblur = function(e) {
+		           						if(input.value.length == 0) input.value = txt;
+		           				    }
+		           					 onfocus = function(e) {
+			           						if(input.value == txt) input.value = '';
+		           				    }
+	           					}
+	           				});
+           				</script>
+	        <div  style="border: black;" >
 		            <p:commandLink
 		            		 id="searchButton" 
-		            		 style="margin:0px;"
+		            		 style="
+		            		 	margin: 0px;
+								position: absolute;
+								z-index: 999;
+								left: 293px;
+								top: 7.5px;
+								color: black;"
 							 action="#{pesquisaBean.pesquisar}" 
 							 process="@this searchTerm" 
 							 update=":form:searchPanel"
 							 onclick="display('searchResult');"
 							 oncomplete="loadSlider();"
+							 styleClass="glyphicon glyphicon-search" 
 							  >
 				    </p:commandLink>
        		</div>
 		 </div>
 	</div>
+		<!--Start Container-->
+		<h:panelGroup id="main"  layout="block"  style="clear:both;" >
+		    	<h:panelGroup id="contentPanel">
+		             		<!-- Página da pesquisa -->
+		             		<ui:include src="/includes/searchContent.xhtml"/>
+							<!-- Página do player -->
+		             		<ui:include src="/includes/players.xhtml"/>
+				</h:panelGroup>
+				<script>
+					 context = "home";
+				</script>
+				<ui:include src="/layoutResources/templateLocalJavaScript.xhtml" />
+				<ui:include src="/layoutResources/templateLocalCss.xhtml" />
+		 </h:panelGroup>
+	<nav class="navbar navbar-blend navbar-fixed-bottom" role="navigation">
+	      <ul id="playerList" class="playerList displayFalse">
+				<!-- o drag funciona mais rapido se iniciar com pelo menos um elemento dentro -->
+				<span id="marcador" />
+	       </ul>
+	       <a class="playerLogo centralized" onclick="togglePlayer();" >
+		  	Player
+		  </a>
+	</nav>
 
-<!--Start Container-->
-<h:panelGroup id="main"  layout="block"  style="clear:both;" >
-    	<h:panelGroup id="contentPanel">
-             		<!-- Página da pesquisa -->
-             		<ui:include src="/includes/searchContent.xhtml"/>
-					<!-- Página do player -->
-             		<ui:include src="/includes/players.xhtml"/>
-		</h:panelGroup>
-<script>
-	 context = "home";
-</script>
-<ui:include src="/layoutResources/templateLocalJavaScript.xhtml" />
-<ui:include src="/layoutResources/templateLocalCss.xhtml" />
- </h:panelGroup>
-</div>
-<nav class="navbar navbar-blend navbar-fixed-bottom" role="navigation">
-	
-	  <a class="playerLogo" onclick="togglePlayer();" >
-	  	YouTv PLayer
-	  </a>
-      <ul id="playerList" class="playerList displayFalse">
-			<!-- o drag funciona mais rapido se iniciar com pelo menos um elemento dentro -->
-			<span id="marcador" />
-       </ul>
-</nav>
 </h:form>
 </h:body>
 </html>

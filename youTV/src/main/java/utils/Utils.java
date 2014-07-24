@@ -1,5 +1,8 @@
 package utils;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -48,5 +51,31 @@ public class Utils {
         result[0] = percentage;
         result[1] = percentage == 0 ? 0 : 100 - percentage;
         return result;
+    }
+
+    public static String obtainFormatVimeoVideoDate(String uploadDate) {
+        PrettyTime t = new PrettyTime();
+        t.setLocale(new Locale("pt", "BR"));
+        String result;
+        try {
+            result = t.format(formatDate(uploadDate));
+        } catch (Exception e) {
+            result = "";
+        }
+        return result;
+    }
+
+    public static Date formatDate(String data) throws Exception {
+        if (data == null || data.equals(""))
+            return null;
+
+        Date date = null;
+        try {
+            DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            date = (java.util.Date) formatter.parse(data);
+        } catch (ParseException e) {
+            throw e;
+        }
+        return date;
     }
 }

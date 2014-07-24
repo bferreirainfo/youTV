@@ -16,7 +16,7 @@ h4{
 }
 
 .menu{
-	padding-top:10px;
+	padding-top:8px;
 	 height: 44px;
 }
 .menu > div {
@@ -32,6 +32,14 @@ h4{
 	vertical-align: middle;
 	white-space: nowrap;
 	display: inline-block;
+}
+.menuOptions  ul  li a:hover{
+  color:black;
+}
+.menuOptions  ul  li a{
+  font-family: sans-serif;
+  font-size: 18px;
+  color:white;
 }
 .searchInput{
 	width: 320px;
@@ -65,7 +73,7 @@ h4{
 }
 /*BxSlider Css */
 .bx-wrapper{
-	margin:0;
+	margin:0 auto;
 }
 .bx-wrapper .bx-pager{
 		top:-26px;
@@ -205,6 +213,7 @@ text-decoration: none;
 	line-height: 17px;
 }
 .thumbnailTitle{
+	padding:1px;
 	display:block;
 	font-size: 11px;
 }
@@ -224,15 +233,53 @@ text-decoration: none;
 }
 
 .thumbnailWrapper:hover .miniPlayerAction{display:block;}
-.thumbnailWrapper:hover img{opacity:0.3;}
-.thumbnailWrapper:hover {
-}
+.thumbnailWrapper:hover img{opacity:0.9;}
 .miniPlayerAction{
 	position: absolute;
-	top: 1px;
-	left: 30%;
+	top: 3px;
+	color: white;
+	left: 155px;
 	display:none;
 	z-index: 200;
+	padding: 2px 3px 0px 3px;
+	border-radius: 1px;
+	padding:0 2px 0 2px;
+	background: rgba(0,0,0,.4);
+}
+.miniPlayerAction:hover{
+	color: rgb(169, 44, 44);
+}
+.durationMask{
+	position:absolute;
+	white-space:nowrap;
+	top: 5px;
+	left: 2px;
+	color: white;
+	background: rgba(0,0,0,.4);
+	border-radius: 1px;
+	padding:0 2px 0 2px;
+	margin:0px;
+}
+.viewMask{
+	position:absolute;
+	white-space:nowrap;
+	top: 104px;
+	left: 2px;
+	color: white;
+	background: rgba(0,0,0,.4);
+	border-radius: 1px;
+	padding:0 2px 0 2px;
+	margin:0px;
+}
+.likeMask{
+	position:absolute;
+	white-space:nowrap;
+	top: 104px;right: 2px;
+	color: white;
+	background: rgba(0,0,0,.4);
+	border-radius: 1px;
+	padding:0 2px 0 2px;
+	margin:0px;
 }
 .relatedVideoThumbnail{
 	width: 180px;
@@ -241,7 +288,7 @@ text-decoration: none;
 }
 .itemSize{
 	width: 184px;
-	height: 250px;
+	height: 176px;
 }
 .relatedItemSize{
 	width: 320px;
@@ -249,7 +296,7 @@ text-decoration: none;
 	padding: 1%;
 }
 .author{
-	max-width:177px;
+	max-width:107px;
 	white-space: nowrap;
   	overflow: hidden;
 	text-overflow: ellipsis;
@@ -257,15 +304,15 @@ text-decoration: none;
 	font-weight:bold;
 }
 .bx-wrapper .bx-loading {
-min-height: 50px;
-background: url(images/bx_loader.gif) center center no-repeat;
-height: 100%;
-width: 100%;
-position: absolute;
-top: 0;
-left: 0;
-z-index: 2000;
-content: "Carregando...";
+	min-height: 50px;
+	background: url(images/bx_loader.gif) center center no-repeat;
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 2000;
+	content: "Carregando...";
 }
 
 .bx-wrapper .bx-next{
@@ -275,16 +322,16 @@ content: "Carregando...";
 	left:-35px;
 }
 .bx-wrapper .bx-pager.bx-default-pager a{
-	background-color: rgba(0, 0, 0, 0);
+	background-color: white;
+	color:rgb(108, 104, 104);
 	border: 1px solid #FFF5F5;
-	border-radius: 20px;
 	margin-right: 5px;
 }
 .bx-wrapper .bx-pager.bx-default-pager a:hover, .bx-wrapper .bx-pager.bx-default-pager a.active{
-	border: 1px solid #FFF5F5;
-	border-radius: 20px;
+	border: 1px solid black;
 	margin-right: 5px;
 	background: white;
+	color:rgb(169, 44, 44);
 }
 
 .bx-wrapper .bx-controls-direction a{
@@ -352,7 +399,6 @@ content: "Carregando...";
 }
 .playerList{
   background: white;
-  border: 1px solid black;
   margin: 0; 
   padding-left:3px;
   width:100%;
@@ -397,7 +443,6 @@ content: "Carregando...";
 	left: 0;
     right: 0;
     overflow:auto;
-    bottom: 32px;
 }
 .contentParcial{
    position: fixed;
@@ -414,7 +459,7 @@ content: "Carregando...";
 .playerLogo{
 	display:block;
 	font-family: systemFont !important;
-	width: 100%;
+	width: 100px;
 	background: black;
 	height: 30px;
 	color: white;
