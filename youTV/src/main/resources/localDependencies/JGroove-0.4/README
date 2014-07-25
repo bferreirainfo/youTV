@@ -1,0 +1,6 @@
+JGroove is a Java library that can be used to access Grooveshark methods 
+in a easy way. For example to search for songs and get the audio stream,
+it can also be used to implement new methods by using low level functions.
+
+Complete JGroove documentation is available at its project page 
+http://code.google.com/p/jgroove
