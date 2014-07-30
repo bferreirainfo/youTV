@@ -1,5 +1,11 @@
 package com.soundcloud.api.fakehttp;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.xml.ws.http.HTTPException;
+
 import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
@@ -8,16 +14,12 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.RequestDirector;
 import org.apache.http.protocol.HttpContext;
 
-import javax.xml.ws.http.HTTPException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 @SuppressWarnings({"UnusedDeclaration"})
 public class FakeHttpLayer {
     List<HttpResponse> pendingHttpResponses = new ArrayList<HttpResponse>();
     List<HttpRequestInfo> httpRequestInfos = new ArrayList<HttpRequestInfo>();
-    List<HttpEntityStub.ResponseRule> httpResponseRules = new ArrayList<HttpEntityStub.ResponseRule>();
+    List<HttpEntityStub.ResponseRule> httpResponseRules =
+            new ArrayList<HttpEntityStub.ResponseRule>();
     HttpResponse defaultHttpResponse;
     private HttpResponse defaultResponse;
 
@@ -25,7 +27,8 @@ public class FakeHttpLayer {
         addPendingHttpResponse(new FakeHttpResponse(statusCode, responseBody));
     }
 
-    public void addPendingHttpResponseWithContentType(int statusCode, String responseBody, Header contentType) {
+    public void addPendingHttpResponseWithContentType(int statusCode, String responseBody,
+            Header contentType) {
         addPendingHttpResponse(new FakeHttpResponse(statusCode, responseBody, contentType));
     }
 
@@ -75,17 +78,22 @@ public class FakeHttpLayer {
         return defaultHttpResponse;
     }
 
-    public HttpResponse emulateRequest(HttpHost httpHost, HttpRequest httpRequest, HttpContext httpContext, RequestDirector requestDirector) throws HttpException, IOException {
+    public HttpResponse emulateRequest(HttpHost httpHost, HttpRequest httpRequest,
+            HttpContext httpContext, RequestDirector requestDirector) throws HttpException,
+            IOException {
         HttpResponse httpResponse = findResponse(httpRequest);
 
         if (httpResponse == null) {
-            throw new RuntimeException("Unexpected call to execute, no pending responses are available. See Robolectric.addPendingResponse().");
+            throw new RuntimeException(
+                    "Unexpected call to execute, no pending responses are available. See Robolectric.addPendingResponse().");
         }
 
-        httpRequestInfos.add(new HttpRequestInfo(httpRequest, httpHost, httpContext, requestDirector));
+        httpRequestInfos.add(new HttpRequestInfo(httpRequest, httpHost, httpContext,
+                requestDirector));
 
         return httpResponse;
     }
+
     public boolean hasPendingResponses() {
         return !pendingHttpResponses.isEmpty();
     }
@@ -105,6 +113,7 @@ public class FakeHttpLayer {
     public HttpRequestInfo getSentHttpRequestInfo(int index) {
         return httpRequestInfos.get(index);
     }
+
     public void clearHttpResponseRules() {
         httpResponseRules.clear();
     }
@@ -130,13 +139,15 @@ public class FakeHttpLayer {
             this.httpException = httpException;
         }
 
-        @Override public boolean matches(HttpRequest request) {
+        public boolean matches(HttpRequest request) {
             return requestMatcher.matches(request);
         }
 
-        @Override public HttpResponse getResponse() throws HttpException, IOException {
-            if (httpException != null) throw httpException;
-            if (ioException != null) throw ioException;
+        public HttpResponse getResponse() throws HttpException, IOException {
+            if (httpException != null)
+                throw httpException;
+            if (ioException != null)
+                throw ioException;
             return responseToGive;
         }
     }
@@ -150,9 +161,9 @@ public class FakeHttpLayer {
             this.uri = uri;
         }
 
-        @Override public boolean matches(HttpRequest request) {
-            return request.getRequestLine().getMethod().equals(method) &&
-                    request.getRequestLine().getUri().equals(uri);
+        public boolean matches(HttpRequest request) {
+            return request.getRequestLine().getMethod().equals(method)
+                    && request.getRequestLine().getUri().equals(uri);
         }
     }
 
@@ -163,7 +174,7 @@ public class FakeHttpLayer {
             this.uri = uri;
         }
 
-        @Override public boolean matches(HttpRequest request) {
+        public boolean matches(HttpRequest request) {
             return request.getRequestLine().getUri().equals(uri);
         }
     }

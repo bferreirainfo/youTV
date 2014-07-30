@@ -1,5 +1,15 @@
 package com.soundcloud.api;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.net.URI;
+import java.util.Arrays;
+
 import org.apache.http.ConnectionReuseStrategy;
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
@@ -55,34 +65,22 @@ import org.apache.http.protocol.HttpProcessor;
 import org.apache.http.protocol.HttpRequestExecutor;
 import org.json.JSONException;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.net.URI;
-import java.util.Arrays;
-
 /**
- * Interface with SoundCloud, using OAuth2.
- * This API wrapper makes a few assumptions - namely:
+ * Interface with SoundCloud, using OAuth2. This API wrapper makes a few assumptions - namely:
  * <ul>
  * <li>Server responses are always requested in JSON format</li>
- * <li>Refresh-token handling is transparent to the client application (you should not need to
- *     call <code>refreshToken()</code> manually)
- * </li>
+ * <li>Refresh-token handling is transparent to the client application (you should not need to call
+ * <code>refreshToken()</code> manually)</li>
  * <li>You use <a href="http://hc.apache.org/httpcomponents-client-ga/">Apache HttpClient</a></li>
  * </ul>
- * Example usage:
- * <code>
+ * Example usage: <code>
  *     <pre>
  * ApiWrapper wrapper = new ApiWrapper("client_id", "client_secret", null, null, Env.SANDBOX);
  * wrapper.login("login", "password");
  * HttpResponse response = wrapper.get(Request.to("/tracks"));
  *      </pre>
  * </code>
+ * 
  * @see <a href="http://developers.soundcloud.com/docs">Using the SoundCloud API</a>
  */
 public class ApiWrapper implements CloudAPI, Serializable {
@@ -116,69 +114,64 @@ public class ApiWrapper implements CloudAPI, Serializable {
     /** debug request details to stderr */
     public boolean debugRequests;
 
-
     /**
      * Constructs a new ApiWrapper instance.
-     *
-     * @param clientId     the application client id
+     * 
+     * @param clientId the application client id
      * @param clientSecret the application client secret
-     * @param redirectUri  the registered redirect url, or null
-     * @param token        an valid token, or null if not known
-     * @see <a href="http://developers.soundcloud.com/docs#authentication">API authentication documentation</a>
+     * @param redirectUri the registered redirect url, or null
+     * @param token an valid token, or null if not known
+     * @see <a href="http://developers.soundcloud.com/docs#authentication">API authentication
+     *      documentation</a>
      */
-    public ApiWrapper(String clientId,
-                      String clientSecret,
-                      URI redirectUri,
-                      Token token) {
+    public ApiWrapper(String clientId, String clientSecret, URI redirectUri, Token token) {
         mClientId = clientId;
         mClientSecret = clientSecret;
         mRedirectUri = redirectUri;
         mToken = token == null ? EMPTY_TOKEN : token;
     }
 
-    @Override public Token login(String username, String password, String... scopes) throws IOException {
+    @Override
+    public Token login(String username, String password, String... scopes) throws IOException {
         if (username == null || password == null) {
             throw new IllegalArgumentException("username or password is null");
         }
-        final Request request = addScope(Request.to(Endpoints.TOKEN).with(
-                GRANT_TYPE, PASSWORD,
-                CLIENT_ID, mClientId,
-                CLIENT_SECRET, mClientSecret,
-                USERNAME, username,
-                PASSWORD, password), scopes);
+        final Request request =
+                addScope(
+                        Request.to(Endpoints.TOKEN).with(GRANT_TYPE, PASSWORD, CLIENT_ID,
+                                mClientId, CLIENT_SECRET, mClientSecret, USERNAME, username,
+                                PASSWORD, password), scopes);
         mToken = requestToken(request);
         return mToken;
     }
 
-
-
-    @Override public Token authorizationCode(String code, String... scopes) throws IOException {
+    @Override
+    public Token authorizationCode(String code, String... scopes) throws IOException {
         if (code == null) {
             throw new IllegalArgumentException("code is null");
         }
-        final Request request = addScope(Request.to(Endpoints.TOKEN).with(
-                GRANT_TYPE, AUTHORIZATION_CODE,
-                CLIENT_ID, mClientId,
-                CLIENT_SECRET, mClientSecret,
-                REDIRECT_URI, mRedirectUri,
-                CODE, code), scopes);
+        final Request request =
+                addScope(
+                        Request.to(Endpoints.TOKEN).with(GRANT_TYPE, AUTHORIZATION_CODE, CLIENT_ID,
+                                mClientId, CLIENT_SECRET, mClientSecret, REDIRECT_URI,
+                                mRedirectUri, CODE, code), scopes);
         mToken = requestToken(request);
         return mToken;
     }
 
-
-    @Override public Token clientCredentials(String... scopes) throws IOException {
-        final Request req = addScope(Request.to(Endpoints.TOKEN).with(
-                GRANT_TYPE, CLIENT_CREDENTIALS,
-                CLIENT_ID,  mClientId,
-                CLIENT_SECRET, mClientSecret), scopes);
+    @Override
+    public Token clientCredentials(String... scopes) throws IOException {
+        final Request req =
+                addScope(
+                        Request.to(Endpoints.TOKEN).with(GRANT_TYPE, CLIENT_CREDENTIALS, CLIENT_ID,
+                                mClientId, CLIENT_SECRET, mClientSecret), scopes);
 
         final Token token = requestToken(req);
         if (scopes != null) {
             for (String scope : scopes) {
                 if (!token.scoped(scope)) {
-                    throw new InvalidTokenException(-1, "Could not obtain requested scope '"+scope+"' (got: '" +
-                    token.scope + "')");
+                    throw new InvalidTokenException(-1, "Could not obtain requested scope '"
+                            + scope + "' (got: '" + token.scope + "')");
                 }
             }
         }
@@ -187,26 +180,27 @@ public class ApiWrapper implements CloudAPI, Serializable {
 
     @Override
     public Token extensionGrantType(String grantType, String... scopes) throws IOException {
-        final Request req = addScope(Request.to(Endpoints.TOKEN).with(
-                GRANT_TYPE, grantType,
-                CLIENT_ID,  mClientId,
-                CLIENT_SECRET, mClientSecret), scopes);
+        final Request req =
+                addScope(
+                        Request.to(Endpoints.TOKEN).with(GRANT_TYPE, grantType, CLIENT_ID,
+                                mClientId, CLIENT_SECRET, mClientSecret), scopes);
 
         mToken = requestToken(req);
         return mToken;
     }
 
-    @Override public Token refreshToken() throws IOException {
-        if (mToken == null || mToken.refresh == null) throw new IllegalStateException("no refresh token available");
-        mToken = requestToken(Request.to(Endpoints.TOKEN).with(
-                GRANT_TYPE, REFRESH_TOKEN,
-                CLIENT_ID, mClientId,
-                CLIENT_SECRET, mClientSecret,
-                REFRESH_TOKEN, mToken.refresh));
+    @Override
+    public Token refreshToken() throws IOException {
+        if (mToken == null || mToken.refresh == null)
+            throw new IllegalStateException("no refresh token available");
+        mToken =
+                requestToken(Request.to(Endpoints.TOKEN).with(GRANT_TYPE, REFRESH_TOKEN, CLIENT_ID,
+                        mClientId, CLIENT_SECRET, mClientSecret, REFRESH_TOKEN, mToken.refresh));
         return mToken;
     }
 
-    @Override public Token invalidateToken() {
+    @Override
+    public Token invalidateToken() {
         if (mToken != null) {
             Token alternative = listener == null ? null : listener.onTokenInvalid(mToken);
             mToken.invalidate();
@@ -221,22 +215,26 @@ public class ApiWrapper implements CloudAPI, Serializable {
         }
     }
 
-    @Override public URI authorizationCodeUrl(String... options) {
-        final Request req = Request.to(options.length == 0 ? Endpoints.CONNECT : options[0]).with(
-                REDIRECT_URI, mRedirectUri,
-                CLIENT_ID, mClientId,
-                RESPONSE_TYPE, CODE);
-        if (options.length > 1) req.add(SCOPE, options[1]);
-        if (options.length > 2) req.add(DISPLAY, options[2]);
-        if (options.length > 3) req.add(STATE, options[3]);
+    @Override
+    public URI authorizationCodeUrl(String... options) {
+        final Request req =
+                Request.to(options.length == 0 ? Endpoints.CONNECT : options[0]).with(REDIRECT_URI,
+                        mRedirectUri, CLIENT_ID, mClientId, RESPONSE_TYPE, CODE);
+        if (options.length > 1)
+            req.add(SCOPE, options[1]);
+        if (options.length > 2)
+            req.add(DISPLAY, options[2]);
+        if (options.length > 3)
+            req.add(STATE, options[3]);
         return getURI(req, false, true);
     }
 
     /**
      * Constructs URI path for a given resource.
-     * @param request      the resource to access
-     * @param api          api or web
-     * @param secure       whether to use SSL or not
+     * 
+     * @param request the resource to access
+     * @param api api or web
+     * @param secure whether to use SSL or not
      * @return a valid URI
      */
     public URI getURI(Request request, boolean api, boolean secure) {
@@ -246,6 +244,7 @@ public class ApiWrapper implements CloudAPI, Serializable {
 
     /**
      * User-Agent to identify ourselves with - defaults to USER_AGENT
+     * 
      * @return the agent to use
      * @see CloudAPI#USER_AGENT
      */
@@ -255,21 +254,24 @@ public class ApiWrapper implements CloudAPI, Serializable {
 
     /**
      * Request an OAuth2 token from SoundCloud
-     * @param  request the token request
+     * 
+     * @param request the token request
      * @return the token
      * @throws java.io.IOException network error
      * @throws com.soundcloud.api.CloudAPI.InvalidTokenException unauthorized
      * @throws com.soundcloud.api.CloudAPI.ApiResponseException http error
      */
     protected Token requestToken(Request request) throws IOException {
-        HttpResponse response = safeExecute(env.sslResourceHost, request.buildRequest(HttpPost.class));
+        HttpResponse response =
+                safeExecute(env.sslResourceHost, request.buildRequest(HttpPost.class));
         final int status = response.getStatusLine().getStatusCode();
 
         String error;
         try {
             if (status == HttpStatus.SC_OK) {
                 final Token token = new Token(Http.getJSON(response));
-                if (listener != null) listener.onTokenRefreshed(token);
+                if (listener != null)
+                    listener.onTokenRefreshed(token);
                 return token;
             } else {
                 error = Http.getJSON(response).getString("error");
@@ -279,14 +281,14 @@ public class ApiWrapper implements CloudAPI, Serializable {
         } catch (JSONException ignored) {
             error = ignored.getMessage();
         }
-        throw status == HttpStatus.SC_UNAUTHORIZED ?
-                new InvalidTokenException(status, error) :
-                new ApiResponseException(response, error);
+        throw status == HttpStatus.SC_UNAUTHORIZED ? new InvalidTokenException(status, error)
+                : new ApiResponseException(response, error);
     }
 
     /**
      * @return the default HttpParams
-     * @see <a href="http://developer.android.com/reference/android/net/http/AndroidHttpClient.html#newInstance(java.lang.String, android.content.Context)">
+     * @see <a
+     *      href="http://developer.android.com/reference/android/net/http/AndroidHttpClient.html#newInstance(java.lang.String, android.content.Context)">
      *      android.net.http.AndroidHttpClient#newInstance(String, Context)</a>
      */
     protected HttpParams getParams() {
@@ -333,23 +335,23 @@ public class ApiWrapper implements CloudAPI, Serializable {
     public void setProxy(URI proxy) {
         final HttpHost host;
         if (proxy != null) {
-            Scheme scheme = getHttpClient()
-                .getConnectionManager()
-                .getSchemeRegistry()
-                .getScheme(proxy.getScheme());
+            Scheme scheme =
+                    getHttpClient().getConnectionManager().getSchemeRegistry()
+                            .getScheme(proxy.getScheme());
 
-            host = new HttpHost(proxy.getHost(), scheme.resolvePort(proxy.getPort()), scheme.getName());
+            host =
+                    new HttpHost(proxy.getHost(), scheme.resolvePort(proxy.getPort()),
+                            scheme.getName());
         } else {
             host = null;
         }
         getHttpClient().getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY, host);
     }
 
-
     public URI getProxy() {
         Object proxy = getHttpClient().getParams().getParameter(ConnRoutePNames.DEFAULT_PROXY);
         if (proxy instanceof HttpHost) {
-            return URI.create(((HttpHost)proxy).toURI());
+            return URI.create(((HttpHost) proxy).toURI());
         } else {
             return null;
         }
@@ -373,7 +375,6 @@ public class ApiWrapper implements CloudAPI, Serializable {
         return SSLSocketFactory.getSocketFactory();
     }
 
-
     /** @return The HttpClient instance used to make the calls */
     public HttpClient getHttpClient() {
         if (httpClient == null) {
@@ -385,73 +386,78 @@ public class ApiWrapper implements CloudAPI, Serializable {
             registry.register(new Scheme("http", getSocketFactory(), 80));
             final SSLSocketFactory sslFactory = getSSLSocketFactory();
             registry.register(new Scheme("https", sslFactory, 443));
-            httpClient = new DefaultHttpClient(
-                    new ThreadSafeClientConnManager(params, registry),
-                    params) {
-                {
-                    setKeepAliveStrategy(new ConnectionKeepAliveStrategy() {
-                        @Override
-                        public long getKeepAliveDuration(HttpResponse httpResponse, HttpContext httpContext) {
-                            return KEEPALIVE_TIMEOUT;
-                        }
-                    });
+            httpClient =
+                    new DefaultHttpClient(new ThreadSafeClientConnManager(params, registry), params) {
+                        {
+                            setKeepAliveStrategy(new ConnectionKeepAliveStrategy() {
+                                @Override
+                                public long getKeepAliveDuration(HttpResponse httpResponse,
+                                        HttpContext httpContext) {
+                                    return KEEPALIVE_TIMEOUT;
+                                }
+                            });
 
-                    getCredentialsProvider().setCredentials(
-                        new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, CloudAPI.REALM, OAUTH_SCHEME),
-                        OAuth2Scheme.EmptyCredentials.INSTANCE);
+                            getCredentialsProvider().setCredentials(
+                                    new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT,
+                                            CloudAPI.REALM, OAUTH_SCHEME),
+                                    OAuth2Scheme.EmptyCredentials.INSTANCE);
 
-                    getAuthSchemes().register(CloudAPI.OAUTH_SCHEME, new OAuth2Scheme.Factory(ApiWrapper.this));
+                            getAuthSchemes().register(CloudAPI.OAUTH_SCHEME,
+                                    new OAuth2Scheme.Factory(ApiWrapper.this));
 
-                    addResponseInterceptor(new HttpResponseInterceptor() {
-                        @Override
-                        public void process(HttpResponse response, HttpContext context)
-                                throws HttpException, IOException {
-                            if (response == null || response.getEntity() == null) return;
+                            addResponseInterceptor(new HttpResponseInterceptor() {
+                                @Override
+                                public void process(HttpResponse response, HttpContext context)
+                                        throws HttpException, IOException {
+                                    if (response == null || response.getEntity() == null)
+                                        return;
 
-                            HttpEntity entity = response.getEntity();
-                            Header header = entity.getContentEncoding();
-                            if (header != null) {
-                                for (HeaderElement codec : header.getElements()) {
-                                    if (codec.getName().equalsIgnoreCase("gzip")) {
-                                        response.setEntity(new GzipDecompressingEntity(entity));
-                                        break;
+                                    HttpEntity entity = response.getEntity();
+                                    Header header = entity.getContentEncoding();
+                                    if (header != null) {
+                                        for (HeaderElement codec : header.getElements()) {
+                                            if (codec.getName().equalsIgnoreCase("gzip")) {
+                                                response.setEntity(new GzipDecompressingEntity(
+                                                        entity));
+                                                break;
+                                            }
+                                        }
                                     }
                                 }
-                            }
+                            });
                         }
-                    });
-                }
 
-                @Override protected HttpContext createHttpContext() {
-                    HttpContext ctxt = super.createHttpContext();
-                    ctxt.setAttribute(ClientContext.AUTH_SCHEME_PREF,
-                            Arrays.asList(CloudAPI.OAUTH_SCHEME, "digest", "basic"));
-                    return ctxt;
-                }
+                        @Override
+                        protected HttpContext createHttpContext() {
+                            HttpContext ctxt = super.createHttpContext();
+                            ctxt.setAttribute(ClientContext.AUTH_SCHEME_PREF,
+                                    Arrays.asList(CloudAPI.OAUTH_SCHEME, "digest", "basic"));
+                            return ctxt;
+                        }
 
-                @Override protected BasicHttpProcessor createHttpProcessor() {
-                    BasicHttpProcessor processor = super.createHttpProcessor();
-                    processor.addInterceptor(new OAuth2HttpRequestInterceptor());
-                    return processor;
-                }
+                        @Override
+                        protected BasicHttpProcessor createHttpProcessor() {
+                            BasicHttpProcessor processor = super.createHttpProcessor();
+                            processor.addInterceptor(new OAuth2HttpRequestInterceptor());
+                            return processor;
+                        }
 
-                // for testability only
-                @Override protected RequestDirector createClientRequestDirector(HttpRequestExecutor requestExec,
-                                                                      ClientConnectionManager conman,
-                                                                      ConnectionReuseStrategy reustrat,
-                                                                      ConnectionKeepAliveStrategy kastrat,
-                                                                      HttpRoutePlanner rouplan,
-                                                                      HttpProcessor httpProcessor,
-                                                                      HttpRequestRetryHandler retryHandler,
-                                                                      RedirectHandler redirectHandler,
-                                                                      AuthenticationHandler targetAuthHandler,
-                                                                      AuthenticationHandler proxyAuthHandler,
-                                                                      UserTokenHandler stateHandler,
-                                                                      HttpParams params) {
-                    return getRequestDirector(requestExec, conman, reustrat, kastrat, rouplan, httpProcessor, retryHandler,
-                            redirectHandler, targetAuthHandler, proxyAuthHandler, stateHandler, params);
-                }
-            };
+                        // for testability only
+                        @Override
+                        protected RequestDirector createClientRequestDirector(
+                                HttpRequestExecutor requestExec, ClientConnectionManager conman,
+                                ConnectionReuseStrategy reustrat,
+                                ConnectionKeepAliveStrategy kastrat, HttpRoutePlanner rouplan,
+                                HttpProcessor httpProcessor, HttpRequestRetryHandler retryHandler,
+                                RedirectHandler redirectHandler,
+                                AuthenticationHandler targetAuthHandler,
+                                AuthenticationHandler proxyAuthHandler,
+                                UserTokenHandler stateHandler, HttpParams params) {
+                            return getRequestDirector(requestExec, conman, reustrat, kastrat,
+                                    rouplan, httpProcessor, retryHandler, redirectHandler,
+                                    targetAuthHandler, proxyAuthHandler, stateHandler, params);
+                        }
+                    };
         }
         return httpClient;
     }
@@ -465,13 +471,13 @@ public class ApiWrapper implements CloudAPI, Serializable {
                 final String path = URI.create(location.getValue()).getPath();
                 if (path != null && path.contains("/")) {
                     try {
-                      final String id = path.substring(path.lastIndexOf("/") + 1);
-                      return Integer.parseInt(id);
+                        final String id = path.substring(path.lastIndexOf("/") + 1);
+                        return Integer.parseInt(id);
                     } catch (NumberFormatException e) {
                         throw new ResolverException(e, resp);
                     }
                 } else {
-                    throw new ResolverException("Invalid string:"+path, resp);
+                    throw new ResolverException("Invalid string:" + path, resp);
                 }
             } else {
                 throw new ResolverException("No location header", resp);
@@ -483,7 +489,8 @@ public class ApiWrapper implements CloudAPI, Serializable {
 
     @Override
     public Stream resolveStreamUrl(final String url, boolean skipLogging) throws IOException {
-        HttpResponse resp = safeExecute(null, addHeaders(Request.to(url).buildRequest(HttpHead.class)));
+        HttpResponse resp =
+                safeExecute(null, addHeaders(Request.to(url).buildRequest(HttpHead.class)));
         if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
             Header location = resp.getFirstHeader("Location");
             if (location != null && location.getValue() != null) {
@@ -497,7 +504,9 @@ public class ApiWrapper implements CloudAPI, Serializable {
                         // skip logging
                         req.with("skip_logging", "1");
                     }
-                    resp = safeExecute(null, addHeaders(Request.to(url).buildRequest(HttpGet.class)));
+                    resp =
+                            safeExecute(null, addHeaders(Request.to(url)
+                                    .buildRequest(HttpGet.class)));
                     if (resp.getStatusLine().getStatusCode() == HttpStatus.SC_MOVED_TEMPORARILY) {
                         return stream.withNewStreamUrl(resp.getFirstHeader("Location").getValue());
                     } else {
@@ -519,27 +528,33 @@ public class ApiWrapper implements CloudAPI, Serializable {
         return execute(request, HttpHead.class);
     }
 
-    @Override public HttpResponse get(Request request) throws IOException {
+    @Override
+    public HttpResponse get(Request request) throws IOException {
         return execute(request, HttpGet.class);
     }
 
-    @Override public HttpResponse put(Request request) throws IOException {
+    @Override
+    public HttpResponse put(Request request) throws IOException {
         return execute(request, HttpPut.class);
     }
 
-    @Override public HttpResponse post(Request request) throws IOException {
+    @Override
+    public HttpResponse post(Request request) throws IOException {
         return execute(request, HttpPost.class);
     }
 
-    @Override public HttpResponse delete(Request request) throws IOException {
+    @Override
+    public HttpResponse delete(Request request) throws IOException {
         return execute(request, HttpDelete.class);
     }
 
-    @Override public Token getToken() {
+    @Override
+    public Token getToken() {
         return mToken;
     }
 
-    @Override public void setToken(Token newToken) {
+    @Override
+    public void setToken(Token newToken) {
         mToken = newToken == null ? EMPTY_TOKEN : newToken;
     }
 
@@ -550,6 +565,7 @@ public class ApiWrapper implements CloudAPI, Serializable {
 
     /**
      * Execute an API request, adds the necessary headers.
+     * 
      * @param request the HTTP request
      * @return the HTTP response
      * @throws java.io.IOException network error etc.
@@ -592,7 +608,8 @@ public class ApiWrapper implements CloudAPI, Serializable {
         }
     }
 
-    protected HttpResponse execute(Request req, Class<? extends HttpRequestBase> reqType) throws IOException {
+    protected HttpResponse execute(Request req, Class<? extends HttpRequestBase> reqType)
+            throws IOException {
         Request defaults = ApiWrapper.defaultParams.get();
         if (defaults != null && !defaults.getParams().isEmpty()) {
             // copy + merge in default parameters
@@ -606,11 +623,13 @@ public class ApiWrapper implements CloudAPI, Serializable {
     }
 
     protected Request addClientIdIfNecessary(Request req) {
-        return req.getParams().containsKey(CLIENT_ID) ? req : new Request(req).add(CLIENT_ID, mClientId);
+        return req.getParams().containsKey(CLIENT_ID) ? req : new Request(req).add(CLIENT_ID,
+                mClientId);
     }
 
-    protected void logRequest( Class<? extends HttpRequestBase> reqType, Request request) {
-        if (debugRequests) System.err.println(reqType.getSimpleName()+" "+request);
+    protected void logRequest(Class<? extends HttpRequestBase> reqType, Request request) {
+        if (debugRequests)
+            System.err.println(reqType.getSimpleName() + " " + request);
     }
 
     protected HttpHost determineTarget(HttpUriRequest request) {
@@ -618,10 +637,7 @@ public class ApiWrapper implements CloudAPI, Serializable {
         // Otherwise, the null target is detected in the director.
         URI requestURI = request.getURI();
         if (requestURI.isAbsolute()) {
-            return new HttpHost(
-                    requestURI.getHost(),
-                    requestURI.getPort(),
-                    requestURI.getScheme());
+            return new HttpHost(requestURI.getHost(), requestURI.getPort(), requestURI.getScheme());
         } else {
             return null;
         }
@@ -629,6 +645,7 @@ public class ApiWrapper implements CloudAPI, Serializable {
 
     /**
      * serialize the wrapper to a File
+     * 
      * @param f target
      * @throws java.io.IOException IO problems
      */
@@ -637,7 +654,6 @@ public class ApiWrapper implements CloudAPI, Serializable {
         oos.writeObject(this);
         oos.close();
     }
-
 
     public String getDefaultContentType() {
         return (mDefaultContentType == null) ? DEFAULT_CONTENT_TYPE : mDefaultContentType;
@@ -655,13 +671,13 @@ public class ApiWrapper implements CloudAPI, Serializable {
         mDefaultAcceptEncoding = encoding;
     }
 
-
-    /* package */ static Request addScope(Request request, String[] scopes) {
+    /* package */static Request addScope(Request request, String[] scopes) {
         if (scopes != null && scopes.length > 0) {
             StringBuilder scope = new StringBuilder();
-            for (int i=0; i<scopes.length; i++) {
+            for (int i = 0; i < scopes.length; i++) {
                 scope.append(scopes[i]);
-                if (i < scopes.length-1) scope.append(" ");
+                if (i < scopes.length - 1)
+                    scope.append(" ");
             }
             request.add(SCOPE, scope.toString());
         }
@@ -670,8 +686,9 @@ public class ApiWrapper implements CloudAPI, Serializable {
 
     /**
      * Read wrapper from a file
-     * @param f  the file
-     * @return   the wrapper
+     * 
+     * @param f the file
+     * @return the wrapper
      * @throws IOException IO problems
      * @throws ClassNotFoundException class not found
      */
@@ -686,8 +703,8 @@ public class ApiWrapper implements CloudAPI, Serializable {
 
     /** Creates an OAuth2 header for the given token */
     public static Header createOAuthHeader(Token token) {
-        return new BasicHeader(AUTH.WWW_AUTH_RESP, "OAuth " +
-                (token == null || !token.valid() ? "invalidated" : token.access));
+        return new BasicHeader(AUTH.WWW_AUTH_RESP, "OAuth "
+                + (token == null || !token.valid() ? "invalidated" : token.access));
     }
 
     /** Adds an OAuth2 header to a given request */
@@ -722,32 +739,27 @@ public class ApiWrapper implements CloudAPI, Serializable {
 
     /** This method mainly exists to make the wrapper more testable. oh, apache's insanity. */
     protected RequestDirector getRequestDirector(HttpRequestExecutor requestExec,
-                                                 ClientConnectionManager conman,
-                                                 ConnectionReuseStrategy reustrat,
-                                                 ConnectionKeepAliveStrategy kastrat,
-                                                 HttpRoutePlanner rouplan,
-                                                 HttpProcessor httpProcessor,
-                                                 HttpRequestRetryHandler retryHandler,
-                                                 RedirectHandler redirectHandler,
-                                                 AuthenticationHandler targetAuthHandler,
-                                                 AuthenticationHandler proxyAuthHandler,
-                                                 UserTokenHandler stateHandler,
-                                                 HttpParams params
-    ) {
+            ClientConnectionManager conman, ConnectionReuseStrategy reustrat,
+            ConnectionKeepAliveStrategy kastrat, HttpRoutePlanner rouplan,
+            HttpProcessor httpProcessor, HttpRequestRetryHandler retryHandler,
+            RedirectHandler redirectHandler, AuthenticationHandler targetAuthHandler,
+            AuthenticationHandler proxyAuthHandler, UserTokenHandler stateHandler, HttpParams params) {
         return new DefaultRequestDirector(requestExec, conman, reustrat, kastrat, rouplan,
                 httpProcessor, retryHandler, redirectHandler, targetAuthHandler, proxyAuthHandler,
                 stateHandler, params);
     }
 
     private static final ThreadLocal<Request> defaultParams = new ThreadLocal<Request>() {
-        @Override protected Request initialValue() {
+        @Override
+        protected Request initialValue() {
             return new Request();
         }
     };
 
     /**
-     * Adds a default parameter which will get added to all requests in this thread.
-     * Use this method carefully since it might lead to unexpected side-effects.
+     * Adds a default parameter which will get added to all requests in this thread. Use this
+     * method carefully since it might lead to unexpected side-effects.
+     * 
      * @param name the name of the parameter
      * @param value the value of the parameter.
      */
