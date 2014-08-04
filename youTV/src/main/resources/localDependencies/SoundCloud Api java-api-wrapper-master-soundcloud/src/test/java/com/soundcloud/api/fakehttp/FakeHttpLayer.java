@@ -139,10 +139,12 @@ public class FakeHttpLayer {
             this.httpException = httpException;
         }
 
+        @Override
         public boolean matches(HttpRequest request) {
             return requestMatcher.matches(request);
         }
 
+        @Override
         public HttpResponse getResponse() throws HttpException, IOException {
             if (httpException != null)
                 throw httpException;
@@ -161,6 +163,7 @@ public class FakeHttpLayer {
             this.uri = uri;
         }
 
+        @Override
         public boolean matches(HttpRequest request) {
             return request.getRequestLine().getMethod().equals(method)
                     && request.getRequestLine().getUri().equals(uri);
@@ -174,6 +177,7 @@ public class FakeHttpLayer {
             this.uri = uri;
         }
 
+        @Override
         public boolean matches(HttpRequest request) {
             return request.getRequestLine().getUri().equals(uri);
         }
