@@ -12,7 +12,7 @@
  * the License.
  */
 
-package com.google.api.services.samples.youtube.cmdline.data;
+package business;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import business.PlayListView;
-import business.usuario.VideoView;
+import business.usuario.ItemView;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
@@ -66,8 +66,8 @@ public class YoutubeService {
         listService.setId("UCVtFOytbRpEvzLjvqGG5gxQ");
         listService.setFields("items(id,snippet/title,snippet/description)");
 
-        Map<PlayListView, List<VideoView>> playListVideosMap =
-                new HashMap<PlayListView, List<VideoView>>();
+        Map<PlayListView, List<ItemView>> playListVideosMap =
+                new HashMap<PlayListView, List<ItemView>>();
 
         StringBuilder playListIds = new StringBuilder();
 
@@ -88,14 +88,14 @@ public class YoutubeService {
             PlayListView playListView = new PlayListView();
             playlistItem.getId();
             playListView.setId(playlistItem.getSnippet().getPlaylistId());
-            playListVideosMap.get(playListView).add(new VideoView(playlistItem));
+            playListVideosMap.get(playListView).add(new ItemView(playlistItem));
 
         }
         //snippet/title,snippet/description,snippet/thumbnails/medium/url,
         System.out.println(playsLIstService.execute());
     }
 
-    public static void loadRelatedVideos(VideoView video) {
+    public static void loadRelatedVideos(ItemView video) {
         if (video.isYoutubeVideo())
             try {
                 StringBuilder relatedVideosIds = obtainRelatedVideosIds(video.getId());
@@ -108,14 +108,14 @@ public class YoutubeService {
         }
     }
 
-    public static VideoView loadVideoByIdWithRelated(String videoId) {
-        VideoView actualVideo = null;
+    public static ItemView loadVideoByIdWithRelated(String videoId) {
+        ItemView actualVideo = null;
         try {
 
             StringBuilder relatedVideosIds = obtainRelatedVideosIds(videoId);
             //insert the original video on the query at position 0.
             String ids = relatedVideosIds.insert(0, videoId + ",").toString();
-            List<VideoView> findResult = findVideosByIds(ids);
+            List<ItemView> findResult = findVideosByIds(ids);
             //the actual video is at position 0, after that, all others videos are related to this. 
             actualVideo = findResult.get(0);
             //remove this video to get only related
@@ -146,7 +146,7 @@ public class YoutubeService {
         return videosList;
     }
 
-    public static List<VideoView> searchVideos(String queryTerm) {
+    public static List<ItemView> searchVideos(String queryTerm) {
 
         try {
             // Define the API request for retrieving search results.
@@ -179,7 +179,7 @@ public class YoutubeService {
         return null;
     }
 
-    private static List<VideoView> findVideosById(SearchListResponse searchResponse)
+    private static List<ItemView> findVideosById(SearchListResponse searchResponse)
             throws IOException {
         StringBuilder videosList = new StringBuilder();
         for (SearchResult item : searchResponse.getItems()) {
@@ -192,10 +192,10 @@ public class YoutubeService {
      * ids must be separeted by comma.
      * 
      * */
-    private static List<VideoView> findVideosByIds(String ids) throws IOException {
-        List<VideoView> youtubeVideos = new ArrayList<VideoView>();
+    private static List<ItemView> findVideosByIds(String ids) throws IOException {
+        List<ItemView> youtubeVideos = new ArrayList<ItemView>();
         for (Video video : youtubeVideosListBydId.setId(ids).execute().getItems()) {
-            youtubeVideos.add(new VideoView(video));
+            youtubeVideos.add(new ItemView(video));
         }
         return youtubeVideos;
     }

@@ -2,6 +2,7 @@ package business.usuario;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import utils.Utils;
 
@@ -9,7 +10,9 @@ import com.google.api.services.youtube.model.PlaylistItem;
 import com.google.api.services.youtube.model.Video;
 import com.google.api.services.youtube.model.VideoStatistics;
 
-public class VideoView {
+import de.voidplus.soundcloud.Track;
+
+public class ItemView {
     private String id;
     private String title;
     private String views;
@@ -23,10 +26,10 @@ public class VideoView {
     private String likesPercentage;
     private String dislikesPercentage;
     private String description;
-    private List<VideoView> relatedVideos;
+    private List<ItemView> relatedVideos;
     private String channelTitle;
 
-    public VideoView(VimeoVideo vimeoVideo) {
+    public ItemView(VimeoVideo vimeoVideo) {
         //https://developer.vimeo.com/apis/advanced/methods
         videoType = VideoTypeEnum.vimeo;
         id = vimeoVideo.getId();
@@ -43,7 +46,7 @@ public class VideoView {
         channelTitle = vimeoVideo.getOwner().getChannelTitle();
     }
 
-    public VideoView(Video video) {
+    public ItemView(Video video) {
         //https://developer.vimeo.com/apis/advanced/methods/vimeo.videos.search
         videoType = VideoTypeEnum.youtube;
         id = video.getId();
@@ -111,7 +114,7 @@ public class VideoView {
         return durationAux.toString();
     }
 
-    public VideoView(PlaylistItem playlistItem) {
+    public ItemView(PlaylistItem playlistItem) {
         videoType = VideoTypeEnum.youtube;
         id = playlistItem.getId();
         description = playlistItem.getSnippet().getDescription();
@@ -135,6 +138,25 @@ public class VideoView {
         //        uploadDate = Utils.obtainFormatYoutubeVideoDate(playlistItem);
         //        title = playlistItem.getSnippet().getTitle();
 
+    }
+
+    public ItemView(Track track) {
+        videoType = VideoTypeEnum.soundCloud;
+        id = String.valueOf(track.getId());
+        title = track.getTitle();
+        String numberOfPlays = String.valueOf(track.getPlaybackCount());
+        views = Utils.formatNumberWithDots(numberOfPlays);
+        likeCount = Utils.formatNumberWithDots(track.getFavoritingsCount().toString());
+        dislikeCount = "n/a";
+        //        uploadDate = Utils.obtainFormatVimeoVideoDate(track.getCreatedAt());
+        uploadDate = track.getCreatedAt();
+        duration =
+                obtainDurationFromVimeo(String.valueOf(TimeUnit.MILLISECONDS.toSeconds(track
+                        .getDuration())));
+        String content = track.getArtworkUrl();
+        thumbnailUrl = content;
+        description = track.getDescription();
+        //        channelTitle = track.get
     }
 
     public String getTitle() {
@@ -229,11 +251,11 @@ public class VideoView {
         return description;
     }
 
-    public List<VideoView> getRelatedVideos() {
+    public List<ItemView> getRelatedVideos() {
         return relatedVideos;
     }
 
-    public void setRelatedVideos(List<VideoView> relatedVideos) {
+    public void setRelatedVideos(List<ItemView> relatedVideos) {
         this.relatedVideos = relatedVideos;
     }
 
@@ -281,7 +303,7 @@ public class VideoView {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        VideoView other = (VideoView) obj;
+        ItemView other = (ItemView) obj;
         if (id == null) {
             if (other.id != null)
                 return false;

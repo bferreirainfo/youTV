@@ -12,8 +12,9 @@ public class SoundCloudApiTest {
                 new SoundCloud("4396efca860e926e3b214b8fc15e5ebc",
                         "3fd42ccfaa15b351acc804ae3be79034", "bferreira.info@gmail.com", "thunder");
 
-        ArrayList<Track> result = soundcloud.findTrack("angra");
+        ArrayList<Track> result = soundcloud.findTrack("the hades rage");
         for (Track track : result) {
+            System.out.println("music name: " + track.getDescription());
             System.out.println("music id: " + track.getId());
         }
     }

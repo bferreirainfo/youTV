@@ -7,10 +7,10 @@ import javax.faces.bean.ManagedBean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
-import business.usuario.VideoView;
+import business.SoundCloundService;
+import business.YoutubeService;
+import business.usuario.ItemView;
 import business.usuario.VimeoService;
-
-import com.google.api.services.samples.youtube.cmdline.data.YoutubeService;
 
 @Controller
 @ManagedBean
@@ -20,14 +20,15 @@ public class PesquisaBean {
     private String searchTerm;
 
     //Carrousel entities
-    private List<VideoView> youTubeVideosSearchResult;
-    private List<VideoView> vimeoVideosSearchResult;
+    private List<ItemView> youTubeVideosSearchResult;
+    private List<ItemView> vimeoVideosSearchResult;
 
     //VideoView attributes
     private String videoViewId;
     private Operation operation;
-    private VideoView videoView;
-    private VideoView relatedVideoView;
+    private ItemView videoView;
+    private ItemView relatedVideoView;
+    private List<ItemView> soundCloudMusicsSearchResult;
 
     public void setOperationToDefault() {
         operation = Operation.search;
@@ -84,10 +85,10 @@ public class PesquisaBean {
         clearValues();
     }
 
-    private VideoView localLoad(List<VideoView> localVideos) {
-        VideoView result = null;
+    private ItemView localLoad(List<ItemView> localVideos) {
+        ItemView result = null;
         if (localVideos != null) {
-            for (VideoView videoView : localVideos) {
+            for (ItemView videoView : localVideos) {
                 if (videoView.getId().equals(videoViewId)) {
                     result = videoView;
                     break;
@@ -98,10 +99,17 @@ public class PesquisaBean {
     }
 
     public void pesquisar() {
-        youTubeVideosSearchResult = YoutubeService.searchVideos(searchTerm);
-        vimeoVideosSearchResult = VimeoService.searchVideos(searchTerm);
-        System.out.println("youtube: " + youTubeVideosSearchResult.size());
-        System.out.println("vimeo: " + vimeoVideosSearchResult.size());
+        try {
+            youTubeVideosSearchResult = YoutubeService.searchVideos(searchTerm);
+            vimeoVideosSearchResult = VimeoService.searchVideos(searchTerm);
+            soundCloudMusicsSearchResult = SoundCloundService.searchMusics(searchTerm);
+            //            new SoundCloundService();
+            System.out.println("youtube: " + youTubeVideosSearchResult.size());
+            System.out.println("vimeo: " + vimeoVideosSearchResult.size());
+            System.out.println("soundClound: " + soundCloudMusicsSearchResult.size());
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -134,19 +142,19 @@ public class PesquisaBean {
         this.searchTerm = termoPesquisa;
     }
 
-    public List<VideoView> getYouTubeVideosSearchResult() {
+    public List<ItemView> getYouTubeVideosSearchResult() {
         return youTubeVideosSearchResult;
     }
 
-    public void setYouTubeVideosSearchResult(List<VideoView> resultadoPesquisa) {
+    public void setYouTubeVideosSearchResult(List<ItemView> resultadoPesquisa) {
         this.youTubeVideosSearchResult = resultadoPesquisa;
     }
 
-    public List<VideoView> getVimeoVideosSearchResult() {
+    public List<ItemView> getVimeoVideosSearchResult() {
         return vimeoVideosSearchResult;
     }
 
-    public void setVimeoVideosSearchResult(List<VideoView> searchVideos) {
+    public void setVimeoVideosSearchResult(List<ItemView> searchVideos) {
         this.vimeoVideosSearchResult = searchVideos;
     }
 
@@ -158,11 +166,11 @@ public class PesquisaBean {
         this.videoViewId = videoViewId;
     }
 
-    public VideoView getVideoView() {
+    public ItemView getVideoView() {
         return videoView;
     }
 
-    public void setVideoView(VideoView videoView) {
+    public void setVideoView(ItemView videoView) {
         this.videoView = videoView;
     }
 
@@ -174,11 +182,19 @@ public class PesquisaBean {
         this.operation = operation;
     }
 
-    public VideoView getRelatedVideoView() {
+    public ItemView getRelatedVideoView() {
         return relatedVideoView;
     }
 
-    public void setRelatedVideoView(VideoView relatedVideoView) {
+    public void setRelatedVideoView(ItemView relatedVideoView) {
         this.relatedVideoView = relatedVideoView;
+    }
+
+    public List<ItemView> getSoundCloudMusicsSearchResult() {
+        return soundCloudMusicsSearchResult;
+    }
+
+    public void setSoundCloudMusicsSearchResult(List<ItemView> soundCloudMusicsSearchResult) {
+        this.soundCloudMusicsSearchResult = soundCloudMusicsSearchResult;
     }
 }

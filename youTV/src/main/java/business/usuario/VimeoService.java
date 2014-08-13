@@ -23,7 +23,7 @@ public class VimeoService {
         oathBuild();
     }
 
-    public static VideoView loadVideoByIdWithRelated(String vimeoVideoId) {
+    public static ItemView loadVideoByIdWithRelated(String vimeoVideoId) {
         OAuthRequest request = createFindVideoByIdRequest(vimeoVideoId);
         service = oathBuild();
         service.signRequest(mytoken, request);
@@ -31,13 +31,13 @@ public class VimeoService {
         VimeoVideo vimeoVideo =
                 new GsonBuilder().create()
                         .fromJson(response.getBody(), VimeoVideoSearchResult.class).getVideo()[0];
-        VideoView videoView = new VideoView(vimeoVideo);
+        ItemView videoView = new ItemView(vimeoVideo);
         loadRelatedVideos(videoView);
         return videoView;
     }
 
-    public static List<VideoView> searchVideos(String term) {
-        List<VideoView> videos = new ArrayList<VideoView>();
+    public static List<ItemView> searchVideos(String term) {
+        List<ItemView> videos = new ArrayList<ItemView>();
         try {
             OAuthRequest myrequest = createSearchRequest(term);
             service = oathBuild();
@@ -48,7 +48,7 @@ public class VimeoService {
                             VimeoVideoSearchResult.class);
 
             for (VimeoVideo vimeoVideo : vimeoVideoSearchResult.getVideos().getVideos()) {
-                videos.add(new VideoView(vimeoVideo));
+                videos.add(new ItemView(vimeoVideo));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,7 +82,7 @@ public class VimeoService {
         return service;
     }
 
-    public static void loadRelatedVideos(VideoView videoView) {
+    public static void loadRelatedVideos(ItemView videoView) {
         StringBuilder searchTerm = new StringBuilder();
         //create an searchTerm with the first two words
         String[] titleWords = videoView.getTitle().split(" ");

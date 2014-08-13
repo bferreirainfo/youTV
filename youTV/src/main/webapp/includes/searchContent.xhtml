@@ -5,7 +5,7 @@
 	  xmlns:f="http://java.sun.com/jsf/core"
  >
 	<body>
-		<div id="searchResult">
+		<div id="searchResult" style="overflow: hidden;" >
 			<h:panelGroup id="searchPanel" style="position: relative;top: 10px;left:2%;">
 						<h:panelGroup id="youtubeCarrousel" layout="block" rendered="#{not empty pesquisaBean.youTubeVideosSearchResult}" >
 							<h4>Youtube</h4>	
@@ -90,7 +90,49 @@
 								</ui:repeat>
 							</ul>
 						</h:panelGroup>
-				</h:panelGroup>
-					</div>
+						<br/>
+						<h:panelGroup id="soundCloundCarrousel" rendered="#{not empty pesquisaBean.soundCloudMusicsSearchResult}" >
+							<h4>SoundCloud</h4>
+								<ul class="bxslider">
+									<ui:repeat var="item" value="#{pesquisaBean.soundCloudMusicsSearchResult}" varStatus="myVarStatus"  >
+										<li> 
+											<div class="itemSize" >
+												<div class="thumbnailWrapper" >
+													<div class="drag" >		
+														<p:commandLink styleClass="draggable" action="#{pesquisaBean.loadVimeoVideo}" process="@this" update=":form:videoInformations" onclick="playVimeo('#{item.id}');" oncomplete="loadRelatedSlider();" >
+															<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}" />
+															<img alt="erro ao gerar img" title="#{item.title}"   class="thumbnailVideo" src="#{item.thumbnailUrl}" />
+														</p:commandLink>
+														<div style="display: none;font-size: 11px;white-space: normal;color: #2a6496" class="thumbnailTitle" >
+															#{item.title}
+														</div>
+														
+														<div style="display: none;font-size: 11px;" class="thumbnailDescription author">#{item.channelTitle}</div>
+													</div>
+													<a class="miniPlayerAction" onClick="playVimeoMiniPlayer('#{item.id}');" >
+															<span class="glyphicon glyphicon-new-window" />
+													</a>
+													<span class="thumbnailDescription durationMask">#{item.duration}</span>
+													<span class="thumbnailDescription viewMask">#{item.views} views</span>
+													<span class="thumbnailDescription likeMask">#{item.likeCount} Likes</span>
+											</div>
+											<div class="videoDescription" >
+												<p:commandLink value="#{item.title}" 
+															   styleClass="ellipsis2 thumbnailTitle" 
+															   action="#{pesquisaBean.loadYoutubeVideo}" 
+															   process="@this" update=":form:videoInformations" 
+															   onclick="playYoutube('#{item.id}');" >
+													<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
+												</p:commandLink>
+													<div class="thumbnailDescription author" style="float:left" >#{item.channelTitle}</div>
+													<div class="thumbnailDescription" style="float:right">#{item.uploadDate}</div>
+											</div>
+										</div>
+									</li>
+								</ui:repeat>
+							</ul>
+						</h:panelGroup>
+			</h:panelGroup>
+		</div>
 	</body>
 </html>
