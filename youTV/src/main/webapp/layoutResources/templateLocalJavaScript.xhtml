@@ -76,47 +76,12 @@ var droppableSettings = {
 
 function loadDrag(){
 	/*
-	drag = $(".draggable");
 	
 	//http://www.dropzonejs.com/ sugestão de drag and drop para fileupload
-	drag.draggable(draggableSettings);
 	*/
 	playerList =  $("#playerList");
 	playerList.sortable(sortableSettings).disableSelection();
 	
-	/*
-	$( "#playerList" ).sortable({ 
-		revert: true,
-        update: function( event, ui ) {
-        	//WTF
-            //var basketItems = $(this).sortable('toArray').toString();
-            //alert("backet item: " + ui);
-            //$.get('updatebasket.cfm', {basketItems:basketItems});
-        }
-    });
-	*/
-	
-	/*
-	$( ".draggable" ).droppable({
-        drop: function  (event, ui) {
-               // $("#sortable").find(".draggable").remove();
-        } 
-
-    }); 
-
-	/*
-	$('.dropme').sortable({
-	    connectWith: '.dropme',
-	    cursor: 'pointer'
-	}).droppable({
-	    accept: '.button',
-	    activeClass: 'highlight',
-	    drop: function(event, ui) {
-	        var $li = $('<div/>').html('List ' + ui.draggable.html());
-	        $li.appendTo(this);
-	    }
-	});
-	*/
 }
 function startHome(){
 	abaAtual = 'searchResult';

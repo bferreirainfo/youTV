@@ -52,12 +52,12 @@
 			<p:outputPanel id="menu" autoUpdate="true" >
 				<ul style="padding: 0px;" >
 					<li>
-						<a id="searchLTabLink" onclick="display('searchResult');" onmouseover="click('searchLTabLink');" >Pesquisa</a>
+						<a id="searchLTabLink" onclick="display('searchResult');"  >Pesquisa</a>
 					</li>
 					<li>
 						<a   id="watchingTabLink" 
 							 style="display: #{pesquisaBean.operation.playing ? 'block' : 'none'} "
-							 onclick="display('playerView');" onmouseover="click('watchingTabLink');" > Assistindo</a>
+							 onclick="display('playerView');"> Assistindo</a>
 					</li>
 				</ul>
 			</p:outputPanel>
