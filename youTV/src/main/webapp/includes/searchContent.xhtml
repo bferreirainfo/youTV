@@ -29,9 +29,7 @@
 												<a class="miniPlayerAction" onClick="playYoutubeMiniPlayer('#{item.id}');" >
 														<span class="glyphicon glyphicon-new-window" />
 												</a>
-												<span class="thumbnailDescription durationMask">#{item.duration}</span>
-												<span class="thumbnailDescription viewMask">#{item.views} views</span>
-												<span class="thumbnailDescription likeMask">#{item.likeCount} Likes</span>
+												<div class="thumbnailDescription likeMask">#{item.duration}</div>
 											</div>
 											<div class="videoDescription" >
 												<p:commandLink value="#{item.title}" 
@@ -43,6 +41,9 @@
 												</p:commandLink>
 												<div class="thumbnailDescription author" style="float:left" >#{item.channelTitle}</div>
 												<div class="thumbnailDescription" style="float:right">#{item.uploadDate}</div>
+												<br/>
+												<div class="thumbnailDescription " style="float:left">#{item.views} views</div>
+												<div class="thumbnailDescription" style="float:right">#{item.likeCount} Likes</div>
 											</div>
 									</li>
 								</ui:repeat>
@@ -68,11 +69,9 @@
 														<div style="display: none;font-size: 11px;" class="thumbnailDescription author">#{item.channelTitle}</div>
 													</div>
 													<a class="miniPlayerAction" onClick="playVimeoMiniPlayer('#{item.id}');" >
-															<span class="glyphicon glyphicon-new-window" />
+														<span class="glyphicon glyphicon-new-window" />
 													</a>
-													<span class="thumbnailDescription durationMask">#{item.duration}</span>
-													<span class="thumbnailDescription viewMask">#{item.views} views</span>
-													<span class="thumbnailDescription likeMask">#{item.likeCount} Likes</span>
+													<div class="thumbnailDescription likeMask">#{item.duration}</div>
 											</div>
 											<div class="videoDescription" >
 												<p:commandLink value="#{item.title}" 
@@ -80,10 +79,13 @@
 															   action="#{pesquisaBean.loadYoutubeVideo}" 
 															   process="@this" update=":form:videoInformations" 
 															   onclick="playYoutube('#{item.id}');" >
-													<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
+															   <f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
 												</p:commandLink>
-													<div class="thumbnailDescription author" style="float:left" >#{item.channelTitle}</div>
-													<div class="thumbnailDescription" style="float:right">#{item.uploadDate}</div>
+												<div class="thumbnailDescription author" style="float:left" >#{item.channelTitle}</div>
+												<div class="thumbnailDescription" style="float:right">#{item.uploadDate}</div>
+												<br/>
+												<div class="thumbnailDescription " style="float:left">#{item.views} views</div>
+												<div class="thumbnailDescription" style="float:right">#{item.likeCount} Likes</div>
 											</div>
 										</div>
 									</li>
@@ -112,9 +114,7 @@
 													<a class="miniPlayerAction" onClick="playVimeoMiniPlayer('#{item.id}');" >
 															<span class="glyphicon glyphicon-new-window" />
 													</a>
-													<span class="thumbnailDescription durationMask">#{item.duration}</span>
-													<span class="thumbnailDescription viewMask">#{item.views} views</span>
-													<span class="thumbnailDescription likeMask">#{item.likeCount} Likes</span>
+													<div class="thumbnailDescription likeMask">#{item.duration}</div>
 											</div>
 											<div class="videoDescription" >
 												<p:commandLink value="#{item.title}" 
@@ -124,8 +124,11 @@
 															   onclick="playYoutube('#{item.id}');" >
 													<f:setPropertyActionListener target="#{pesquisaBean.videoViewId}" value="#{item.id}"/>
 												</p:commandLink>
-													<div class="thumbnailDescription author" style="float:left" >#{item.channelTitle}</div>
-													<div class="thumbnailDescription" style="float:right">#{item.uploadDate}</div>
+												<div class="thumbnailDescription author" style="float:left" >#{item.channelTitle}</div>
+												<div class="thumbnailDescription" style="float:right">#{item.uploadDate}</div>
+												<br/>
+												<div class="thumbnailDescription " style="float:left">#{item.views} views</div>
+												<div class="thumbnailDescription" style="float:right">#{item.likeCount} Likes</div>
 											</div>
 										</div>
 									</li>

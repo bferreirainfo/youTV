@@ -103,7 +103,6 @@ public class PesquisaBean {
             youTubeVideosSearchResult = YoutubeService.searchVideos(searchTerm);
             vimeoVideosSearchResult = VimeoService.searchVideos(searchTerm);
             soundCloudMusicsSearchResult = SoundCloundService.searchMusics(searchTerm);
-            //            new SoundCloundService();
             System.out.println("youtube: " + youTubeVideosSearchResult.size());
             System.out.println("vimeo: " + vimeoVideosSearchResult.size());
             System.out.println("soundClound: " + soundCloudMusicsSearchResult.size());
